@@ -1,0 +1,61 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model FinanceManager.Models.TransactionModel
+@{
+    ViewData["Title"] = "Create";
+}
+
+<div>
+    <h1>Create transaction</h1>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Create" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Amount" class="control-label"></label>
+                    <input type="number" asp-for="Amount" class="form-control" />
+                    <span asp-validation-for="Amount" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="TransactionDate" class="control-label"></label>
+                    <input type="date" asp-for="TransactionDate" class="form-control" />
+                    <span asp-validation-for="TransactionDate" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="TransactionType" class="control-label"></label>
+                    <select id="TransactionType" name="TransactionType" asp-for="TransactionType" class="form-control">
+                        <option value="EatingOut">EatingOut</option>
+                        <option value="Grocery">Grocery</option>
+                        <option value="Fmaily">Fmaily</option>
+                        <option value="Freinds">Freinds</option>
+                        <option value="Electic_Bill">Electic Bill</option>
+                        <option value="Internet_Bill">Internet Bill</option>
+                        <option value="Tv_Bill">Tv Bill</option>
+                        <option value="Clothing">Clothing</option>
+                        <option value="Sanitary">Sanitary</option>
+                        <option value="Emergency">Emergency</option>
+                        <option value="Insurance">Insurance</option>
+                        <option value="Personal_Development">Personal Development</option>
+                        <option value="Savings">Savings</option>
+                        <option value="Rent">Rent</option>
+                    </select>
+                    <span asp-validation-for="TransactionType" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="TransctionNote" class="control-label"></label>
+                    <input type="text" asp-for="TransctionNote" class="form-control" />
+                    <span asp-validation-for="TransctionNote" class="text-danger"></span>
+                </div>
+                <div class="form-group create-button">
+                    <input type="submit" value="Submit" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>
+</div>
