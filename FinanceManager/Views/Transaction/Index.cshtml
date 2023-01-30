@@ -6,31 +6,50 @@
     ViewData["Title"] = "Transaction List";
 }
 
-<div>
-    <h1>Transactions List</h1>
-    <hr />
-    <table class="table">
-        <thead>
-        <tr>
-            <th>@Html.DisplayNameFor(model => model.Id)</th>
-            <th>@Html.DisplayNameFor(model => model.Amount)</th>
-            <th>@Html.DisplayNameFor(model => model.TransactionDate)</th>
-            <th>@Html.DisplayNameFor(model => model.TransactionType)</th>
-            <th>@Html.DisplayNameFor(model => model.TransctionNote)</th>
-            <th></th>
-        </tr>
-        </thead>
-        <tbody>
-    @foreach(var  item in Model)
-    {
-        <tr>
-            <td>@Html.DisplayFor(modelItem => item.Id)</td>
-            <td>@Html.DisplayFor(modelItem => item.Amount)</td>
-            <td>@Html.DisplayFor(modelItem => item.TransactionDate)</td>
-            <td>@Html.DisplayFor(modelItem => item.TransactionType)</td>
-            <td>@Html.DisplayFor(modelItem => item.TransctionNote)</td>
-        </tr>
-    }
-        </tbody>
-    </table>
+<div class="container">
+    <div class="savings-div">
+        <div class="row savings-amountdropdown-div">
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="total-amount">
+                    <h4>Total savings</h4>
+                    <span>$ 60000000000000000000000.00</span>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="total-amount">
+                    <h4>Total spending</h4>
+                    <span>$ 60000000000000000000000.00</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="transaction-div">
+            <h4>Transaction List</h4>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">@Html.DisplayNameFor(model => model.Id)</th>
+                        <th scope="col">@Html.DisplayNameFor(model => model.Amount)</th>
+                        <th scope="col">@Html.DisplayNameFor(model => model.TransactionDate)</th>
+                        <th scope="col">@Html.DisplayNameFor(model => model.TransactionType)</th>
+                        <th scope="col">@Html.DisplayNameFor(model => model.TransctionNote)</th>
+                        <th scope="col">@Html.DisplayNameFor(model => model.TransactionForm)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.Id)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Amount)</td>
+                            <td>@Html.DisplayFor(modelItem => item.TransactionDate)</td>
+                            <td>@Html.DisplayFor(modelItem => item.TransactionType)</td>
+                            <td>@Html.DisplayFor(modelItem => item.TransctionNote)</td>
+                            <td>@Html.DisplayFor(modelItem => item.TransactionForm)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
