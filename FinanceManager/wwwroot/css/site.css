@@ -13,10 +13,29 @@ html {
   min-height: 100%;
 }
 
+/*NavBar styling*/
+.nav-div{
+    border-bottom: 1px solid lightgray;
+}
+/*Home styling*/
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
 }
 
-.create-button{
-   padding: 1rem 0 !important;
+.body-div{
+    margin-top:3rem;
+}
+
+.create-button {
+    padding: 1rem 0 !important;
+}
+
+/*Index page styling*/
+.total-amount{
+    border: 3px dashed lightgray;
+    width:fit-content;
+    padding: 4rem;
+    border-radius: 10px;
+    margin-bottom:2rem;
+    justify-content:center;
 }
