@@ -20,6 +20,7 @@ namespace FinanceManager.Models
         public TransactionType TransactionType { get; set; }
         [Display(Name = "Transacttion Note")]
         public string TransctionNote { get; set; } = string.Empty;
+        public TransactionForm TransactionForm { get; set; }
 
     }
     public enum TransactionType
@@ -32,12 +33,17 @@ namespace FinanceManager.Models
         Internet_Bill,
         Tv_Bill,
         Clothing,
-        Sanitary ,
+        Sanitary,
         Emergency,
         Insurance,
         Personal_Development,
         Savings,
         Rent,
+    }
+    public enum TransactionForm
+    {
+        Credit,
+        Debit
     }
 
 }
