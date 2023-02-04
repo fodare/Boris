@@ -12,5 +12,7 @@ namespace FinanceManager.Data
         }
 
         public DbSet<TransactionModel> TransactionModels { get; set; }
+
+        public DbSet<Summation> Summations { get; set; }
     }
 }
