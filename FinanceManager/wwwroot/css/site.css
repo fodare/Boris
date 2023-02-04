@@ -33,8 +33,9 @@ body {
 /*Index page styling*/
 .total-amount{
     border: 3px dashed lightgray;
-    width:fit-content;
-    padding: 4rem;
+    width:auto;
+    height:auto;
+    padding:3rem;
     border-radius: 10px;
     margin-bottom:2rem;
     justify-content:center;
