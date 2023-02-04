@@ -50,12 +50,7 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="TransactionForm" class="control-label"></label>
-                    <select id="TransactionForm" name="TransactionForm" asp-for="TransactionForm" class="form-control">
-                        <option value="Debit">Debit</option>
-                        <option value="Credit">Credit</option>
-                    </select>
-
-
+                    @Html.DropDownList("TransactionForm", Model)
                     <span asp-validation-for="TransctionNote" class="text-danger"></span>
                 </div>
                 <div class="form-group create-button">
