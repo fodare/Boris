@@ -47,5 +47,11 @@ namespace FinanceManager.Controllers
             return View(transaction);
         }
 
+
+        [HttpGet]
+        public IActionResult Analysis()
+        {
+            return View();
+        }
     }
 }
