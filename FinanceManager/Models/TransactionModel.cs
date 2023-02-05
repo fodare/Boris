@@ -13,12 +13,12 @@ namespace FinanceManager.Models
         [DataType(DataType.Currency)]
         public decimal Amount { get; set; }
 
-        [Display(Name = "Transacttion Date")]
+        [Display(Name = "Transaction Date")]
         [DataType(DataType.Date)]
         public DateTime TransactionDate { get; set; }
-        [Display(Name = "Transacttion Type")]
+        [Display(Name = "Transaction Type")]
         public TransactionType TransactionType { get; set; }
-        [Display(Name = "Transacttion Note")]
+        [Display(Name = "Transaction Note")]
         public string TransctionNote { get; set; } = string.Empty;
         public TransactionForm TransactionForm { get; set; }
 
