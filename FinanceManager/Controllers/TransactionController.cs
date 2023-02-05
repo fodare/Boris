@@ -62,10 +62,12 @@ namespace FinanceManager.Controllers
                         {
                             amountSummations.TotalSpending = amountSummations.TotalSpending + transaction.Amount;
                             amountSummations.TotalSavngs = amountSummations.TotalSavngs - transaction.Amount;
+                            amountSummations.LastUpdateDate = DateTime.Now;
                         }
                         else
                         {
                             amountSummations.TotalSavngs = amountSummations.TotalSavngs + transaction.Amount;
+                            amountSummations.LastUpdateDate = DateTime.Now;
                         }
                         _context.SaveChanges();
                     }
