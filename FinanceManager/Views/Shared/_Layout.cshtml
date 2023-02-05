@@ -7,7 +7,9 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/FinanceManager.styles.css" asp-append-version="true" />
-    <nav>
+    </head>
+<body>
+        <nav>
         <div class="nav-div">
             <ul class="nav justify-content-center">
                 <li class="nav-item">
@@ -17,17 +19,11 @@
                     <a class="nav-link" asp-controller="Transaction" asp-action="Create">Create</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" asp-controller="Transaction" asp-action="Analysis">Analysis</a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link" asp-controller="Transaction" asp-action="About">About</a>
                 </li>
             </ul>
         </div>
     </nav>
-
-    </head>
-<body>
     <div class="container body-div">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -36,7 +32,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; @DateTime.Now - FinanceManager - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; @DateTime.Now.Year - FinanceManager.
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
