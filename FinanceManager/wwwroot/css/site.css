@@ -34,7 +34,7 @@ body {
 .total-amount{
     border: 3px dashed lightgray;
     width:auto;
-    height:auto;
+    height:12rem;
     padding:3rem;
     border-radius: 10px;
     margin-bottom:2rem;
