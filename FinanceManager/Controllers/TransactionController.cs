@@ -68,7 +68,8 @@ namespace FinanceManager.Controllers
                             amountSummations.TotalSavngs = amountSummations.TotalSavngs + transaction.Amount;
                         }
                         _context.SaveChanges();
-                    } else
+                    }
+                    else
                     {
                         Console.WriteLine("Error reading amount summation from the db!");
                     }
