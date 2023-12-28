@@ -1,4 +1,5 @@
 using System;
+using System.Security.Cryptography.X509Certificates;
 using System.Text.Json.Serialization;
 
 namespace backend.Models
@@ -6,6 +7,8 @@ namespace backend.Models
     public class TransactionModel
     {
         public int TransactionId { get; set; }
+
+        public int UserId { get; set; }
 
         [JsonPropertyName("spaceId")]
         public int SpaceId { get; set; }
