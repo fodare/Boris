@@ -24,6 +24,10 @@ CREATE TABLE FinanceManagerSchema.TransactionRecord
 );
 GO
 
+CREATE CLUSTERED INDEX cix_TransactionRecord_TransactionId 
+    ON FinanceManagerSchema.TransactionRecord (TransactionId);
+GO
+
 CREATE TABLE FinanceManagerSchema.UserRecord
 (
     UserId INT IDENTITY(1,1),
@@ -33,4 +37,8 @@ CREATE TABLE FinanceManagerSchema.UserRecord
     CreatedDate Datetime,
     UpdatedDate Datetime
 );
+GO
+
+CREATE CLUSTERED INDEX cix_UserRecord_UserId
+    ON FinanceManagerSchema.UserRecord(UserId);
 GO
