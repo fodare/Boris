@@ -23,3 +23,14 @@ CREATE TABLE FinanceManagerSchema.TransactionRecord
     UpdatedDate DATETIME
 );
 GO
+
+CREATE TABLE FinanceManagerSchema.UserRecord
+(
+    UserId INT IDENTITY(1,1),
+    UserName VARCHAR(50),
+    UserPassword NVARCHAR(max),
+    IsAdmin BIT,
+    CreatedDate Datetime,
+    UpdatedDate Datetime
+);
+GO
