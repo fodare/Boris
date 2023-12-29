@@ -22,9 +22,8 @@ namespace backend.Data
         public T ExecuteSql<T>(string sqlCommand)
         {
             IDbConnection dbConnection = new SqlConnection(dbConnectionString);
-            var testResponse = dbConnection.QuerySingle<T>(sqlCommand);
-            Console.WriteLine(testResponse);
-            return testResponse;
+            var queryResponse = dbConnection.QuerySingle<T>(sqlCommand);
+            return queryResponse;
         }
     }
 }
