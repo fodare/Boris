@@ -7,10 +7,10 @@ namespace backend.Services
 {
     public interface IUserService
     {
-        Task<ResponseModel<IEnumerable<User>>> GetUsers();
+        Task<IEnumerable<UserModel>> GetUsers();
 
-        Task<ResponseModel<User>> GetUser(int userId);
+        Task<UserModel> GetUser(int userId);
 
-        Task<ResponseModel<string>> CreateUser(UserRegestration newUser);
+        Task<string> CreateUser(UserRegestration newUser);
     }
 }
