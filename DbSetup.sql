@@ -44,11 +44,14 @@ CREATE CLUSTERED INDEX cix_UserRecord_UserId
 GO
 
 CREATE OR ALTER PROCEDURE FinanceManagerSchema.spUser_Get
-    /* EXEC FinanceManagerSchema.spUser_Get @userId = 1  */
-    @userId INT
+    /* EXEC FinanceManagerSchema.spUser_Get @userId = 2 */
+    /* EXEC FinanceManagerSchema.spUser_Get @userName = 'string' */
+    @userId INT = NULL,
+    @userName VARCHAR(50) = NULL
 AS
 BEGIN
     SELECT *
     FROM FinanceManagerSchema.UserRecord AS Users
-    WHERE Users.[UserId] = @userId;
+    WHERE Users.[UserId] = ISNULL(@userId, UserId) AND
+        Users.UserName = ISNULL(@userName, UserName)
 END
