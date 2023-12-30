@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using backend.Data;
 using backend.Dtos;
 using backend.Models;
+using Microsoft.AspNetCore.Hosting.Server;
 
 namespace backend.Services
 {
@@ -16,9 +17,27 @@ namespace backend.Services
             _dapper = new DataContextDapper();
         }
 
-        public Task<string> CreateUser(UserRegestration newUser)
+        public async Task<bool> CreateUser(UserRegestration newUser)
         {
-            throw new NotImplementedException();
+            try
+            {
+                string sqlCommand = $@"EXEC FinanceManagerSchema.spUser_Add 
+                @userName = '{newUser.UserName}', 
+                @userPassword = '{newUser.Password}',
+                @createDate = '{DateTime.Now}'";
+
+                bool userAdded = _dapper.ExcecuteSqlAdd(sqlCommand);
+                if (userAdded)
+                {
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Error creating user.{e.Message}");
+                return false;
+            }
         }
 
         public async Task<UserModel>? GetUser(int userId)
