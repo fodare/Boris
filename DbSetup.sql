@@ -55,3 +55,34 @@ BEGIN
     WHERE Users.[UserId] = ISNULL(@userId, UserId) AND
         Users.UserName = ISNULL(@userName, UserName)
 END
+GO
+
+CREATE OR ALTER PROCEDURE FinanceManagerSchema.spUser_Add
+    /* EXEC FinanceManagerSchema.spUser_Add 
+        @userName = 'Jane', @userPassword = 'janedoewwewe123',
+        @isAdmin = 1, @createDate = '2023-12-30T17:31:30.368Z'
+    */
+    @userName VARCHAR(50),
+    @userPassword NVARCHAR(max),
+    @isAdmin BIT = 0,
+    @createDate DATETIME
+AS
+BEGIN
+    IF NOT EXISTS (SELECT *
+    FROM FinanceManagerSchema.UserRecord AS Users
+    WHERE Users.UserName = @userName)
+    BEGIN
+        INSERT INTO FinanceManagerSchema.UserRecord
+            (
+            [UserName],
+            [UserPassword],
+            [IsAdmin],
+            [CreatedDate]
+            )
+        VALUES(@userName, @userPassword, @isAdmin, @createDate)
+    END
+    ELSE
+        THROW 52000,
+        'Username exists. Please provide another username.',1;
+END
+GO
