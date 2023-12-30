@@ -25,5 +25,11 @@ namespace backend.Data
             var queryResponse = dbConnection.QuerySingle<T>(sqlCommand);
             return queryResponse;
         }
+
+        public bool ExcecuteSqlAdd(string sqlCommand)
+        {
+            IDbConnection dbConnection = new SqlConnection(dbConnectionString);
+            return dbConnection.Execute(sqlCommand) > 0;
+        }
     }
 }
