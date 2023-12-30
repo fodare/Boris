@@ -39,5 +39,19 @@ namespace backend.Controllers
                 return BadRequest("Can not find qureied user!");
             }
         }
+
+        [HttpPost("user/register", Name = "CreateUser")]
+        public async Task<ActionResult> RegisterUser([FromBody] UserRegestration newUser)
+        {
+            bool userCreated = await _userService.CreateUser(newUser);
+            if (userCreated)
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest("Username is taken. Please try with another user name");
+            }
+        }
     }
 }
