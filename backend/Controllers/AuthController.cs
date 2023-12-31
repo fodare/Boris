@@ -24,7 +24,7 @@ namespace backend.Controllers
         }
 
         [HttpGet("user/{userId}", Name = "GetUserById")]
-        public async Task<ActionResult<GetUserDto>> GetUserAsync(int userId)
+        public async Task<ActionResult<ResponseModel<GetUserDto>>> GetUserAsync(int userId)
         {
             ResponseModel<GetUserDto> response = new();
             var queryResult = await _userService.GetUser(userId);
@@ -52,6 +52,14 @@ namespace backend.Controllers
             {
                 return BadRequest("Username is taken. Please try with another user name");
             }
+        }
+
+        [HttpGet("users", Name = "GetUserList")]
+        public async Task<ActionResult<GetUserDto>> FetchUser()
+        {
+            var userList = await _userService.GetUsers();
+            var filteredUserList = _mapper.Map<List<GetUserDto>>(userList);
+            return Ok(filteredUserList);
         }
     }
 }
