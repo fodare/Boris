@@ -61,5 +61,18 @@ namespace backend.Controllers
             var filteredUserList = _mapper.Map<List<GetUserDto>>(userList);
             return Ok(filteredUserList);
         }
+
+        [HttpPost("login", Name = ("login"))]
+        public async Task<ActionResult> AuthenticateUser([FromBody] LoginDto userInfo)
+        {
+            if (await _userService.VerifyUser(userInfo.UserName, userInfo.Password))
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
     }
 }
