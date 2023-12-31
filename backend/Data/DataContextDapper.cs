@@ -31,5 +31,11 @@ namespace backend.Data
             IDbConnection dbConnection = new SqlConnection(dbConnectionString);
             return dbConnection.Execute(sqlCommand) > 0;
         }
+
+        public IEnumerable<T> LoadData<T>(string sqlCommand)
+        {
+            IDbConnection dbConnection = new SqlConnection(dbConnectionString);
+            return dbConnection.Query<T>(sqlCommand);
+        }
     }
 }
