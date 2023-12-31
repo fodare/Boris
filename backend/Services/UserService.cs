@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using backend.Data;
 using backend.Dtos;
+using backend.Helpers;
 using backend.Models;
 using Microsoft.AspNetCore.Hosting.Server;
 
@@ -12,18 +13,22 @@ namespace backend.Services
     public class UserService : IUserService
     {
         private readonly DataContextDapper _dapper;
+        private readonly UserHelper _userHelper;
         public UserService()
         {
             _dapper = new DataContextDapper();
+            _userHelper = new UserHelper();
         }
 
         public async Task<bool> CreateUser(UserRegestration newUser)
         {
             try
             {
+                string hashedUserPassword = _userHelper.createPasswordHash(newUser.Password);
+
                 string sqlCommand = $@"EXEC FinanceManagerSchema.spUser_Add 
                 @userName = '{newUser.UserName}', 
-                @userPassword = '{newUser.Password}',
+                @userPassword = '{hashedUserPassword}',
                 @createDate = '{DateTime.Now}'";
 
                 bool userAdded = _dapper.ExcecuteSqlAdd(sqlCommand);
@@ -52,9 +57,11 @@ namespace backend.Services
             return null;
         }
 
-        public Task<IEnumerable<UserModel>> GetUsers()
+        public async Task<IEnumerable<UserModel>> GetUsers()
         {
-            throw new NotImplementedException();
+            string sqlCommand = $"EXEC FinanceManagerSchema.spUser_Get";
+            IEnumerable<UserModel> userList = _dapper.LoadData<UserModel>(sqlCommand);
+            return userList;
         }
     }
 }
