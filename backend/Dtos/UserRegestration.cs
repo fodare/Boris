@@ -10,8 +10,5 @@ namespace backend.Dtos
 
         [JsonPropertyName("password")]
         public string Password { get; set; } = "";
-
-        [JsonPropertyName("userFullName")]
-        public string userFullName { get; set; } = "";
     }
 }
