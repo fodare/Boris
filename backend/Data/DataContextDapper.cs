@@ -37,5 +37,11 @@ namespace backend.Data
             IDbConnection dbConnection = new SqlConnection(dbConnectionString);
             return dbConnection.Query<T>(sqlCommand);
         }
+
+        public T LoadDataSingle<T>(string sqlCommand)
+        {
+            IDbConnection dbConnection = new SqlConnection(dbConnectionString);
+            return dbConnection.QuerySingle<T>(sqlCommand);
+        }
     }
 }

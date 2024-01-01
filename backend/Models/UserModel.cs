@@ -11,7 +11,7 @@ namespace backend.Models
         public string UserName { get; set; } = "";
 
         [JsonPropertyName("password")]
-        public string Password { get; set; } = "";
+        public string UserPassword { get; set; } = "";
 
         public bool IsAdmin { get; set; }
 

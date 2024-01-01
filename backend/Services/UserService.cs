@@ -24,7 +24,7 @@ namespace backend.Services
         {
             try
             {
-                string hashedUserPassword = _userHelper.createPasswordHash(newUser.Password);
+                var hashedUserPassword = _userHelper.CreatePasswordHash(newUser.Password);
 
                 string sqlCommand = $@"EXEC FinanceManagerSchema.spUser_Add 
                 @userName = '{newUser.UserName}', 
@@ -40,7 +40,6 @@ namespace backend.Services
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Error creating user.{e.Message}");
                 return false;
             }
         }
@@ -62,6 +61,26 @@ namespace backend.Services
             string sqlCommand = $"EXEC FinanceManagerSchema.spUser_Get";
             IEnumerable<UserModel> userList = _dapper.LoadData<UserModel>(sqlCommand);
             return userList;
+        }
+
+        public async Task<bool> VerifyUser(string userName, string userPassword)
+        {
+            string sqlCommand = @$"EXEC FinanceManagerSchema.spUser_Get 
+                @userName = '{userName}'";
+            UserModel qureidUser = _dapper.LoadDataSingle<UserModel>(sqlCommand);
+            if (qureidUser.UserName != null)
+            {
+                bool passwordMatch = _userHelper.VerifyPasswordHash(userPassword, qureidUser.UserPassword);
+                if (passwordMatch)
+                {
+                    return true;
+                }
+                return false;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

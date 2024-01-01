@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using backend.Data;
+using backend.Dtos;
 using backend.Models;
 using backend.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -26,6 +27,26 @@ namespace backend.Controllers
         {
             _dapper.ExecuteSql<string>("SELECT GETDATE()");
             return Ok(DateTime.Now);
+        }
+
+        [HttpPost("addtransaction", Name = "RecordTransaction")]
+        public async Task<ActionResult<ResponseModel<string>>> CreateRecord([FromBody] RecordTransactionDto newRecord)
+        {
+            ResponseModel<string> response = new();
+            bool userAdded = await _transactionService.RecordTransaction(newRecord);
+            if (userAdded)
+            {
+                response.Message = "Transaction aded successfully!";
+                response.Success = true;
+                return Ok(response);
+            }
+            else
+            {
+                response.Message = "Error adding transaction. Please try again!";
+                response.Success = false;
+                return BadRequest(response);
+            }
+
         }
     }
 }

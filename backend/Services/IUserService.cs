@@ -12,5 +12,7 @@ namespace backend.Services
         Task<UserModel> GetUser(int userId);
 
         Task<bool> CreateUser(UserRegestration newUser);
+
+        Task<bool> VerifyUser(string userName, string password);
     }
 }

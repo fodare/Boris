@@ -9,17 +9,14 @@ namespace backend.Models
 
         public int UserId { get; set; }
 
-        [JsonPropertyName("spaceId")]
-        public int SpaceId { get; set; }
-
         [JsonPropertyName("amount")]
         public double Amount { get; set; }
 
         [JsonPropertyName("type")]
-        public Transactiontype Type { get; set; }
+        public Transactiontype TransactionType { get; set; }
 
         [JsonPropertyName("tag")]
-        public Recordtype Tag { get; set; }
+        public Recordtype TransactionTag { get; set; }
 
         [JsonPropertyName("note")]
         public string Note { get; set; } = "";
@@ -28,6 +25,6 @@ namespace backend.Models
         public DateTime RecordDate { get; set; }
 
         [JsonPropertyName("lastUpdateDate")]
-        public DateTime LastUpdatedDate { get; set; }
+        public DateTime UpdatedDate { get; set; }
     }
 }
