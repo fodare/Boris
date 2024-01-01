@@ -16,7 +16,6 @@ namespace backend.Helpers
         {
             var passwordVerificationResult = new PasswordHasher<object?>()
                 .VerifyHashedPassword(null, hashedPassword, password);
-            Console.WriteLine(passwordVerificationResult);
             return passwordVerificationResult switch
             {
                 PasswordVerificationResult.Failed => false,
