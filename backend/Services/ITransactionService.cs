@@ -15,7 +15,7 @@ namespace backend.Services
 
         Task<ResponseModel<TransactionModel>> GetTransaction(int transactionId);
 
-        Task<ResponseModel<bool>> RecordTransaction(RecordTransactionDto newRecord);
+        Task<bool> RecordTransaction(RecordTransactionDto newRecord);
 
         Task<ResponseModel<bool>> UpdateTransactionRecord(UpdateTransactionDto updatedRecord);
 
