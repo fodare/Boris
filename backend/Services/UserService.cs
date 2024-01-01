@@ -40,7 +40,6 @@ namespace backend.Services
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Error creating user.{e.Message}");
                 return false;
             }
         }
@@ -69,7 +68,6 @@ namespace backend.Services
             string sqlCommand = @$"EXEC FinanceManagerSchema.spUser_Get 
                 @userName = '{userName}'";
             UserModel qureidUser = _dapper.LoadDataSingle<UserModel>(sqlCommand);
-            Console.WriteLine(qureidUser.UserPassword);
             if (qureidUser.UserName != null)
             {
                 bool passwordMatch = _userHelper.VerifyPasswordHash(userPassword, qureidUser.UserPassword);
