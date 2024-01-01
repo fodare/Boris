@@ -41,37 +41,51 @@ namespace backend.Controllers
         }
 
         [HttpPost("user/register", Name = "CreateUser")]
-        public async Task<ActionResult> RegisterUser([FromBody] UserRegestration newUser)
+        public async Task<ActionResult<ResponseModel<string>>> RegisterUser([FromBody] UserRegestration newUser)
         {
+            ResponseModel<string> response = new();
             bool userCreated = await _userService.CreateUser(newUser);
             if (userCreated)
             {
-                return Ok();
+                response.Success = true;
+                response.Message = "User created successfully!";
+                return Ok(response);
             }
             else
             {
-                return BadRequest("Username is taken. Please try with another user name");
+                response.Success = false;
+                response.Message = "Error creating account. Please try again!";
+                return BadRequest(response);
             }
         }
 
         [HttpGet("users", Name = "GetUserList")]
-        public async Task<ActionResult<GetUserDto>> FetchUser()
+        public async Task<ActionResult<ResponseModel<GetUserDto>>> FetchUser()
         {
+            ResponseModel<IEnumerable<GetUserDto>> response = new();
             var userList = await _userService.GetUsers();
-            var filteredUserList = _mapper.Map<List<GetUserDto>>(userList);
-            return Ok(filteredUserList);
+            IEnumerable<GetUserDto> filteredUserList = _mapper.Map<List<GetUserDto>>(userList);
+            response.Message = "Successfully retrived users list";
+            response.Success = true;
+            response.Data = filteredUserList;
+            return Ok(response);
         }
 
         [HttpPost("login", Name = ("login"))]
-        public async Task<ActionResult> AuthenticateUser([FromBody] LoginDto userInfo)
+        public async Task<ActionResult<ResponseModel<string>>> AuthenticateUser([FromBody] LoginDto userInfo)
         {
+            ResponseModel<string> response = new();
             if (await _userService.VerifyUser(userInfo.UserName, userInfo.Password))
             {
-                return Ok();
+                response.Success = true;
+                response.Message = "User authenticated successfully!";
+                return Ok(response);
             }
             else
             {
-                return BadRequest();
+                response.Success = false;
+                response.Message = "Error authenticating user. Please try again!";
+                return BadRequest(response);
             }
         }
     }
