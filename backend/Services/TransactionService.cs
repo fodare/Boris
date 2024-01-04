@@ -21,9 +21,28 @@ namespace backend.Services
             throw new NotImplementedException();
         }
 
-        public Task<ResponseModel<TransactionModel>> GetTransaction(int transactionId)
+        public async Task<TransactionModel?> GetTransaction(int transactionId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                string sqlCommand = $@"EXEC FinanceManagerSchema.spTransaction_Get
+                @transactionId = {transactionId}";
+
+                var qureidUser = _dapper.LoadDataSingle<TransactionModel>(sqlCommand);
+                if (qureidUser.TransactionId > 0)
+                {
+                    return qureidUser;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return null;
+            }
         }
 
         public Task<ResponseModel<IEnumerable<TransactionModel>>> GetTransactions()
