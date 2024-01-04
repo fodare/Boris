@@ -13,7 +13,7 @@ namespace backend.Services
     {
         Task<ResponseModel<IEnumerable<TransactionModel>>> GetTransactions();
 
-        Task<ResponseModel<TransactionModel>> GetTransaction(int transactionId);
+        Task<TransactionModel> GetTransaction(int transactionId);
 
         Task<bool> RecordTransaction(RecordTransactionDto newRecord);
 

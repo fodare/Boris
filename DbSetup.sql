@@ -109,3 +109,17 @@ BEGIN
         (ISNULL(@userId, 0), @amount, @transactionType, @transactionTag, @note, @recordDate)
 END
 GO
+
+CREATE OR ALTER PROCEDURE FinanceManagerSchema.spTransaction_Get
+    /* EXEC FinanceManagerSchema.spTransaction_Get
+        @transactionId = 1, @userId = 8
+    */
+    @transactionId INT = null,
+    @userId INT = null
+AS
+BEGIN
+    SELECT *
+    FROM FinanceManagerSchema.TransactionRecord WITH(NOLOCK)
+    WHERE TransactionId = ISNULL(@transactionId , TransactionId)
+        AND UserId = ISNULL(@userId, UserId)
+END
