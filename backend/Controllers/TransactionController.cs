@@ -15,18 +15,35 @@ namespace backend.Controllers
     public class TransactionController : ControllerBase
     {
         private readonly ITransactionService _transactionService;
-        DataContextDapper _dapper;
         public TransactionController(ITransactionService transactionService)
         {
             _transactionService = transactionService;
-            _dapper = new DataContextDapper();
         }
 
         [HttpGet("health", Name = "HelathCheck")]
         public IActionResult Gethealth()
         {
-            _dapper.ExecuteSql<string>("SELECT GETDATE()");
             return Ok(DateTime.Now);
+        }
+
+        [HttpGet("{transactionId}", Name = "GetTransaction")]
+        public async Task<ActionResult<ResponseModel<TransactionModel>>> GetTransactionById(int transactionId)
+        {
+            ResponseModel<TransactionModel> response = new();
+            var qureiedTransaction = await _transactionService.GetTransaction(transactionId);
+            if (qureiedTransaction.TransactionId == transactionId)
+            {
+                response.Message = "Successfully retrived record";
+                response.Data = qureiedTransaction;
+                response.Success = true;
+                return Ok(response);
+            }
+            else
+            {
+                response.Message = $"Can not find record with id {transactionId}";
+                response.Success = false;
+                return NotFound(response);
+            }
         }
 
         [HttpPost("addtransaction", Name = "RecordTransaction")]
