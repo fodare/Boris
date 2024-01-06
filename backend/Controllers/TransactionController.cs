@@ -26,6 +26,26 @@ namespace backend.Controllers
             return Ok(DateTime.Now);
         }
 
+        [HttpGet("transactionLists", Name = "GetTrasnactions")]
+        public async Task<ActionResult<ResponseModel<TransactionModel>>> GetTransactionRecords()
+        {
+            ResponseModel<IEnumerable<TransactionModel>> response = new();
+            var transactionsList = await _transactionService.GetTransactions();
+            if (transactionsList != null)
+            {
+                response.Message = "Successfully retrived transaction record list";
+                response.Success = true;
+                response.Data = (IEnumerable<TransactionModel>?)transactionsList;
+                return Ok(transactionsList);
+            }
+            else
+            {
+                response.Message = "Error fetching transaction records. Please try again!";
+                response.Success = false;
+                return StatusCode(500, response);
+            }
+        }
+
         [HttpGet("{transactionId}", Name = "GetTransaction")]
         public async Task<ActionResult<ResponseModel<TransactionModel>>> GetTransactionById(int transactionId)
         {
@@ -64,6 +84,27 @@ namespace backend.Controllers
                 return BadRequest(response);
             }
 
+        }
+
+        [HttpPut("updateTrasnaction/{transactionId}", Name = "UpdateRecord")]
+        public async Task<ActionResult<ResponseModel<string>>> UpdateTransactionRecord(int transactionId,
+            [FromBody] UpdateTransactionDto newRecord)
+        {
+            ResponseModel<string> response = new();
+            bool recordUpdated = await _transactionService
+                .UpdateTransactionRecord(newRecord, transactionId);
+            if (recordUpdated)
+            {
+                response.Success = true;
+                response.Message = "Transaction record updated successfully!";
+                return Ok(response);
+            }
+            else
+            {
+                response.Message = "Error updating record. Please try again";
+                response.Success = false;
+                return BadRequest(response);
+            }
         }
     }
 }
