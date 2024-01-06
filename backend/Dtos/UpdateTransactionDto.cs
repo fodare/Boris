@@ -8,10 +8,10 @@ namespace backend.Dtos
         [JsonPropertyName("amount")]
         public double Amount { get; set; }
 
-        [JsonPropertyName("type")]
+        [JsonPropertyName("transactionType")]
         public Transactiontype Type { get; set; }
 
-        [JsonPropertyName("tag")]
+        [JsonPropertyName("transactionTag")]
         public Recordtype Tag { get; set; }
 
         [JsonPropertyName("note")]
