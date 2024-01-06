@@ -16,9 +16,19 @@ namespace backend.Services
         {
             _dapper = new DataContextDapper();
         }
-        public Task<ResponseModel<bool>> DeleteTransactionRecord(int trasnactionId)
+
+        public async Task<IEnumerable<TransactionModel>>? GetTransactions()
         {
-            throw new NotImplementedException();
+            string sqlCommand = "EXEC FinanceManagerSchema.spTransaction_Get";
+            try
+            {
+                IEnumerable<TransactionModel> transactionsList = _dapper.LoadData<TransactionModel>(sqlCommand);
+                return transactionsList;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         public async Task<TransactionModel?> GetTransaction(int transactionId)
@@ -45,11 +55,6 @@ namespace backend.Services
             }
         }
 
-        public Task<ResponseModel<IEnumerable<TransactionModel>>> GetTransactions()
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<bool> RecordTransaction(RecordTransactionDto newRecord)
         {
             try
@@ -73,9 +78,36 @@ namespace backend.Services
             }
         }
 
-        public Task<ResponseModel<bool>> UpdateTransactionRecord(UpdateTransactionDto updatedRecord)
+        public async Task<bool> UpdateTransactionRecord(UpdateTransactionDto updatedRecord,
+            int transactionId)
         {
-            throw new NotImplementedException();
+            string sqlCommandUpdate = @$"EXEC FinanceManagerSchema.spTransaction_Update
+            @amount = {updatedRecord.Amount}, @transactionType = '{updatedRecord.Type}', 
+            @tranactionTag = '{updatedRecord.Tag}',  @note = '{updatedRecord.Note}', 
+            @updateDate = '{DateTime.Now}',  @transactionId = {transactionId}";
+
+            string sqlCommandCheckTransaction = $@"EXEC FinanceManagerSchema.spTransaction_Get
+            @transactionId = {transactionId}";
+
+            try
+            {
+                TransactionModel qureiedTransaction = _dapper
+                    .ExecuteSql<TransactionModel>(sqlCommandCheckTransaction);
+                if (qureiedTransaction.TransactionId == transactionId)
+                {
+                    bool transactionRecord = _dapper.ExcecuteSqlAdd(sqlCommandUpdate);
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+
         }
     }
 }
