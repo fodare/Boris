@@ -23,7 +23,7 @@ The application is intended for personal use and can be hosted on your private m
 - SQL server Express.
 - Dotnet CLI.
 - Docker.
-- Favourite IDE, VS Code or Visual studio.
+- Favorite IDE, VS Code or Visual Studio.
 
 ### Clone and install
 
