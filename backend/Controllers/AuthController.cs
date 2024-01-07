@@ -23,23 +23,6 @@ namespace backend.Controllers
             }));
         }
 
-        [HttpGet("user/{userId}", Name = "GetUserById")]
-        public async Task<ActionResult<ResponseModel<GetUserDto>>> GetUserAsync(int userId)
-        {
-            ResponseModel<GetUserDto> response = new();
-            var queryResult = await _userService.GetUser(userId);
-            if (queryResult != null)
-            {
-                response.Success = true;
-                response.Data = _mapper.Map<GetUserDto>(queryResult);
-                return Ok(response);
-            }
-            else
-            {
-                return BadRequest("Can not find qureied user!");
-            }
-        }
-
         [HttpPost("user/register", Name = "CreateUser")]
         public async Task<ActionResult<ResponseModel<string>>> RegisterUser([FromBody] UserRegestration newUser)
         {
@@ -59,18 +42,6 @@ namespace backend.Controllers
             }
         }
 
-        [HttpGet("users", Name = "GetUserList")]
-        public async Task<ActionResult<ResponseModel<GetUserDto>>> FetchUser()
-        {
-            ResponseModel<IEnumerable<GetUserDto>> response = new();
-            var userList = await _userService.GetUsers();
-            IEnumerable<GetUserDto> filteredUserList = _mapper.Map<List<GetUserDto>>(userList);
-            response.Message = "Successfully retrived users list";
-            response.Success = true;
-            response.Data = filteredUserList;
-            return Ok(response);
-        }
-
         [HttpPost("login", Name = ("login"))]
         public async Task<ActionResult<ResponseModel<string>>> AuthenticateUser([FromBody] LoginDto userInfo)
         {
@@ -87,6 +58,35 @@ namespace backend.Controllers
                 response.Message = "Error authenticating user. Please try again!";
                 return BadRequest(response);
             }
+        }
+
+        [HttpGet("user/{userId}", Name = "GetUserById")]
+        public async Task<ActionResult<ResponseModel<GetUserDto>>> GetUserAsync(int userId)
+        {
+            ResponseModel<GetUserDto> response = new();
+            var queryResult = await _userService.GetUser(userId);
+            if (queryResult != null)
+            {
+                response.Success = true;
+                response.Data = _mapper.Map<GetUserDto>(queryResult);
+                return Ok(response);
+            }
+            else
+            {
+                return BadRequest("Can not find qureied user!");
+            }
+        }
+
+        [HttpGet("users", Name = "GetUserList")]
+        public async Task<ActionResult<ResponseModel<GetUserDto>>> FetchUser()
+        {
+            ResponseModel<IEnumerable<GetUserDto>> response = new();
+            var userList = await _userService.GetUsers();
+            IEnumerable<GetUserDto> filteredUserList = _mapper.Map<List<GetUserDto>>(userList);
+            response.Message = "Successfully retrived users list";
+            response.Success = true;
+            response.Data = filteredUserList;
+            return Ok(response);
         }
     }
 }
