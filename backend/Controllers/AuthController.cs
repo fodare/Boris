@@ -24,10 +24,10 @@ namespace backend.Controllers
         }
 
         [HttpPost("user/register", Name = "CreateUser")]
-        public async Task<ActionResult<ResponseModel<string>>> RegisterUser([FromBody] UserRegestration newUser)
+        public ActionResult<ResponseModel<string>> RegisterUser([FromBody] UserRegestration newUser)
         {
             ResponseModel<string> response = new();
-            bool userCreated = await _userService.CreateUser(newUser);
+            bool userCreated = _userService.CreateUser(newUser);
             if (userCreated)
             {
                 response.Success = true;
@@ -43,10 +43,10 @@ namespace backend.Controllers
         }
 
         [HttpPost("login", Name = ("login"))]
-        public async Task<ActionResult<ResponseModel<string>>> AuthenticateUser([FromBody] LoginDto userInfo)
+        public ActionResult<ResponseModel<string>> AuthenticateUser([FromBody] LoginDto userInfo)
         {
             ResponseModel<string> response = new();
-            if (await _userService.VerifyUser(userInfo.UserName, userInfo.Password))
+            if (_userService.VerifyUser(userInfo.UserName, userInfo.Password))
             {
                 response.Success = true;
                 response.Message = "User authenticated successfully!";
@@ -61,10 +61,10 @@ namespace backend.Controllers
         }
 
         [HttpGet("user/{userId}", Name = "GetUserById")]
-        public async Task<ActionResult<ResponseModel<GetUserDto>>> GetUserAsync(int userId)
+        public ActionResult<ResponseModel<GetUserDto>> GetUser(int userId)
         {
             ResponseModel<GetUserDto> response = new();
-            var queryResult = await _userService.GetUser(userId);
+            var queryResult = _userService.GetUser(userId);
             if (queryResult != null)
             {
                 response.Success = true;
@@ -78,10 +78,10 @@ namespace backend.Controllers
         }
 
         [HttpGet("users", Name = "GetUserList")]
-        public async Task<ActionResult<ResponseModel<GetUserDto>>> FetchUser()
+        public ActionResult<ResponseModel<GetUserDto>> FetchUser()
         {
             ResponseModel<IEnumerable<GetUserDto>> response = new();
-            var userList = await _userService.GetUsers();
+            var userList = _userService.GetUsers();
             IEnumerable<GetUserDto> filteredUserList = _mapper.Map<List<GetUserDto>>(userList);
             response.Message = "Successfully retrived users list";
             response.Success = true;

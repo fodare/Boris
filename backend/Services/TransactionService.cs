@@ -17,7 +17,7 @@ namespace backend.Services
             _dapper = new DataContextDapper();
         }
 
-        public async Task<IEnumerable<TransactionModel>>? GetTransactions()
+        public IEnumerable<TransactionModel>? GetTransactions()
         {
             string sqlCommand = "EXEC FinanceManagerSchema.spTransaction_Get";
             try
@@ -31,7 +31,7 @@ namespace backend.Services
             }
         }
 
-        public async Task<TransactionModel?> GetTransaction(int transactionId)
+        public TransactionModel? GetTransaction(int transactionId)
         {
             try
             {
@@ -55,7 +55,7 @@ namespace backend.Services
             }
         }
 
-        public async Task<bool> RecordTransaction(RecordTransactionDto newRecord)
+        public bool RecordTransaction(RecordTransactionDto newRecord)
         {
             try
             {
@@ -78,7 +78,7 @@ namespace backend.Services
             }
         }
 
-        public async Task<bool> UpdateTransactionRecord(UpdateTransactionDto updatedRecord,
+        public bool UpdateTransactionRecord(UpdateTransactionDto updatedRecord,
             int transactionId)
         {
             string sqlCommandUpdate = @$"EXEC FinanceManagerSchema.spTransaction_Update
@@ -88,7 +88,6 @@ namespace backend.Services
 
             string sqlCommandCheckTransaction = $@"EXEC FinanceManagerSchema.spTransaction_Get
             @transactionId = {transactionId}";
-
             try
             {
                 TransactionModel qureiedTransaction = _dapper
@@ -103,7 +102,7 @@ namespace backend.Services
                     return false;
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }

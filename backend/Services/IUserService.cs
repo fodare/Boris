@@ -7,12 +7,12 @@ namespace backend.Services
 {
     public interface IUserService
     {
-        Task<IEnumerable<UserModel>> GetUsers();
+        IEnumerable<UserModel> GetUsers();
 
-        Task<UserModel> GetUser(int userId);
+        UserModel? GetUser(int userId);
 
-        Task<bool> CreateUser(UserRegestration newUser);
+        bool CreateUser(UserRegestration newUser);
 
-        Task<bool> VerifyUser(string userName, string password);
+        bool VerifyUser(string userName, string password);
     }
 }

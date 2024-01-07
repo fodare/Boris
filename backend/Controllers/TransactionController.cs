@@ -27,10 +27,10 @@ namespace backend.Controllers
         }
 
         [HttpGet("transactionLists", Name = "GetTrasnactions")]
-        public async Task<ActionResult<ResponseModel<TransactionModel>>> GetTransactionRecords()
+        public ActionResult<ResponseModel<TransactionModel>> GetTransactionRecords()
         {
             ResponseModel<IEnumerable<TransactionModel>> response = new();
-            var transactionsList = await _transactionService.GetTransactions();
+            var transactionsList = _transactionService.GetTransactions();
             if (transactionsList != null)
             {
                 response.Message = "Successfully retrived transaction record list";
@@ -47,10 +47,10 @@ namespace backend.Controllers
         }
 
         [HttpGet("{transactionId}", Name = "GetTransaction")]
-        public async Task<ActionResult<ResponseModel<TransactionModel>>> GetTransactionById(int transactionId)
+        public ActionResult<ResponseModel<TransactionModel>> GetTransactionById(int transactionId)
         {
             ResponseModel<TransactionModel> response = new();
-            var qureiedTransaction = await _transactionService.GetTransaction(transactionId);
+            var qureiedTransaction = _transactionService.GetTransaction(transactionId);
             if (qureiedTransaction.TransactionId == transactionId)
             {
                 response.Message = "Successfully retrived record";
@@ -67,10 +67,10 @@ namespace backend.Controllers
         }
 
         [HttpPost("addtransaction", Name = "RecordTransaction")]
-        public async Task<ActionResult<ResponseModel<string>>> CreateRecord([FromBody] RecordTransactionDto newRecord)
+        public ActionResult<ResponseModel<string>> CreateRecord([FromBody] RecordTransactionDto newRecord)
         {
             ResponseModel<string> response = new();
-            bool userAdded = await _transactionService.RecordTransaction(newRecord);
+            bool userAdded = _transactionService.RecordTransaction(newRecord);
             if (userAdded)
             {
                 response.Message = "Transaction aded successfully!";
@@ -87,12 +87,11 @@ namespace backend.Controllers
         }
 
         [HttpPut("updateTrasnaction/{transactionId}", Name = "UpdateRecord")]
-        public async Task<ActionResult<ResponseModel<string>>> UpdateTransactionRecord(int transactionId,
+        public ActionResult<ResponseModel<string>> UpdateTransactionRecord(int transactionId,
             [FromBody] UpdateTransactionDto newRecord)
         {
             ResponseModel<string> response = new();
-            bool recordUpdated = await _transactionService
-                .UpdateTransactionRecord(newRecord, transactionId);
+            bool recordUpdated = _transactionService.UpdateTransactionRecord(newRecord, transactionId);
             if (recordUpdated)
             {
                 response.Success = true;
