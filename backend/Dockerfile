@@ -12,6 +12,6 @@ RUN dotnet publish -c Release -o out
 FROM mcr.microsoft.com/dotnet/aspnet:7.0
 WORKDIR /App
 ENV dbConString=$dbConString
-EXPOSE 3001
+EXPOSE 80
 COPY --from=build-env /App/out .
 ENTRYPOINT ["dotnet", "backend.dll"]
