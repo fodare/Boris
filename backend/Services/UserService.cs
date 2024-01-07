@@ -20,7 +20,7 @@ namespace backend.Services
             _userHelper = new UserHelper();
         }
 
-        public async Task<bool> CreateUser(UserRegestration newUser)
+        public bool CreateUser(UserRegestration newUser)
         {
             try
             {
@@ -38,13 +38,13 @@ namespace backend.Services
                 }
                 return false;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }
         }
 
-        public async Task<UserModel>? GetUser(int userId)
+        public UserModel? GetUser(int userId)
         {
             string sqlCommand = @$"EXEC FinanceManagerSchema.spUser_Get 
                 @userId = {userId}";
@@ -56,14 +56,14 @@ namespace backend.Services
             return null;
         }
 
-        public async Task<IEnumerable<UserModel>> GetUsers()
+        public IEnumerable<UserModel> GetUsers()
         {
             string sqlCommand = $"EXEC FinanceManagerSchema.spUser_Get";
             IEnumerable<UserModel> userList = _dapper.LoadData<UserModel>(sqlCommand);
             return userList;
         }
 
-        public async Task<bool> VerifyUser(string userName, string userPassword)
+        public bool VerifyUser(string userName, string userPassword)
         {
             string sqlCommand = @$"EXEC FinanceManagerSchema.spUser_Get 
                 @userName = '{userName}'";

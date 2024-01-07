@@ -11,13 +11,12 @@ namespace backend.Services
 {
     public interface ITransactionService
     {
-        Task<IEnumerable<TransactionModel>> GetTransactions();
+        IEnumerable<TransactionModel>? GetTransactions();
 
-        Task<TransactionModel> GetTransaction(int transactionId);
+        TransactionModel? GetTransaction(int transactionId);
 
-        Task<bool> RecordTransaction(RecordTransactionDto newRecord);
+        bool RecordTransaction(RecordTransactionDto newRecord);
 
-        Task<bool> UpdateTransactionRecord(UpdateTransactionDto updatedRecord,
-            int transactionId);
+        bool UpdateTransactionRecord(UpdateTransactionDto updatedRecord, int transactionId);
     }
 }
