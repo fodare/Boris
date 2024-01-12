@@ -86,7 +86,7 @@ namespace backend.Controllers
 
         }
 
-        [HttpPut("updateTrasnaction/{transactionId}", Name = "UpdateRecord")]
+        [HttpPut("updateTransaction/{transactionId}", Name = "UpdateRecord")]
         public ActionResult<ResponseModel<string>> UpdateTransactionRecord(int transactionId,
             [FromBody] UpdateTransactionDto newRecord)
         {
