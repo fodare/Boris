@@ -1,0 +1,74 @@
+body{
+    background-color: #1C1E24;
+    color: #f8f9fa;
+    font-family: 'Courier New', Courier, monospace;
+    margin: 0;
+    display: block;
+    padding: 1rem 0;
+}
+
+.footer{
+    position: absolute;
+    bottom: 0;
+    width: 100vw;
+    height: 3rem;
+    justify-content: center;
+    text-align: center !important;
+}
+
+/* Nav styling */
+.nav{
+    padding-top: 2rem;
+}
+
+.nav-link{
+    color: var(--text-color) !important;
+}
+
+.active.home-link{
+    border-bottom:1px solid var(--indigo) ;
+}
+
+.active.transaction-link{
+    border-bottom:1px solid var(--pink) ;
+}
+
+.active.register-link{
+    border-bottom:1px solid var(--orange) ;
+}
+
+.home-link:hover{
+    border-bottom:1px solid var(--indigo) ;
+}
+
+.transaction-link:hover{
+    border-bottom:1px solid var(--pink) ;
+}
+
+.register-link:hover{
+    border-bottom:1px solid var(--orange) ;
+}
+
+/* Colors */
+:root{
+    --orange: #ff7e22;
+    --yellow: #fca62a;
+    --pink: #f57ad0;
+    --purple: #673ece;
+    --indigo: #5a43f1;
+    --indigo-dark: #4509cf;
+    --indigo-light: #969bf6;
+    --indigo-muted: #f1f2fd;
+    --text-color: #f8f9fa;
+    --backgroud-color:#1C1E24;
+}
+
+
+/* Login page styling */
+.form-control{
+    flex: 0 0 50% !important;
+}
+
+.loginform{
+    padding: 2rem 0;
+}
