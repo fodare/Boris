@@ -63,6 +63,32 @@ body{
     --backgroud-color:#1C1E24;
 }
 
+/* Transaction page styling */
+.transactionview{
+    padding-top: 2rem;
+}
+
+.transactiontable{
+    padding-top: 2rem !important;
+}
+
+td.credit{
+    color: lightgreen;
+}
+
+td.debit{
+    color: var(--orange);
+}
+
+.editLink{
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+.editLink:hover{
+    border-bottom: 3px solid var(--indigo-light);
+    transition: transform .2s;
+}
 
 /* Login page styling */
 .form-control{
