@@ -1,0 +1,43 @@
+{% extends "basetemplate.html" %} {% block title %} Transactions {% endblock %}
+{% block content %}
+<div class="transactionview">
+   <h1>Transaction List</h1>
+   <div class="transactiontable">
+      <table class="table table-dark table-hover">
+         <thead>
+            <tr>
+               <th scope="col">ID</th>
+               <th scope="col">Amount</th>
+               <th scope="col">Type</th>
+               <th scope="col">Tag</th>
+               <th scope="col">Record Date</th>
+               <th scope="col">Action(s)</th>
+            </tr>
+         </thead>
+         <tbody>
+            {% for transaction in transactionList %}
+            <tr>
+               <td>{{transaction.transactionId}}</td>
+               <td>{{transaction.amount}}</td>
+               {%- if transaction.type == "Credit" -%}
+               <td class="credit">{{transaction.type}}</td>
+               {%- endif %} {%- if transaction.type == "Debit" -%}
+               <td class="debit">{{transaction.type}}</td>
+               {%- endif %}
+               <td>{{transaction.tag}}</td>
+               <td>{{transaction.recordDate}}</td>
+               <td>
+                  <a
+                     class="editLink"
+                     target="_self"
+                     href="{{ url_for('edit', id=transaction.transactionId )}}"
+                     >Edit</a
+                  >
+               </td>
+            </tr>
+            {% endfor %}
+         </tbody>
+      </table>
+   </div>
+</div>
+{% endblock %}
