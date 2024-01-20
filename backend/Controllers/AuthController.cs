@@ -38,6 +38,7 @@ namespace backend.Controllers
             {
                 response.Success = false;
                 response.Message = "Error creating account. Please try again!";
+                Console.WriteLine("Error creating account. Please try again!");
                 return BadRequest(response);
             }
         }
