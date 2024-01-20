@@ -2,7 +2,7 @@
 
 A personal web-based application to help track spending and savings habits. (Demo only)
 
-<img src="https://raw.githubusercontent.com/fodare/media/main/FinanceManager/Home.png" alt="App homepage" title="App homepage">
+<img src="https://github.com/fodare/media/blob/main/FinanceManager/App_home_page.png?raw=true" alt="App homepage" title="App homepage">
 
 ## About
 
@@ -31,17 +31,34 @@ The parent Dir contains a `backend` and a `frontend` sub Dir. `backend` holds th
 ## Prepare and configure DB
 
 - Pull / Run an SQL instance [Docker SQL server](<https://hub.docker.com/_/microsoft-mssql-server>).
-- Connect to docker container and configure database. DB creation script `DbSetup.sql`. DB explorer such as Azure data studio, VS Code SQL server plugin or SQL server management studio (SSMS) provide options to connect to the SQL server instance and execute the `DbSetup.sql` script.
-
-- Configure and export DB connection string.
 
     ```bash
-    docker network ls
-    docker network inspect <network name>
+    # Example
+    docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=<desired db password>"
+    -e "MSSQL_PID=Evaluation" --network host --name sqlserver 
+    --hostname sqlserver 
+    -d mcr.microsoft.com/mssql/server:2022-preview-ubuntu-22.04
+
+    # Note the SQL server container is exposed to all services within your LAN.
+    # You can access the SQL server from another host in the LAN  via the -
+    # IP address of the host running the container.
     ```
 
-    The command above exposes the `IP address for the server container`. Copy and update the connection string below. Export the database connection string as it's required for backend API to connect to the database.
+- Using a DB explorer such as Azure data studio, VS Code SQL server plugin or SQL server management studio (SSMS) provide options to connect to the SQL server instance and execute the `DbSetup.sql` script to help configure the db table.
+
+- Prepare DB connection string.
 
     ```bash
-    export dbConString='Server=<sqlserver ipaddress>;Database=FinanceManagerDb;Trusted_Connection=false;TrustServerCertificate=True;User Id=<db username>;Password=<db password>'
+    # On the host running the SQL server container. Run the command below.
+    ip address show
+    # You looking for inet 192.168...
     ```
+
+    The command above exposes the `IP address of the container running the SQL server`. Copy and update the connection string below as it's required for the backend API to connect to the database.
+
+    ```bash
+    # exmple 
+   dbConString="Server=192.168.0.1;Database=FinanceManagerDb;Trusted_Connection=false;TrustServerCertificate=True;User Id=<db username>;Password=<db password>;"
+    ```
+
+## Start the backend API

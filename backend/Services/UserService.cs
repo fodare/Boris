@@ -38,8 +38,9 @@ namespace backend.Services
                 }
                 return false;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Console.WriteLine($"Error creating user record. {e.Message}");
                 return false;
             }
         }
@@ -53,14 +54,24 @@ namespace backend.Services
             {
                 return qureiedUser;
             }
+            Console.WriteLine($"Error feting user with id {userId}");
             return null;
         }
 
-        public IEnumerable<UserModel> GetUsers()
+        public IEnumerable<UserModel>? GetUsers()
         {
             string sqlCommand = $"EXEC FinanceManagerSchema.spUser_Get";
-            IEnumerable<UserModel> userList = _dapper.LoadData<UserModel>(sqlCommand);
-            return userList;
+            try
+            {
+                IEnumerable<UserModel> userList = _dapper.LoadData<UserModel>(sqlCommand);
+                return userList;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Error fetching user list. {e.Message}");
+                return null;
+            }
+
         }
 
         public bool VerifyUser(string userName, string userPassword)
@@ -75,10 +86,12 @@ namespace backend.Services
                 {
                     return true;
                 }
+                Console.WriteLine($"Error verifying user credentails");
                 return false;
             }
             else
             {
+                Console.WriteLine($"Erro. User account not found!");
                 return false;
             }
         }
