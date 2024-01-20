@@ -25,8 +25,9 @@ namespace backend.Services
                 IEnumerable<TransactionModel> transactionsList = _dapper.LoadData<TransactionModel>(sqlCommand);
                 return transactionsList;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Console.WriteLine($"Error fetching transaction list. {e.Message}");
                 return null;
             }
         }
@@ -102,8 +103,9 @@ namespace backend.Services
                     return false;
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Console.WriteLine($"Error updating transaction record. {e.Message}");
                 return false;
             }
 
