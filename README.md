@@ -2,7 +2,7 @@
 
 A personal web-based application to help track spending and savings habits. (Demo only)
 
-<img src="https://raw.githubusercontent.com/fodare/media/main/FinanceManager/Home.png" alt="App homepage" title="App homepage">
+<img src="https://github.com/fodare/media/blob/main/FinanceManager/App_home_page.png?raw=true" alt="App homepage" title="App homepage">
 
 ## About
 
