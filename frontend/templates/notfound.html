@@ -1,0 +1,9 @@
+{% extends "basetemplate.html" %} {% block title %}404{% endblock %} {% block
+content %}
+<div class="notfoundPage">
+   <h1>Page not found</h1>
+   <a class="btn btn-secondary" href="{{ url_for('home_page') }}"
+      >Back to Home page</a
+   >
+</div>
+{% endblock %}
