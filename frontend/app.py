@@ -40,8 +40,6 @@ def login():
     if request.method == 'GET':
         return render_template('login.html')
     else:
-        print(
-            f"Username: {request.form['userName']} and password: {request.form['password']}")
         return redirect('/login')
 
 
@@ -50,10 +48,39 @@ def register():
     return render_template('register.html')
 
 
-@app.route("/edit/<int:id>")
-def edit(id, methods=['GET', 'POST']):
+@app.route("/edit/<int:id>", methods=['GET', 'POST'])
+def edit(id):
     if request.method == 'GET':
-        return "Ok"
+        response_data = requests.get(
+            f"{BACKEND_API_BASE_URL}/api/v2/Transaction/{id}")
+        if response_data.status_code == 200:
+            json_content = response_data.json()
+            return render_template('edit.html', record=json_content["data"])
+        else:
+            flash(
+                f"Error editing record with id {id}. Please try again!", "error")
+            return redirect('home_page')
+    else:
+        request_body = {
+            "amount": f"{request.form['amount']}",
+            "transactionType": f"{request.form['type']}",
+            "transactionTag": f"{request.form['tag']}",
+            "note": f"{request.form['note']}"
+        }
+        response_data = requests.put(
+            f"{BACKEND_API_BASE_URL}/api/v2/Transaction/updatetransaction/{id}", json=request_body)
+        print(response_data.status_code)
+        if response_data.status_code == 200:
+            return redirect(url_for('home_page'))
+        else:
+            flash(
+                f"Error editing record with id {id}. Please check your input and try again", "error")
+            return redirect(url_for('edit', id=id))
+
+
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template('notfound.html')
 
 
 if __name__ == "__main__":
