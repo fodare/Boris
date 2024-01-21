@@ -109,3 +109,10 @@ td.debit{
 .loginform{
     padding: 2rem 0;
 }
+
+/* 404 page */
+.notfoundPage{
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+    text-align: center;
+}
