@@ -78,6 +78,25 @@ namespace backend.Controllers
             }
         }
 
+        [HttpGet("{userName}", Name = "ByUserName")]
+        public ActionResult<ResponseModel<GetUserDto>> FetchUserByUserName(string userName)
+        {
+            ResponseModel<GetUserDto> response = new();
+            var queryResult = _userService.GetUserByUserName(userName);
+            if (queryResult != null)
+            {
+                response.Success = true;
+                response.Data = _mapper.Map<GetUserDto>(queryResult);
+                return Ok(response);
+            }
+            else
+            {
+                response.Success = false;
+                response.Message = "Can not find qureied user!";
+                return BadRequest(response);
+            }
+        }
+
         [HttpGet("users", Name = "GetUserList")]
         public ActionResult<ResponseModel<GetUserDto>> FetchUser()
         {
