@@ -2,16 +2,21 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 import datetime
 import os
 import requests
+from Helpers.userMethods import check_user_credentials, check_user_name
 
 app = Flask(__name__)
 app.secret_key = f'{os.environ.get("secret")}'
-
-
 BACKEND_API_BASE_URL = 'http://localhost:3001'
 
 
 @app.route("/", methods=['GET', 'POST'])
-def home_page():
+def home():
+    if request.method == 'GET':
+        return render_template('login.html')
+
+
+@app.route("/record", methods=['GET', 'POST'])
+def record():
     if request.method == 'GET':
         transaction_list = requests.get(
             f"{BACKEND_API_BASE_URL}/api/v2/Transaction/transactionlists").json()
@@ -28,11 +33,11 @@ def home_page():
         response_data = requests.post(
             f"{BACKEND_API_BASE_URL}/api/v2/Transaction/addtransaction", json=request_body)
         if response_data.status_code == 200:
-            return redirect(url_for('home_page'))
+            return redirect(url_for('record'))
         else:
             flash(
                 "Error recording transaction. Please check you input and try again!", 'error')
-            return redirect(url_for('home_page'))
+            return redirect(url_for('record'))
 
 
 @app.route("/login", methods=['GET', 'POST'])
@@ -40,7 +45,12 @@ def login():
     if request.method == 'GET':
         return render_template('login.html')
     else:
-        return redirect('/login')
+        username = request.form['userName']
+        password = request.form['password']
+        if check_user_credentials(username, password):
+            return redirect(url_for('record'))
+
+        return redirect(url_for('login'))
 
 
 @app.route("/register")
@@ -69,9 +79,8 @@ def edit(id):
         }
         response_data = requests.put(
             f"{BACKEND_API_BASE_URL}/api/v2/Transaction/updatetransaction/{id}", json=request_body)
-        print(response_data.status_code)
         if response_data.status_code == 200:
-            return redirect(url_for('home_page'))
+            return redirect(url_for('record'))
         else:
             flash(
                 f"Error editing record with id {id}. Please check your input and try again", "error")
