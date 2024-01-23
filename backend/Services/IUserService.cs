@@ -11,6 +11,8 @@ namespace backend.Services
 
         UserModel? GetUser(int userId);
 
+        UserModel? GetUserByUserName(string userName);
+
         bool CreateUser(UserRegestration newUser);
 
         bool VerifyUser(string userName, string password);
