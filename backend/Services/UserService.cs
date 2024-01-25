@@ -58,6 +58,19 @@ namespace backend.Services
             return null;
         }
 
+        public UserModel? GetUserByUserName(string userName)
+        {
+            string sqlCommand = @$"EXEC FinanceManagerSchema.spUser_Get 
+                @userName = {userName}";
+            UserModel qureiedUser = _dapper.ExecuteSql<UserModel>(sqlCommand);
+            if (qureiedUser.UserId > 0)
+            {
+                return qureiedUser;
+            }
+            Console.WriteLine($"Error feting user with username {userName}");
+            return null;
+        }
+
         public IEnumerable<UserModel>? GetUsers()
         {
             string sqlCommand = $"EXEC FinanceManagerSchema.spUser_Get";
