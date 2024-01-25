@@ -53,9 +53,21 @@ def login():
         return redirect(url_for('login'))
 
 
-@app.route("/register")
+@app.route("/register", methods=['GET', 'POST'])
 def register():
-    return render_template('register.html')
+    if request.method == 'GET':
+        return render_template('register.html')
+    request_body = {
+        "userName": f"{request.form['userName']}",
+        "password": f"{request.form['password']}"
+    }
+    response_data = requests.post(
+        f"{BACKEND_API_BASE_URL}/api/v2/auth/user/register", json=request_body)
+    if response_data.status_code == 200:
+        return redirect(url_for('record'))
+    else:
+        flash("Error creating account. Please check your input or try again!", "error")
+    return redirect(url_for('register'))
 
 
 @app.route("/edit/<int:id>", methods=['GET', 'POST'])
@@ -85,6 +97,11 @@ def edit(id):
             flash(
                 f"Error editing record with id {id}. Please check your input and try again", "error")
             return redirect(url_for('edit', id=id))
+
+
+@app.route("/summary")
+def summary():
+    return render_template('stats.html')
 
 
 @app.errorhandler(404)
