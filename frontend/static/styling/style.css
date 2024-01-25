@@ -36,6 +36,10 @@ body{
     border-bottom:1px solid var(--orange) ;
 }
 
+.active.summary-link{
+    border-bottom: 1px solid var(--yellow)                                                                                         --;
+}
+
 .home-link:hover{
     border-bottom:1px solid var(--indigo) ;
 }
@@ -46,6 +50,10 @@ body{
 
 .register-link:hover{
     border-bottom:1px solid var(--orange) ;
+}
+
+.summary-link:hover{
+    border-bottom: 1px solid var(--yellow);
 }
 
 /* Colors */
@@ -115,4 +123,9 @@ td.debit{
     padding-top: 3rem;
     padding-bottom: 3rem;
     text-align: center;
+}
+
+/* Summary view */
+.summaryview{
+    padding-top: 2rem;
 }
