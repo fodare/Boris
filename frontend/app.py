@@ -5,6 +5,7 @@ import requests
 from Helpers.userMethods import check_user_credentials, check_user_name
 
 app = Flask(__name__)
+port = int(os.environ.get('PORT', 5000))
 app.secret_key = f'{os.environ.get("secret")}'
 BACKEND_API_BASE_URL = 'http://localhost:3001'
 
@@ -110,4 +111,4 @@ def page_not_found(error):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=port)
