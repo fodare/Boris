@@ -7,7 +7,7 @@ from Helpers.userMethods import check_user_credentials, check_user_name
 app = Flask(__name__)
 port = int(os.environ.get('PORT', 5000))
 app.secret_key = f'{os.environ.get("secret")}'
-BACKEND_API_BASE_URL = 'http://localhost:3001'
+BACKEND_API_BASE_URL = "http://backendapi:3001"
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -20,7 +20,7 @@ def home():
 def record():
     if request.method == 'GET':
         transaction_list = requests.get(
-            f"{BACKEND_API_BASE_URL}/api/v2/Transaction/transactionlists").json()
+            f"{BACKEND_API_BASE_URL}/api/v2/Transaction/transactionlists", verify=False).json()
         current_year = datetime.datetime.now().year
         return render_template('index.html', current_year=current_year,
                                transactionList=transaction_list)
@@ -63,7 +63,7 @@ def register():
         "password": f"{request.form['password']}"
     }
     response_data = requests.post(
-        f"{BACKEND_API_BASE_URL}/api/v2/auth/user/register", json=request_body)
+        f"{BACKEND_API_BASE_URL}/api/v2/auth/user/register", verify=False json=request_body)
     if response_data.status_code == 200:
         return redirect(url_for('record'))
     else:
@@ -75,7 +75,7 @@ def register():
 def edit(id):
     if request.method == 'GET':
         response_data = requests.get(
-            f"{BACKEND_API_BASE_URL}/api/v2/Transaction/{id}")
+            f"{BACKEND_API_BASE_URL}/api/v2/Transaction/{id}", verify=False)
         if response_data.status_code == 200:
             json_content = response_data.json()
             return render_template('edit.html', record=json_content["data"])

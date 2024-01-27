@@ -1,0 +1,18 @@
+services:
+   backendapi:
+      image: backendapi:v1
+      ports:
+         - "3001:80"
+      container_name: "backendapi"
+      environment:
+         dbConString: ""
+   frontendapi:
+      image: frontendapi:v1
+      depends_on:
+         backendapi:
+            condition: service_started
+      ports:
+         - "3002:5000"
+      container_name: "frontendapi"
+      environment:
+         secret: ""
