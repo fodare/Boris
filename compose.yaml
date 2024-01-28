@@ -17,3 +17,4 @@ services:
       environment:
          secret: "$secret"
          host_ip: "$host_ip"
+         backendapi_port: "$backendapi_port"
