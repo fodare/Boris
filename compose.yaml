@@ -5,7 +5,7 @@ services:
          - "3001:80"
       container_name: "backendapi"
       environment:
-         dbConString: ""
+         dbConString: "$dbConString"
    frontendapi:
       image: frontendapi:latest
       depends_on:
@@ -15,5 +15,5 @@ services:
          - "3002:5000"
       container_name: "frontendapi"
       environment:
-         secret: ""
-         host_ip: ""
+         secret: "$secret"
+         host_ip: "$host_ip"
