@@ -42,22 +42,22 @@ namespace backend.Controllers
         }
 
         [HttpPost("summary", Name = "GetTransactionSummary")]
-        public ActionResult<ResponseModel<SummarModel>> GetRecordSummary(GetSummaryDTO queryTime)
+        public ActionResult<ResponseModel<SummaryModel>> GetRecordSummary(GetSummaryDTO queryTime)
         {
-            ResponseModel<IEnumerable<SummarModel>> response = new();
+            ResponseModel<IEnumerable<SummaryModel>> response = new();
             var transactionSummary = _transactionService.GetSummary(queryTime);
             if (transactionSummary != null && transactionSummary.Any())
             {
                 response.Message = "Successfully retrived transaction summary!";
                 response.Success = true;
-                response.Data = (IEnumerable<SummarModel>?)transactionSummary;
+                response.Data = (IEnumerable<SummaryModel>?)transactionSummary;
                 return Ok(response);
             }
             else if (transactionSummary != null && !transactionSummary.Any())
             {
                 response.Message = "Query date range has to value to summarize!";
                 response.Success = false;
-                response.Data = (IEnumerable<SummarModel>?)transactionSummary;
+                response.Data = (IEnumerable<SummaryModel>?)transactionSummary;
                 return Ok(response);
             }
             else

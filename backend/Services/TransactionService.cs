@@ -27,13 +27,13 @@ namespace backend.Services
             }
         }
 
-        public IEnumerable<SummarModel>? GetSummary(GetSummaryDTO queryTime)
+        public IEnumerable<SummaryModel>? GetSummary(GetSummaryDTO queryTime)
         {
             string sqlCommand = @$"EXEC FinanceManagerSchema.spTransaction_Summary
                 @startDate = '{queryTime.Starttime}', @endDate ='{queryTime.Endtime}'";
             try
             {
-                IEnumerable<SummarModel>? transactionModel = _dapper.LoadData<SummarModel>(sqlCommand);
+                IEnumerable<SummaryModel>? transactionModel = _dapper.LoadData<SummaryModel>(sqlCommand);
                 return transactionModel;
             }
             catch (Exception e)

@@ -6,12 +6,15 @@ using System.Threading.Tasks;
 
 namespace backend.Models
 {
-    public class SummarModel
+    public class SummaryModel
     {
         [JsonPropertyName("tag")]
         public Recordtype TransactionTag { get; set; }
+
         [JsonPropertyName("amount")]
-        public double Amount { get; set; }
+        public double Amount_Sum { get; set; }
+
+        [JsonPropertyName("count")]
         public int Event_Count { get; set; }
     }
 }
