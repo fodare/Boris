@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Threading.Tasks;
 using backend.Data;
 using backend.Dtos;
 using backend.Models;
@@ -28,6 +23,22 @@ namespace backend.Services
             catch (Exception e)
             {
                 Console.WriteLine($"Error fetching transaction list. {e.Message}");
+                return null;
+            }
+        }
+
+        public IEnumerable<SummarModel>? GetSummary(GetSummaryDTO queryTime)
+        {
+            string sqlCommand = @$"EXEC FinanceManagerSchema.spTransaction_Summary
+                @startDate = '{queryTime.Starttime}', @endDate ='{queryTime.Endtime}'";
+            try
+            {
+                IEnumerable<SummarModel>? transactionModel = _dapper.LoadData<SummarModel>(sqlCommand);
+                return transactionModel;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Error fetching transaction summary. {e.Message}");
                 return null;
             }
         }

@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using backend.Data;
 using backend.Dtos;
 using backend.Models;
 using backend.Services;
@@ -42,6 +37,33 @@ namespace backend.Controllers
             {
                 response.Message = "Error fetching transaction records. Please try again!";
                 response.Success = false;
+                return StatusCode(500, response);
+            }
+        }
+
+        [HttpPost("summary", Name = "GetTransactionSummary")]
+        public ActionResult<ResponseModel<SummarModel>> GetRecordSummary(GetSummaryDTO queryTime)
+        {
+            ResponseModel<IEnumerable<SummarModel>> response = new();
+            var transactionSummary = _transactionService.GetSummary(queryTime);
+            if (transactionSummary != null && transactionSummary.Any())
+            {
+                response.Message = "Successfully retrived transaction summary!";
+                response.Success = true;
+                response.Data = (IEnumerable<SummarModel>?)transactionSummary;
+                return Ok(response);
+            }
+            else if (transactionSummary != null && !transactionSummary.Any())
+            {
+                response.Message = "Query date range has to value to summarize!";
+                response.Success = false;
+                response.Data = (IEnumerable<SummarModel>?)transactionSummary;
+                return Ok(response);
+            }
+            else
+            {
+                response.Success = false;
+                response.Message = "Error retriving transaction summary. Please try again!";
                 return StatusCode(500, response);
             }
         }

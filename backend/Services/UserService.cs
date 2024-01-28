@@ -1,12 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using backend.Data;
 using backend.Dtos;
 using backend.Helpers;
 using backend.Models;
-using Microsoft.AspNetCore.Hosting.Server;
 
 namespace backend.Services
 {

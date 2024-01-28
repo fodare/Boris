@@ -1,10 +1,6 @@
-using System;
 using System.Data;
-using System.Data.Common;
-using System.Globalization;
 using Dapper;
 using Microsoft.Data.SqlClient;
-using Microsoft.IdentityModel.Tokens;
 
 namespace backend.Data
 {

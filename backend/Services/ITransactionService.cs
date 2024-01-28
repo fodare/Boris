@@ -13,6 +13,8 @@ namespace backend.Services
     {
         IEnumerable<TransactionModel>? GetTransactions();
 
+        IEnumerable<SummarModel>? GetSummary(GetSummaryDTO queryTime);
+
         TransactionModel? GetTransaction(int transactionId);
 
         bool RecordTransaction(RecordTransactionDto newRecord);
