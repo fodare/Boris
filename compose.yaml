@@ -1,13 +1,13 @@
 services:
    backendapi:
-      image: backendapi:v1
+      image: backendapi:latest
       ports:
          - "3001:80"
       container_name: "backendapi"
       environment:
          dbConString: ""
    frontendapi:
-      image: frontendapi:v1
+      image: frontendapi:latest
       depends_on:
          backendapi:
             condition: service_started
@@ -16,3 +16,4 @@ services:
       container_name: "frontendapi"
       environment:
          secret: ""
+         host_ip: ""
