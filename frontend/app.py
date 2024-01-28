@@ -8,7 +8,8 @@ app = Flask(__name__)
 port = int(os.environ.get('PORT', 5000))
 app.secret_key = f'{os.environ.get("secret")}'
 host_ip = f'{os.environ.get("host_ip")}'
-BACKEND_API_BASE_URL = f"http://{host_ip}:3001"
+backendapi_port = f'{os.environ.get("backend_port", 3001)}'
+BACKEND_API_BASE_URL = f"http://{host_ip}:{backendapi_port}"
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -101,9 +102,28 @@ def edit(id):
             return redirect(url_for('edit', id=id))
 
 
-@app.route("/summary")
+@app.route("/summary", methods=['GET', 'POST'])
 def summary():
-    return render_template('stats.html')
+    if request.method == 'GET':
+        return render_template('stats.html')
+    else:
+        request_body = {
+            "startTime": f"{request.form['startDate']}",
+            "endtime": f"{request.form['endDate']}"
+        }
+        respose_data = requests.post(
+            f"{BACKEND_API_BASE_URL}/api/v2/Transaction/summary", verify=False, json=request_body)
+        if respose_data.status_code == 200:
+            json_content = respose_data.json()
+            record_summary = json_content['data']
+            return render_template('stats.html',
+                                   record_summary=record_summary,
+                                   start_date=request.form['startDate'],
+                                   end_date=request.form['endDate']
+                                   )
+        else:
+            flash("Error retiving transaction summary. Please try again!", "error")
+            return redirect(url_for('summary'))
 
 
 @app.errorhandler(404)
