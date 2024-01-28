@@ -7,7 +7,8 @@ from Helpers.userMethods import check_user_credentials, check_user_name
 app = Flask(__name__)
 port = int(os.environ.get('PORT', 5000))
 app.secret_key = f'{os.environ.get("secret")}'
-BACKEND_API_BASE_URL = "http://backendapi:3001"
+host_ip = f'{os.environ.get("host_ip")}'
+BACKEND_API_BASE_URL = f"http://{host_ip}:3001"
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -63,7 +64,7 @@ def register():
         "password": f"{request.form['password']}"
     }
     response_data = requests.post(
-        f"{BACKEND_API_BASE_URL}/api/v2/auth/user/register", verify=False json=request_body)
+        f"{BACKEND_API_BASE_URL}/api/v2/auth/user/register", verify=False, json=request_body)
     if response_data.status_code == 200:
         return redirect(url_for('record'))
     else:
@@ -82,7 +83,7 @@ def edit(id):
         else:
             flash(
                 f"Error editing record with id {id}. Please try again!", "error")
-            return redirect('home_page')
+            return redirect(url_for("record"))
     else:
         request_body = {
             "amount": f"{request.form['amount']}",
@@ -111,4 +112,4 @@ def page_not_found(error):
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0', port=port)
+    app.run(host='0.0.0.0', port=port)
