@@ -145,3 +145,22 @@ BEGIN
         UpdatedDate = @updateDate
             WHERE TransactionId = @transactionId
 END
+GO
+
+Create OR ALTER PROCEDURE FinanceManagerSchema.spTransaction_Summary
+    /* EXEC FinanceManagerSchema.spTransaction_Summary
+    @startDate = '2024-01-01',
+    @endDate = '2024-01-24'
+  */
+    @startDate DATETIME = null,
+    @endDate DATETIME = null
+AS
+BEGIN
+    SELECT
+        TransactionTag,
+        SUM(Amount) as Amount_Sum,
+        COUNT(TransactionTag) as Event_count
+    FROM FinanceManagerSchema.TransactionRecord
+    WHERE RecordDate >= ISNULL(@startDate, RecordDate) AND RecordDate <= ISNULL(@endDate, RecordDate)
+    GROUP BY TransactionTag
+END
