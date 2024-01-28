@@ -2,7 +2,8 @@ import requests
 import os
 
 host_ip = f'{os.environ.get("host_ip")}'
-BACKEND_API_BASE_URL = f"http://{host_ip}:3001"
+backendapi_port = f'{os.environ.get("backend_port")}'
+BACKEND_API_BASE_URL = f"http://{host_ip}:{backendapi_port}"
 
 
 def check_user_credentials(userName, password):
