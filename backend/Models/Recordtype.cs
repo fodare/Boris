@@ -18,5 +18,6 @@ namespace backend.Models
         Savings,
         Charity,
         Loan,
+        Income
     }
 }
