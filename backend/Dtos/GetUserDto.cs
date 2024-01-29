@@ -1,6 +1,4 @@
-using System;
 using System.Text.Json.Serialization;
-using backend.Models;
 namespace backend.Dtos
 {
     public class GetUserDto

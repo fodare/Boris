@@ -7,7 +7,9 @@ from Helpers.userMethods import check_user_credentials, check_user_name
 app = Flask(__name__)
 port = int(os.environ.get('PORT', 5000))
 app.secret_key = f'{os.environ.get("secret")}'
-BACKEND_API_BASE_URL = 'http://localhost:3001'
+host_ip = f'{os.environ.get("host_ip")}'
+backendapi_port = f'{os.environ.get("backend_port", 3001)}'
+BACKEND_API_BASE_URL = f"http://{host_ip}:{backendapi_port}"
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -20,7 +22,7 @@ def home():
 def record():
     if request.method == 'GET':
         transaction_list = requests.get(
-            f"{BACKEND_API_BASE_URL}/api/v2/Transaction/transactionlists").json()
+            f"{BACKEND_API_BASE_URL}/api/v2/Transaction/transactionlists", verify=False).json()
         current_year = datetime.datetime.now().year
         return render_template('index.html', current_year=current_year,
                                transactionList=transaction_list)
@@ -63,7 +65,7 @@ def register():
         "password": f"{request.form['password']}"
     }
     response_data = requests.post(
-        f"{BACKEND_API_BASE_URL}/api/v2/auth/user/register", json=request_body)
+        f"{BACKEND_API_BASE_URL}/api/v2/auth/user/register", verify=False, json=request_body)
     if response_data.status_code == 200:
         return redirect(url_for('record'))
     else:
@@ -75,14 +77,14 @@ def register():
 def edit(id):
     if request.method == 'GET':
         response_data = requests.get(
-            f"{BACKEND_API_BASE_URL}/api/v2/Transaction/{id}")
+            f"{BACKEND_API_BASE_URL}/api/v2/Transaction/{id}", verify=False)
         if response_data.status_code == 200:
             json_content = response_data.json()
             return render_template('edit.html', record=json_content["data"])
         else:
             flash(
                 f"Error editing record with id {id}. Please try again!", "error")
-            return redirect('home_page')
+            return redirect(url_for("record"))
     else:
         request_body = {
             "amount": f"{request.form['amount']}",
@@ -100,9 +102,28 @@ def edit(id):
             return redirect(url_for('edit', id=id))
 
 
-@app.route("/summary")
+@app.route("/summary", methods=['GET', 'POST'])
 def summary():
-    return render_template('stats.html')
+    if request.method == 'GET':
+        return render_template('stats.html')
+    else:
+        request_body = {
+            "startTime": f"{request.form['startDate']}",
+            "endtime": f"{request.form['endDate']}"
+        }
+        respose_data = requests.post(
+            f"{BACKEND_API_BASE_URL}/api/v2/Transaction/summary", verify=False, json=request_body)
+        if respose_data.status_code == 200:
+            json_content = respose_data.json()
+            record_summary = json_content['data']
+            return render_template('stats.html',
+                                   record_summary=record_summary,
+                                   start_date=request.form['startDate'],
+                                   end_date=request.form['endDate']
+                                   )
+        else:
+            flash("Error retiving transaction summary. Please try again!", "error")
+            return redirect(url_for('summary'))
 
 
 @app.errorhandler(404)
@@ -111,4 +132,4 @@ def page_not_found(error):
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0', port=port)
+    app.run(host='0.0.0.0', port=port)
