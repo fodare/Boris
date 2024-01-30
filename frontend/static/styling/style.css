@@ -40,6 +40,10 @@ body{
     border-bottom: 1px solid var(--yellow)                                                                                         --;
 }
 
+.active.logout-link{
+    border-bottom: 1px solid var(--indigo-muted);
+}
+
 .home-link:hover{
     border-bottom:1px solid var(--indigo) ;
 }
@@ -54,6 +58,10 @@ body{
 
 .summary-link:hover{
     border-bottom: 1px solid var(--yellow);
+}
+
+.logout-link:hover{
+    border-bottom: 1px solid var(--indigo-muted);
 }
 
 /* Colors */
