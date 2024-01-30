@@ -15,6 +15,7 @@
    <body class="">
       <nav>
          <ul class="nav justify-content-center">
+            {% if crurent_user.is_authenticated %}
             <li class="nav-item">
                <a
                   class="nav-link home-link"
@@ -32,6 +33,12 @@
                >
             </li>
             <li class="nav-item">
+               <a class="nav-link logout-link" href="{{url_for('logout')}}"
+                  >Log out</a
+               >
+            </li>
+            {% else %}
+            <li class="nav-item">
                <a class="nav-link transaction-link" href="{{url_for('login')}}"
                   >Login</a
                >
@@ -41,11 +48,7 @@
                   >Register</a
                >
             </li>
-            <li class="nav-item">
-               <a class="nav-link logout-link" href="{{url_for('logout')}}"
-                  >Log out</a
-               >
-            </li>
+            {% endif %}
          </ul>
       </nav>
       <div class="contentblock container">
