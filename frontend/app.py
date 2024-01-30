@@ -2,14 +2,41 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 import datetime
 import os
 import requests
-from Helpers.userMethods import check_user_credentials, check_user_name
+from Helpers.userMethods import check_user_credentials, check_user_name, get_user_by_id
+from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
+
+# ///////////////////// Configuration block ///////////////////// #
 
 app = Flask(__name__)
 port = int(os.environ.get('PORT', 5000))
-app.secret_key = f'{os.environ.get("secret")}'
+app.config['SECRET_KEY'] = f'{os.environ.get("secret")}'
 host_ip = f'{os.environ.get("host_ip")}'
 backendapi_port = f'{os.environ.get("backend_port", 3001)}'
 BACKEND_API_BASE_URL = f"http://{host_ip}:{backendapi_port}"
+
+# ///////////////////// Authentication block ///////////////////// #
+
+
+class User(UserMixin):
+    def __init__(self, user_json):
+        self.user_json = user_json
+
+    def get_id(self):
+        object_id = self.user_json.get('userId')
+        return int(object_id)
+
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = "login"
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    user_info = get_user_by_id(user_id)
+    return User(user_info)
+
+# ///////////////////// Application routes ///////////////////// #
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -19,6 +46,7 @@ def home():
 
 
 @app.route("/record", methods=['GET', 'POST'])
+@login_required
 def record():
     if request.method == 'GET':
         transaction_list = requests.get(
@@ -51,9 +79,19 @@ def login():
         username = request.form['userName']
         password = request.form['password']
         if check_user_credentials(username, password):
+            user_object = check_user_name(username)
+            user = User(user_object)
+            login_user(user)
             return redirect(url_for('record'))
 
         return redirect(url_for('login'))
+
+
+@app.route("/logout", methods=['GET', 'POST'])
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('home'))
 
 
 @app.route("/register", methods=['GET', 'POST'])
@@ -74,6 +112,7 @@ def register():
 
 
 @app.route("/edit/<int:id>", methods=['GET', 'POST'])
+@login_required
 def edit(id):
     if request.method == 'GET':
         response_data = requests.get(
@@ -103,6 +142,7 @@ def edit(id):
 
 
 @app.route("/summary", methods=['GET', 'POST'])
+@login_required
 def summary():
     if request.method == 'GET':
         return render_template('stats.html')
