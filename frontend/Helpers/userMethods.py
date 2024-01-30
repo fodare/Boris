@@ -26,7 +26,15 @@ def check_user_name(username):
     response_data = requests.get(
         f"{BACKEND_API_BASE_URL}/api/v2/auth/{username}", verify=False)
     if response_data.status_code == 200:
-        json_content = response_data.json
+        json_content = response_data.json()
         user_info = json_content['data']
         return user_info
-    return null
+
+
+def get_user_by_id(user_id):
+    response_data = requests.get(
+        f"{BACKEND_API_BASE_URL}/api/v2/auth/user/{user_id}", verify=False)
+    if response_data.status_code == 200:
+        json_content = response_data.json()
+        user_data = json_content['data']
+        return user_data
