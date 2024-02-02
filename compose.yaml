@@ -3,7 +3,7 @@ services:
       image: backendapi:latest
       container_name: backendapi
       ports:
-         - "3001:80"
+         - "$backendapi_port:80"
       environment:
          dbConString: "$dbConString"
    frontendapi:
@@ -13,7 +13,7 @@ services:
          backendapi:
             condition: service_started
       ports:
-         - "3002:5000"
+         - "$frontendapi_port:5000"
       environment:
          secret: "$secret"
          host_ip: "$host_ip"
