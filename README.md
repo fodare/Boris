@@ -1,18 +1,17 @@
 # FinanceManager
 
-A personal web-based application to help track spending and savings habits. (Demo only)
+A personal web-based application to help track spending and savings habits. (Demo version)
 
 <img src="https://github.com/fodare/media/blob/main/FinanceManager/App_home_page.png?raw=true" alt="App homepage" title="App homepage">
 
 ## About
 
-FinanceManager is a web-based .net MVC application to help track personal savings and spending habits. Each spending or savings record is persisted in a connected SQL server.
+FinanceManager is a web-based application to help track personal savings and spending habits. Each spending or savings record is persisted in a connected SQL server.
 
 The application is intended for personal use and can be hosted on your private machine within your home / private network or a Raspberry Pi instance.
 
 ## Prerequisite
 
-- Donet SDK 7+ Installed.
 - SQL server Express running.
 - Dotnet CLI installed.
 - Docker installed.
@@ -57,8 +56,26 @@ The parent Dir contains a `backend` and a `frontend` sub Dir. `backend` holds th
     The command above exposes the `IP address of the container running the SQL server`. Copy and update the connection string below as it's required for the backend API to connect to the database.
 
     ```bash
-    # exmple 
-   dbConString="Server=192.168.0.1;Database=FinanceManagerDb;Trusted_Connection=false;TrustServerCertificate=True;User Id=<db username>;Password=<db password>;"
+    # exmple dbConString="Server=192.168.0.1;Database=FinanceManagerDb;Trusted_Connection=false;TrustServerCertificate=True;User Id=<db username>;Password=<db password>;"
+   dbConString="Server=<host ip adress>;Database=FinanceManagerDb;Trusted_Connection=false;TrustServerCertificate=True;User Id=<db username>;Password=<db password>;"
     ```
 
-## Start the backend API
+## Update container environment variable
+
+Update environment varibales place holder in the `.env` file.
+
+- `dbConString`: the database connection string that was prepared in `Prepare and configure DB`
+- `secret`: You desired frontend cookies signing secret.
+- `host_ip`: You local machine Ip address. Eg 192.168.0.1
+- `backendapi_port`: Host listening port number for the backend API service.
+- `frontendapi_port`: Host listening port number for the frontendapi service.
+
+## Start services
+
+From your CLI / terminal, ensure you are in the project root dir then execute the command below.
+
+``` bash
+docker compose up -d 
+```
+
+Visit [localhost:frontendapi_portnumber](<http://localhost:{frontendapi_port number}/>)(e.g <http://localhost:3001>) to access the frontendapi service.
