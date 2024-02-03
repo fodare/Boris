@@ -2,8 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 import datetime
 import os
 import requests
-from Helpers.userMethods import check_user_credentials, check_user_name, get_user_by_id
-from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
+from Helpers.userMethods import check_user_credentials
 
 # ///////////////////// Configuration block ///////////////////// #
 
