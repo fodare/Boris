@@ -2,7 +2,7 @@ import requests
 import os
 
 host_ip = f'{os.environ.get("host_ip")}'
-backendapi_port = f'{os.environ.get("backend_port")}'
+backendapi_port = f'{os.environ.get("backendapi_port")}'
 BACKEND_API_BASE_URL = f"http://{host_ip}:{backendapi_port}"
 
 
