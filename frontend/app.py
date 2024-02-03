@@ -12,7 +12,7 @@ port = int(os.environ.get('PORT', 5000))
 app.config['SECRET_KEY'] = f'{os.environ.get("secret")}'
 app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(minutes=15)
 host_ip = f'{os.environ.get("host_ip")}'
-backendapi_port = f'{os.environ.get("backend_port", 3001)}'
+backendapi_port = f'{os.environ.get("backendapi_port", 3001)}'
 BACKEND_API_BASE_URL = f"http://{host_ip}:{backendapi_port}"
 
 # ///////////////////// Application routes ///////////////////// #
