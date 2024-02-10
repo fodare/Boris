@@ -159,8 +159,15 @@ BEGIN
     SELECT
         TransactionTag,
         SUM(Amount) as Amount_Sum,
-        COUNT(TransactionTag) as Event_count
+        COUNT(TransactionTag) as Event_count,
+        (SELECT SUM(Amount)
+        FROM FinanceManagerSchema.TransactionRecord
+        WHERE TransactionType = 'Credit') AS Credit_Sum,
+        (SELECT SUM(Amount)
+        FROM FinanceManagerSchema.TransactionRecord
+        WHERE TransactionType = 'Debit') AS Debit_Sum
     FROM FinanceManagerSchema.TransactionRecord
     WHERE RecordDate >= ISNULL(@startDate, RecordDate) AND RecordDate <= ISNULL(@endDate, RecordDate)
     GROUP BY TransactionTag
+    ORDER BY Event_count
 END
