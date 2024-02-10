@@ -16,5 +16,11 @@ namespace backend.Models
 
         [JsonPropertyName("count")]
         public int Event_Count { get; set; }
+
+        [JsonPropertyName("creditSum")]
+        public double Credit_Sum { get; set; }
+
+        [JsonPropertyName("debitSum")]
+        public double Debit_Sum { get; set; }
     }
 }

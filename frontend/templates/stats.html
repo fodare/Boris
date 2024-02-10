@@ -53,6 +53,8 @@ content %}
                <th scope="col">Transaction Tag</th>
                <th scope="col">Amount Sum</th>
                <th scope="col">Event Count</th>
+               <th scope="col">Credit Sum</th>
+               <th scope="col">Debit Sum</th>
             </tr>
          </thead>
          <tbody>
@@ -61,6 +63,8 @@ content %}
                <td>{{summary.tag}}</td>
                <td>{{summary.amount}}</td>
                <td>{{summary.count}}</td>
+               <td>{{summary.creditSum}}</td>
+               <td>{{summary.debitSum}}</td>
             </tr>
             {% endfor %}
          </tbody>
