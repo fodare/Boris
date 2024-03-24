@@ -8,15 +8,15 @@ namespace backend.Models
         public int UserId { get; set; }
 
         [JsonPropertyName("userName")]
-        public string UserName { get; set; } = "";
+        public required string UserName { get; set; }
 
         [JsonPropertyName("password")]
-        public string UserPassword { get; set; } = "";
+        public required string UserPassword { get; set; }
 
-        public bool IsAdmin { get; set; }
+        public required bool IsAdmin { get; set; }
 
-        public DateTime CreatedDate { get; set; }
+        public DateOnly CreatedDate { get; set; }
 
-        public DateTime UpdatedDate { get; set; }
+        public DateOnly UpdatedDate { get; set; }
     }
 }
