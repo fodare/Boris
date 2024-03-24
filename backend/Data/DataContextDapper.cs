@@ -6,37 +6,65 @@ namespace backend.Data
 {
     public class DataContextDapper
     {
-        private readonly string? dbConnectionString = Environment.GetEnvironmentVariable("dbConString");
+        static readonly string? dbServerName = Environment.GetEnvironmentVariable("dbServerName");
+        static readonly string? dbName = Environment.GetEnvironmentVariable("dbName ");
+        static readonly string? dbUserName = Environment.GetEnvironmentVariable("dbUserName");
+        static readonly string? dbPassword = Environment.GetEnvironmentVariable("dbPassword");
+
+        static readonly string connectionString = @$"Server={dbServerName};
+            Database={dbName};
+            Trusted_Connection=false;
+            TrustServerCertificate=True;
+            User Id={dbUserName};Password={dbPassword};";
+
+        private readonly string? dbConnectionString = connectionString;
+
         public DataContextDapper()
         {
-            if (dbConnectionString == null)
+            using IDbConnection testConnection = new SqlConnection(dbConnectionString);
+            Console.WriteLine($"Attempting connection to {dbConnectionString}");
+            try
             {
-                throw new NullReferenceException("Db connection string is null. Check the connection string is exported!");
+                string sqlCommand = "SELECT GETDATE();";
+                var queryResponse = testConnection.Query<string>(sqlCommand);
+                if (queryResponse is null)
+                {
+                    throw new NullReferenceException(@"DB connection failed. 
+                            Check the connection string is correct");
+                }
+                else
+                {
+                    Console.WriteLine("DB connection successful!");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new NullReferenceException(@$"DB connection failed with message {ex.Message}");
             }
         }
 
         public T ExecuteSql<T>(string sqlCommand)
         {
-            IDbConnection dbConnection = new SqlConnection(dbConnectionString);
+            using IDbConnection dbConnection = new SqlConnection(dbConnectionString);
             var queryResponse = dbConnection.QuerySingle<T>(sqlCommand);
             return queryResponse;
         }
 
         public bool ExcecuteSqlAdd(string sqlCommand)
         {
-            IDbConnection dbConnection = new SqlConnection(dbConnectionString);
+            using IDbConnection dbConnection = new SqlConnection(dbConnectionString);
             return dbConnection.Execute(sqlCommand) > 0;
         }
 
         public IEnumerable<T> LoadData<T>(string sqlCommand)
         {
-            IDbConnection dbConnection = new SqlConnection(dbConnectionString);
+            using IDbConnection dbConnection = new SqlConnection(dbConnectionString);
             return dbConnection.Query<T>(sqlCommand);
         }
 
         public T LoadDataSingle<T>(string sqlCommand)
         {
-            IDbConnection dbConnection = new SqlConnection(dbConnectionString);
+            using IDbConnection dbConnection = new SqlConnection(dbConnectionString);
             return dbConnection.QuerySingle<T>(sqlCommand);
         }
     }
