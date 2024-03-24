@@ -7,15 +7,11 @@ namespace backend.Data
     public class DataContextDapper
     {
         static readonly string? dbServerName = Environment.GetEnvironmentVariable("dbServerName");
-        static readonly string? dbName = Environment.GetEnvironmentVariable("dbName ");
+        static readonly string? dbName = Environment.GetEnvironmentVariable("dbName");
         static readonly string? dbUserName = Environment.GetEnvironmentVariable("dbUserName");
         static readonly string? dbPassword = Environment.GetEnvironmentVariable("dbPassword");
 
-        static readonly string connectionString = @$"Server={dbServerName};
-            Database={dbName};
-            Trusted_Connection=false;
-            TrustServerCertificate=True;
-            User Id={dbUserName};Password={dbPassword};";
+        static readonly string connectionString = @$"Server={dbServerName};Database={dbName};Trusted_Connection=false;TrustServerCertificate=True;User Id={dbUserName};Password={dbPassword};";
 
         private readonly string? dbConnectionString = connectionString;
 

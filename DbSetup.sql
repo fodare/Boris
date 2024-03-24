@@ -42,6 +42,7 @@ CREATE CLUSTERED INDEX cix_UserRecord_UserId
     ON FinanceRecordSchema.UserRecord(UserId);
 GO
 
+
 -- CREATE OR ALTER PROCEDURE FinanceManagerSchema.spUser_Get
 --     /* EXEC FinanceManagerSchema.spUser_Get @userId = 2 */
 --     /* EXEC FinanceManagerSchema.spUser_Get @userName = 'string' */
