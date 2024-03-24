@@ -42,50 +42,50 @@ CREATE CLUSTERED INDEX cix_UserRecord_UserId
     ON FinanceRecordSchema.UserRecord(UserId);
 GO
 
+CREATE OR ALTER PROCEDURE FinanceRecordSchema.spUser_Get
+    /* EXEC FinanceRecordSchema.spUser_Get @userId = 6 */
+    /* EXEC FinanceRecordSchema.spUser_Get @userName = 'jane' */
+    @userId INT = NULL,
+    @userName VARCHAR(50) = NULL
+AS
+BEGIN
+    SELECT *
+    FROM FinanceRecordSchema.UserRecord AS Users
+    WHERE Users.[UserId] = ISNULL(@userId, UserId) AND Users.UserName = ISNULL(@userName, UserName)
+END
+GO
 
--- CREATE OR ALTER PROCEDURE FinanceManagerSchema.spUser_Get
---     /* EXEC FinanceManagerSchema.spUser_Get @userId = 2 */
---     /* EXEC FinanceManagerSchema.spUser_Get @userName = 'string' */
---     @userId INT = NULL,
---     @userName VARCHAR(50) = NULL
--- AS
--- BEGIN
---     SELECT *
---     FROM FinanceManagerSchema.UserRecord AS Users
---     WHERE Users.[UserId] = ISNULL(@userId, UserId) AND
---         Users.UserName = ISNULL(@userName, UserName)
--- END
--- GO
-
--- CREATE OR ALTER PROCEDURE FinanceManagerSchema.spUser_Add
---     /* EXEC FinanceManagerSchema.spUser_Add 
---         @userName = 'Jane', @userPassword = 'janedoewwewe123',
---         @isAdmin = 1, @createDate = '2023-12-30T17:31:30.368Z'
---     */
---     @userName VARCHAR(50),
---     @userPassword NVARCHAR(max),
---     @isAdmin BIT = 0,
---     @createDate DATETIME
--- AS
--- BEGIN
---     IF NOT EXISTS (SELECT *
---     FROM FinanceManagerSchema.UserRecord AS Users
---     WHERE Users.UserName = @userName)
---     BEGIN
---         INSERT INTO FinanceManagerSchema.UserRecord
---             (
---             [UserName],
---             [UserPassword],
---             [IsAdmin],
---             [CreatedDate]
---             )
---         VALUES(@userName, @userPassword, @isAdmin, @createDate)
---     END
---     ELSE
---         THROW 52000,
---         'Username exists. Please provide another username.',1;
--- END
--- GO
+CREATE OR ALTER PROCEDURE FinanceRecordSchema.spUser_Add
+    /* EXEC FinanceRecordSchema.spUser_Add 
+        @userName = 'Jane', @userPassword = 'janedoewwewe123',
+        @isAdmin = 1, @createDate = '2023-12-30', @updateDate = '2023-12-30'
+    */
+    @userName VARCHAR(50),
+    @userPassword NVARCHAR(max),
+    @isAdmin BIT = 0,
+    @createDate DATE,
+    @updateDate DATE
+AS
+BEGIN
+    IF NOT EXISTS (SELECT *
+    FROM FinanceRecordSchema.UserRecord AS Users
+    WHERE Users.UserName = @userName)
+    BEGIN
+        INSERT INTO FinanceRecordSchema.UserRecord
+            (
+            [UserName],
+            [UserPassword],
+            [IsAdmin],
+            [CreatedDate],
+            [UpdatedDate]
+            )
+        VALUES(@userName, @userPassword, @isAdmin, @createDate, @updateDate)
+    END
+    ELSE
+        THROW 52000,
+        'Username exists. Please provide another username.',1;
+END
+GO
 
 -- CREATE OR ALTER PROCEDURE FinanceManagerSchema.spTransaction_Add
 --     /* EXEC FinanceManagerSchema.spTransaction_Add
