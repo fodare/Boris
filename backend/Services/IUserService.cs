@@ -18,13 +18,5 @@ namespace backend.Services
         bool LockUser(int userId);
 
         bool VerifyUser(string userName, string password);
-
-        // IEnumerable<UserModel> GetUsers();
-
-        // UserModel? GetUser(int userId);
-
-        // UserModel? GetUserByUserName(string userName);
-
-        // bool VerifyUser(string userName, string password);
     }
 }
