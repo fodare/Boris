@@ -87,6 +87,7 @@ BEGIN
 END
 GO
 
+
 -- CREATE OR ALTER PROCEDURE FinanceManagerSchema.spTransaction_Add
 --     /* EXEC FinanceManagerSchema.spTransaction_Add
 --         @amount = 20.00, @transactionType = 'Credit',
