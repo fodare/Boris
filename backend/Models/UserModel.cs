@@ -15,8 +15,8 @@ namespace backend.Models
 
         public required bool IsAdmin { get; set; }
 
-        public DateOnly CreatedDate { get; set; }
+        public DateTime CreatedDate { get; set; }
 
-        public DateOnly UpdatedDate { get; set; }
+        public DateTime UpdatedDate { get; set; }
     }
 }
