@@ -25,16 +25,14 @@ namespace backend.Data
                 var queryResponse = testConnection.Query<string>(sqlCommand);
                 if (queryResponse is null)
                 {
-                    throw new NullReferenceException(@"DB connection failed. 
-                            Check the connection string is correct");
+                    Console.WriteLine("Database connection failed!");
+                    throw new NullReferenceException(@"DB connection failed. Check the connection string is correct");
                 }
-                else
-                {
-                    Console.WriteLine("DB connection successful!");
-                }
+                Console.WriteLine("Database connection successful!");
             }
             catch (Exception ex)
             {
+                Console.WriteLine("DB connection successful!");
                 throw new NullReferenceException(@$"DB connection failed with message {ex.Message}");
             }
         }
