@@ -17,6 +17,15 @@ namespace backend.Data
 
         public DataContextDapper()
         {
+            if (!TestDBConnection())
+            {
+                throw new NullReferenceException(@"DB connection failed. Check the connection string is correct");
+            }
+            Console.WriteLine("Database connection successful!");
+        }
+
+        public bool TestDBConnection()
+        {
             using IDbConnection testConnection = new SqlConnection(dbConnectionString);
             Console.WriteLine($"Attempting connection to {dbConnectionString}");
             try
@@ -25,15 +34,15 @@ namespace backend.Data
                 var queryResponse = testConnection.Query<string>(sqlCommand);
                 if (queryResponse is null)
                 {
-                    Console.WriteLine("Database connection failed!");
-                    throw new NullReferenceException(@"DB connection failed. Check the connection string is correct");
+                    Console.WriteLine("Database connection failed!. Check DB connection string is correct.");
+                    return false;
                 }
-                Console.WriteLine("Database connection successful!");
+                return true;
             }
             catch (Exception ex)
             {
-                Console.WriteLine("DB connection successful!");
-                throw new NullReferenceException(@$"DB connection failed with message {ex.Message}");
+                Console.WriteLine($"DB connection successful!. Exception {ex.Message}");
+                return false;
             }
         }
 
