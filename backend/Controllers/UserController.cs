@@ -41,7 +41,7 @@ namespace backend.Controllers
             }
         }
 
-        [HttpGet("{userId}", Name = "GetUserById")]
+        [HttpGet("userid/{userId}/", Name = "GetUserById")]
         public ActionResult<ResponseModel<GetUserDTO>> GetUser(int userId)
         {
             ResponseModel<GetUserDTO> response = new();
@@ -62,6 +62,31 @@ namespace backend.Controllers
             {
                 response.Message = "Error while fetching user. Please try again!";
                 Console.WriteLine($"Error fetching user with id {userId}. Exception {ex.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
+            }
+        }
+
+        [HttpGet("{userName}", Name = "GetUserByUserName")]
+        public ActionResult<ResponseModel<string>> FetchByUserName(string userName)
+        {
+            ResponseModel<GetUserDTO> response = new();
+            try
+            {
+                var queryResult = _userService.GetUserByUserName(userName);
+                if (queryResult != null)
+                {
+                    response.Message = "Successfully retrived user.";
+                    response.Success = true;
+                    response.Data = _mapper.Map<GetUserDTO>(queryResult);
+                    return Ok(response);
+                }
+                response.Message = "Error retriving user. Can not find quried user!";
+                return BadRequest(response);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error fetching user {userName}. Excaption: {ex.Message}");
+                response.Message = "Error while fetching qureied user. Please try again!";
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
         }
