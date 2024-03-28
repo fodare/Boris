@@ -21,10 +21,26 @@ namespace backend.Controllers
             }));
         }
 
-        [HttpGet(Name = "Home")]
+        [HttpGet("/", Name = "Home")]
         public ActionResult GetHealth()
         {
             return Ok(DateTime.Now);
+        }
+
+        [HttpGet("users", Name = "GetUsers")]
+        public ActionResult<ResponseModel<IEnumerable<GetUserDTO>>> GetUserList()
+        {
+            ResponseModel<IEnumerable<GetUserDTO>> response = new();
+            var userList = _userService.GetUsers();
+            if (userList is null)
+            {
+                response.Message = "Error retriving user list. Please try again";
+                return BadRequest(response);
+            }
+            response.Data = _mapper.Map<List<GetUserDTO>>(userList);
+            response.Success = true;
+            response.Message = "Successfully retrived user list.";
+            return Ok(response);
         }
 
         [HttpPost("user/register", Name = "CreateUser")]
@@ -95,6 +111,21 @@ namespace backend.Controllers
                 Console.WriteLine($"Error fetching user with id {userId}. Exception {ex.Message}");
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
+        }
+
+        [HttpPost("verify", Name = "VerifyUser")]
+        public ActionResult<ResponseModel<string>> VerifyUserCreds([FromBody] VerifyUserDTO userInfo)
+        {
+            ResponseModel<string> response = new();
+            bool passVerfication = _userService.VerifyUser(userInfo.UserName, userInfo.password);
+            if (!passVerfication)
+            {
+                response.Message = "Verfication failed";
+                return BadRequest(response);
+            }
+            response.Message = "Verification successful!";
+            response.Success = true;
+            return Ok(response);
         }
 
     }
