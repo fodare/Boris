@@ -62,9 +62,17 @@ namespace backend.Services
 
         public IEnumerable<UserModel>? GetUsers()
         {
-            string sqlCommand = "EXEC FinanceRecordSchema.spUser_Get";
-            IEnumerable<UserModel> userList = _dapper.LoadData<UserModel>(sqlCommand);
-            return userList;
+            try
+            {
+                string sqlCommand = "EXEC FinanceRecordSchema.spUser_Get";
+                IEnumerable<UserModel> userList = _dapper.LoadData<UserModel>(sqlCommand);
+                return userList;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error fetching user list. Error message {ex.Message}");
+                return null;
+            }
         }
 
         public bool LockUser(int userId)
@@ -74,7 +82,29 @@ namespace backend.Services
 
         public bool VerifyUser(string userName, string password)
         {
-            throw new NotImplementedException();
+            try
+            {
+                string sqlCommand = @$"EXEC FinanceRecordSchema.spUser_Get 
+                @userName = '{userName}'";
+                UserModel qureidUser = _dapper.LoadDataSingle<UserModel>(sqlCommand);
+                if (qureidUser.UserName != null)
+                {
+                    bool passwordMatch = _userHelper.VerifyPasswordHash(password, qureidUser.UserPassword);
+                    if (!passwordMatch)
+                    {
+                        Console.WriteLine($"Error verifying user {userName} credentails");
+                        return false;
+                    }
+                    return true;
+                }
+                Console.WriteLine($"Error. Can not find an account with user {userName}!");
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error fetching user {userName}. Error message {ex.Message}");
+                return false;
+            }
         }
     }
 }
