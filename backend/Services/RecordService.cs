@@ -89,7 +89,27 @@ namespace backend.Services
 
         public bool UpdateRecord(int id, UpdateRecordDTO modifiedRecord)
         {
-            throw new NotImplementedException();
+            static string getServerTime() => DateTime.Now.ToString("yyyy-MM-dd");
+
+            string sqlCommand = $@"EXEC FinanceRecordSchema.spRecord_Update @amount={modifiedRecord.Amount}, @recordType='{modifiedRecord.Recordtype}', @recordTag='{modifiedRecord.RecordTag}', @recordNote='{modifiedRecord.RecordNote}',@RecordUpdateDate='{getServerTime()}', @recordId={id}";
+
+            string sqlCommandCheckRecord = $@"EXEC FinanceRecordSchema.spRecord_Get @recordId={id}";
+
+            try
+            {
+                RecordModel queridRecord = _dapper.ExecuteSql<RecordModel>(sqlCommandCheckRecord);
+                if (queridRecord.RecordId != id)
+                {
+                    return false;
+                }
+                bool recordUpdated = _dapper.ExcecuteSqlAdd(sqlCommand);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error updating record Id {id}. {ex.Message}");
+                return false;
+            }
         }
     }
 }
