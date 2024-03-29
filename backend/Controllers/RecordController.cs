@@ -104,5 +104,20 @@ namespace backend.Controllers
             response.Data = recordsInfo;
             return Ok(response);
         }
+
+        [HttpPut("updateRecord/{id}", Name = "UpdateRecord")]
+        public ActionResult<ResponseModel<string>> ReplaceRecord(UpdateRecordDTO updatedRecord, int id)
+        {
+            ResponseModel<string> response = new();
+            bool recordUpdated = _recordService.UpdateRecord(id, updatedRecord);
+            if (!recordUpdated)
+            {
+                response.Message = "Error updating record. Please try again";
+                return BadRequest(response);
+            }
+            response.Success = true;
+            response.Message = $"Successfuly updated record id {id}";
+            return Ok(response);
+        }
     }
 }
