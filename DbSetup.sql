@@ -88,44 +88,53 @@ END
 GO
 
 
--- CREATE OR ALTER PROCEDURE FinanceManagerSchema.spTransaction_Add
---     /* EXEC FinanceManagerSchema.spTransaction_Add
---         @amount = 20.00, @transactionType = 'Credit',
---         @transactionTag = 'Savings', @note = 'test',
---         @recordDate = '2023-12-31 15:43:49.000'
---     */
---     @userId INT = 0,
---     @amount DECIMAL(18, 4),
---     @transactionType VARCHAR(50),
---     @transactionTag VARCHAR(50),
---     @note VARCHAR(255),
---     @recordDate Datetime
--- AS
--- BEGIN
---     INSERT INTO FinanceManagerSchema.TransactionRecord
---         (
---         [UserId],[Amount],[TransactionType],[TransactionTag],
---         [Note],[RecordDate]
---         )
---     VALUES
---         (ISNULL(@userId, 0), @amount, @transactionType, @transactionTag, @note, @recordDate)
--- END
--- GO
+CREATE OR ALTER PROCEDURE FinanceRecordSchema.spRecord_Add
+    /* EXEC FinanceRecordSchema.spRecord_Add
+        @amount = 20.00, @recordType = 'Credit',
+        @recordTag = 'Savings', @recordNote = 'test',
+        @recordDate = '2023-12-31', @recordUpdateDate='2023-12-31'
+    */
+    @userId INT = 0,
+    @amount DECIMAL(18, 4),
+    @recordType VARCHAR(50),
+    @recordTag VARCHAR(50),
+    @recordNote VARCHAR(255),
+    @recordDate DATE,
+    @recordUpdateDate DATE
+AS
+BEGIN
+    INSERT INTO FinanceRecordSchema.Records
+        (
+        [UserId],[Amount],[RecordType],[RecordTag],
+        [RecordNote],[RecordDate],[RecordUpdateDate]
+        )
+    VALUES
+        (ISNULL(@userId, 0), @amount, @recordType, @recordTag, @recordNote, @recordDate, @recordUpdateDate)
+END
+GO
 
--- CREATE OR ALTER PROCEDURE FinanceManagerSchema.spTransaction_Get
---     /* EXEC FinanceManagerSchema.spTransaction_Get
---         @transactionId = 1, @userId = 8
---     */
---     @transactionId INT = null,
---     @userId INT = null
--- AS
--- BEGIN
---     SELECT *
---     FROM FinanceManagerSchema.TransactionRecord WITH(NOLOCK)
---     WHERE TransactionId = ISNULL(@transactionId , TransactionId)
---         AND UserId = ISNULL(@userId, UserId)
--- END
--- GO
+CREATE OR ALTER PROCEDURE FinanceRecordSchema.spRecord_Get
+    /* 
+    EXEC FinanceRecordSchema.spRecord_Get @transactionId = 1
+    EXEC FinanceRecordSchema.spRecord_Get @userId = 8
+    EXEC FinanceRecordSchema.spRecord_Get @startDate = '2022-12-31',
+        @endDate = '2022-12-31'
+    */
+    @recordId INT = null,
+    @userId INT = null,
+    @startDate DATE = null,
+    @endDate DATE =  NULL
+
+AS
+BEGIN
+    SELECT *
+    FROM FinanceRecordSchema.Records WITH(NOLOCK)
+    WHERE RecordId = ISNULL(@recordId , RecordId)
+        AND UserId = ISNULL(@userId, UserId)
+        AND RecordDate = ISNULL(@startDate, RecordDate)
+        AND RecordUpdateDate = ISNULL(@endDate, RecordUpdateDate)
+END
+GO
 
 -- CREATE OR ALTER PROCEDURE FinanceManagerSchema.spTransaction_Update
 --     /* EXEC FinanceManagerSchema.spTransaction_Update
