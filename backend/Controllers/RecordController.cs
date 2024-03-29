@@ -82,5 +82,27 @@ namespace backend.Controllers
             response.Data = queridRecord;
             return Ok(response);
         }
+
+        [HttpPost("byDateRange", Name = "GetRecordsByDateRange")]
+        public ActionResult<ResponseModel<GetRecordDTO>> GetRecordsByDate(FilterByDateDTO range)
+        {
+            ResponseModel<GetRecordDTO> response = new();
+            GetRecordDTO recordsInfo = new();
+            var recordList = _recordService.GetRecordsByDateRange(range.StartDate, range.EndDate);
+            if (recordList is null)
+            {
+                response.Message = $"Can not find records from {range.StartDate} - {range.EndDate}";
+                return BadRequest(response);
+            }
+
+            recordsInfo.CreditTotal = _recordHelper.CalculateCreditSum(recordList);
+            recordsInfo.DebitTotal = _recordHelper.CalculateDebitSum(recordList);
+            recordsInfo.Records = recordList;
+
+            response.Message = "Successfully retrived records";
+            response.Success = true;
+            response.Data = recordsInfo;
+            return Ok(response);
+        }
     }
 }
