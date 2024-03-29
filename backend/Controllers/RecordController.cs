@@ -66,5 +66,21 @@ namespace backend.Controllers
             response.Data = recordsInfo;
             return Ok(response);
         }
+
+        [HttpGet("{recordId}", Name = "GetRecordById")]
+        public ActionResult<ResponseModel<RecordModel>> GetRecordById(int recordId)
+        {
+            ResponseModel<RecordModel> response = new();
+            var queridRecord = _recordService.GetRecordById(recordId);
+            if (queridRecord is null)
+            {
+                response.Message = $"Error fetching record Id {recordId}. Please try again!";
+                return BadRequest(response);
+            }
+            response.Success = true;
+            response.Message = "Record retrived successfully!";
+            response.Data = queridRecord;
+            return Ok(response);
+        }
     }
 }

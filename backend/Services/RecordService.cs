@@ -36,7 +36,21 @@ namespace backend.Services
 
         public RecordModel? GetRecordById(int id)
         {
-            throw new NotImplementedException();
+            string sqlCommand = $@"EXEC FinanceRecordSchema.spRecord_Get @recordId={id}";
+            try
+            {
+                var quriedRecord = _dapper.LoadDataSingle<RecordModel>(sqlCommand);
+                if (quriedRecord.RecordId == id)
+                {
+                    return quriedRecord;
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error fetching record id {id}. {ex.Message}");
+                return null;
+            }
         }
 
         public IEnumerable<RecordModel>? GetRecords()
