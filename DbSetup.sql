@@ -136,27 +136,27 @@ BEGIN
 END
 GO
 
--- CREATE OR ALTER PROCEDURE FinanceManagerSchema.spTransaction_Update
---     /* EXEC FinanceManagerSchema.spTransaction_Update
---         @amount = 130, @transactionType = 'Credit',
---         @tranactionTag = 'Eatingout', @note = 'This is a test',
---         @updateDate = '2024-01-01 20:36:31.000', @transactionId = 5
---     */
---     @amount INT,
---     @transactionType VARCHAR(50),
---     @tranactionTag VARCHAR(50),
---     @note VARCHAR(50),
---     @updateDate DATETIME,
---     @transactionId INT
--- AS
--- BEGIN
---     UPDATE FinanceManagerSchema.TransactionRecord 
---         SET Amount = @amount, TransactionType = @transactionType,
---         TransactionTag = @tranactionTag, Note = @note,
---         UpdatedDate = @updateDate
---             WHERE TransactionId = @transactionId
--- END
--- GO
+CREATE OR ALTER PROCEDURE FinanceRecordSchema.spRecord_Update
+    /* EXEC FinanceRecordSchema.spRecord_Update
+        @amount = 130, @recordType = 'Credit',
+        @recordTag = 'Eatingout', @recordNote = 'This is a test',
+        @RecordUpdateDate = '2024-01-01', @recordId = 5
+    */
+    @amount INT,
+    @recordType VARCHAR(50),
+    @recordTag VARCHAR(50),
+    @recordNote VARCHAR(50),
+    @RecordUpdateDate DATETIME,
+    @recordId INT
+AS
+BEGIN
+    UPDATE FinanceRecordSchema.Records 
+        SET Amount = @amount, RecordType = @recordType,
+        RecordTag = @recordTag, RecordNote = @recordNote,
+        RecordUpdateDate = @RecordUpdateDate
+            WHERE RecordId = @recordId
+END
+GO
 
 -- Create OR ALTER PROCEDURE FinanceManagerSchema.spTransaction_Summary
 --     /* EXEC FinanceManagerSchema.spTransaction_Summary
