@@ -118,7 +118,7 @@ CREATE OR ALTER PROCEDURE FinanceRecordSchema.spRecord_Get
     EXEC FinanceRecordSchema.spRecord_Get @recordId=1
     EXEC FinanceRecordSchema.spRecord_Get @userId = 8
     EXEC FinanceRecordSchema.spRecord_Get @startDate = '2022-12-31',
-        @endDate = '2022-12-31'
+        @endDate = '2024-01-29'
     */
     @recordId INT = null,
     @userId INT = null,
@@ -131,8 +131,8 @@ BEGIN
     FROM FinanceRecordSchema.Records WITH(NOLOCK)
     WHERE RecordId = ISNULL(@recordId , RecordId)
         AND UserId = ISNULL(@userId, UserId)
-        AND RecordDate = ISNULL(@startDate, RecordDate)
-        AND RecordUpdateDate = ISNULL(@endDate, RecordUpdateDate)
+        AND RecordDate >= ISNULL(@startDate, RecordDate)
+        AND RecordUpdateDate <= ISNULL(@endDate, RecordUpdateDate)
 END
 GO
 
