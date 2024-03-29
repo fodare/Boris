@@ -68,9 +68,23 @@ namespace backend.Services
             }
         }
 
-        public IEnumerable<GetRecordDTO> GetRecordsByDateRange(DateOnly startDate, DateOnly endDate)
+        public IEnumerable<RecordModel>? GetRecordsByDateRange(DateTime startDate, DateTime endDate)
         {
-            throw new NotImplementedException();
+            string sqlCommand = $@"EXEC FinanceRecordSchema.spRecord_Get @startDate = '{startDate}', @endDate = '{endDate}'";
+            try
+            {
+                IEnumerable<RecordModel>? recorList = _dapper.LoadData<RecordModel>(sqlCommand);
+                if (recorList is null)
+                {
+                    return null;
+                }
+                return recorList;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error fetching records from {startDate} - {endDate}. {ex.Message}");
+                return null;
+            }
         }
 
         public bool UpdateRecord(int id, UpdateRecordDTO modifiedRecord)
