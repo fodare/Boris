@@ -158,27 +158,23 @@ BEGIN
 END
 GO
 
--- Create OR ALTER PROCEDURE FinanceManagerSchema.spTransaction_Summary
---     /* EXEC FinanceManagerSchema.spTransaction_Summary
+-- Create OR ALTER PROCEDURE FinanceRecordSchema.spRecord_Summary
+--     /* EXEC FinanceRecordSchema.spRecord_Summary
 --     @startDate = '2024-01-01',
---     @endDate = '2024-01-24'
+--     @endDate = '2024-04-01'
 --   */
---     @startDate DATETIME = null,
---     @endDate DATETIME = null
+--     @startDate DATE = null,
+--     @endDate DATE = null
 -- AS
 -- BEGIN
 --     SELECT
---         TransactionTag,
---         SUM(Amount) as Amount_Sum,
---         COUNT(TransactionTag) as Event_count,
+--         RecordTag,
+--         COUNT(RecordTag) as Event_count,
 --         (SELECT SUM(Amount)
---         FROM FinanceManagerSchema.TransactionRecord
---         WHERE TransactionType = 'Credit') AS Credit_Sum,
---         (SELECT SUM(Amount)
---         FROM FinanceManagerSchema.TransactionRecord
---         WHERE TransactionType = 'Debit') AS Debit_Sum
---     FROM FinanceManagerSchema.TransactionRecord
+--         FROM FinanceRecordSchema.Records
+--         WHERE RecordTag = RecordTag) AS Tag_SUM
+--     FROM FinanceRecordSchema.Records
 --     WHERE RecordDate >= ISNULL(@startDate, RecordDate) AND RecordDate <= ISNULL(@endDate, RecordDate)
---     GROUP BY TransactionTag
+--     GROUP BY RecordTag
 --     ORDER BY Event_count
 -- END
