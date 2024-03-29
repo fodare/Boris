@@ -13,6 +13,6 @@ namespace backend.Services
 
         bool UpdateRecord(int id, UpdateRecordDTO modifiedRecord);
 
-        IEnumerable<GetRecordDTO> GetRecordsByDateRange(DateOnly startDate, DateOnly endDate);
+        IEnumerable<RecordModel>? GetRecordsByDateRange(DateTime startDate, DateTime endDate);
     }
 }
