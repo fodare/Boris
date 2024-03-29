@@ -21,8 +21,8 @@ namespace backend.Controllers
             }));
         }
 
-        [HttpGet("/", Name = "Home")]
-        public ActionResult GetHealth()
+        [HttpGet("/userService", Name = "UserserviceHome")]
+        public ActionResult GetUserServiceHealth()
         {
             return Ok(DateTime.Now);
         }
