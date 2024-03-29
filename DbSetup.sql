@@ -117,8 +117,8 @@ CREATE OR ALTER PROCEDURE FinanceRecordSchema.spRecord_Get
     /* 
     EXEC FinanceRecordSchema.spRecord_Get @recordId=1
     EXEC FinanceRecordSchema.spRecord_Get @userId = 8
-    EXEC FinanceRecordSchema.spRecord_Get @startDate = '2022-12-31',
-        @endDate = '2024-01-29'
+    EXEC FinanceRecordSchema.spRecord_Get @startDate = '2024-03-01',
+        @endDate = '2024-03-28'
     */
     @recordId INT = null,
     @userId INT = null,
