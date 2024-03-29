@@ -22,7 +22,7 @@ namespace backend.Models
         [JsonPropertyName("note")]
         public string? RecordNote { get; set; }
 
-        public DateOnly RecordDate { get; set; }
-        public DateOnly RecordUpdateDate { get; set; }
+        public DateTime RecordDate { get; set; }
+        public DateTime RecordUpdateDate { get; set; }
     }
 }

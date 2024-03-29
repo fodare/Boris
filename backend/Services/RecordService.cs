@@ -14,7 +14,24 @@ namespace backend.Services
 
         public bool CreateRecord(CreateRecordDTO newRecord)
         {
-            throw new NotImplementedException();
+            try
+            {
+                static string getServerTime() => DateTime.Now.ToString("yyyy-MM-dd");
+                string sqlCommand = $@"EXEC FinanceRecordSchema.spRecord_Add 
+                    @amount = {newRecord.Amount}, @recordType = '{newRecord.Recordtype}', @recordTag = '{newRecord.RecordTag}', @recordNote = '{newRecord.RecordNote}', @recordDate = '{getServerTime()}', @recordUpdateDate='{getServerTime()}'";
+                bool userAdded = _dapper.ExcecuteSqlAdd(sqlCommand);
+                if (!userAdded)
+                {
+                    Console.WriteLine("Error creating user. Please try again!");
+                    return false;
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error creating user. Error {ex.Message}");
+                return false;
+            }
         }
 
         public RecordModel? GetRecordById(int id)
@@ -22,9 +39,19 @@ namespace backend.Services
             throw new NotImplementedException();
         }
 
-        public IEnumerable<GetRecordDTO> GetRecords()
+        public IEnumerable<RecordModel>? GetRecords()
         {
-            throw new NotImplementedException();
+            try
+            {
+                string sqlCommand = $@"EXEC FinanceRecordSchema.spRecord_Get";
+                IEnumerable<RecordModel> recordList = _dapper.LoadData<RecordModel>(sqlCommand);
+                return recordList;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error fetching records. Error {ex.Message}");
+                return null;
+            }
         }
 
         public IEnumerable<GetRecordDTO> GetRecordsByDateRange(DateOnly startDate, DateOnly endDate)

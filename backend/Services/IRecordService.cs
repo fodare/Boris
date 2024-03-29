@@ -9,7 +9,7 @@ namespace backend.Services
 
         RecordModel? GetRecordById(int id);
 
-        IEnumerable<GetRecordDTO> GetRecords();
+        IEnumerable<RecordModel> GetRecords();
 
         bool UpdateRecord(int id, UpdateRecordDTO modifiedRecord);
 
