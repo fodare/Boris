@@ -56,8 +56,9 @@ namespace backend.Controllers
                 response.Message = "Error fetching records. Please try again";
                 return BadRequest(response);
             }
-            double recordsAmountSum = _recordHelper.CalculateRecordsAmountSum(recordList);
-            recordsInfo.Total = recordsAmountSum;
+
+            recordsInfo.CreditTotal = _recordHelper.CalculateCreditSum(recordList);
+            recordsInfo.DebitTotal = _recordHelper.CalculateDebitSum(recordList);
             recordsInfo.Records = recordList;
 
             response.Message = "Successfully retrived records.";

@@ -11,14 +11,30 @@ namespace backend.Helpers
 {
     public class RecrodsHelper
     {
-        public double CalculateRecordsAmountSum(IEnumerable<RecordModel> records)
+        public double CalculateCreditSum(IEnumerable<RecordModel> records)
         {
-            double amountSum = 0;
+            double creditSum = 0;
             foreach (RecordModel record in records)
             {
-                amountSum += record.Amount;
+                if (record.Recordtype == Recordtype.Credit)
+                {
+                    creditSum += record.Amount;
+                }
             }
-            return amountSum;
+            return creditSum;
+        }
+
+        public double CalculateDebitSum(IEnumerable<RecordModel> records)
+        {
+            double debitSum = 0;
+            foreach (RecordModel record in records)
+            {
+                if (record.Recordtype == Recordtype.Debit)
+                {
+                    debitSum += record.Amount;
+                }
+            }
+            return debitSum;
         }
     }
 }
