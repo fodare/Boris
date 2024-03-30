@@ -142,7 +142,7 @@ CREATE OR ALTER PROCEDURE FinanceRecordSchema.spRecord_Update
         @recordTag = 'Eatingout', @recordNote = 'This is a test',
         @RecordUpdateDate = '2024-01-01', @recordId = 5
     */
-    @amount INT,
+    @amount DECIMAL(18, 4),
     @recordType VARCHAR(50),
     @recordTag VARCHAR(50),
     @recordNote VARCHAR(50),
