@@ -68,7 +68,7 @@ namespace backend.Services
             }
         }
 
-        public IEnumerable<RecordModel>? GetRecordsByDateRange(DateTime startDate, DateTime endDate)
+        public IEnumerable<RecordModel>? GetRecordsByDateRange(string startDate, string endDate)
         {
             string sqlCommand = $@"EXEC FinanceRecordSchema.spRecord_Get @startDate = '{startDate}', @endDate = '{endDate}'";
             try
@@ -82,7 +82,7 @@ namespace backend.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error fetching records from {startDate} - {endDate}. {ex.Message}");
+                Console.WriteLine($"Error fetching records from {startDate} - {endDate}. {ex}");
                 return null;
             }
         }

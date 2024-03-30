@@ -9,9 +9,9 @@ namespace backend.Dtos
     public class FilterByDateDTO
     {
         [JsonPropertyName("startDate")]
-        public DateTime StartDate { get; set; }
+        public string StartDate { get; set; }
 
         [JsonPropertyName("endDate")]
-        public DateTime EndDate { get; set; }
+        public string EndDate { get; set; }
     }
 }
