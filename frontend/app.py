@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 import datetime
 import os
 import requests
-from Helpers.userMethods import check_user_credentials
+from Helpers.userMethods import check_user_credentials, create_user
 from Helpers.recordMethods import get_records, create_record, get_record, update_record, get_summary
 
 # ///////////////////// Configuration block ///////////////////// #
@@ -71,13 +71,9 @@ def logout():
 def register():
     if request.method == 'GET':
         return render_template('register.html')
-    request_body = {
-        "userName": f"{request.form['userName']}",
-        "password": f"{request.form['password']}"
-    }
-    response_data = requests.post(
-        f"{BACKEND_API_BASE_URL}/api/v2/auth/user/register", verify=False, json=request_body)
-    if response_data.status_code == 200:
+    userName = request.form['userName']
+    password = request.form['password']
+    if create_user(userName, password):
         return redirect(url_for('record'))
     else:
         flash("Error creating account. Please check your input or try again!", "error")

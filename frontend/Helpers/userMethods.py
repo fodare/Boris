@@ -38,3 +38,15 @@ def get_user_by_id(user_id):
         json_content = response_data.json()
         user_data = json_content['data']
         return user_data
+
+
+def create_user(user_name, user_password):
+    request_body = {
+        "userName": f"{user_name}",
+        "password": f"{user_password}"
+    }
+    response_data = requests.post(
+        f"{BACKEND_API_BASE_URL}/api/v3/User/user/register", verify=False, json=request_body)
+    if response_data.status_code == 200:
+        return True
+    return False
