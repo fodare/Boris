@@ -5,7 +5,11 @@ services:
       ports:
          - "$backendapi_port:80"
       environment:
-         dbConString: "$dbConString"
+         dbServerName: "$dbServerName"
+         dbName: "$dbName"
+         dbUserName: "$dbUserName"
+         dbPassword: "$dbPassword"
+
    frontendapi:
       image: "frontendapi:latest"
       container_name: frontendapi

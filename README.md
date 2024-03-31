@@ -49,30 +49,18 @@ The parent DIR contains a `backend` and a `frontend` sub DIR. `backend` holds th
 
 - Using a DB explorer such as Azure data studio, VS Code SQL server plugin or SQL server management studio (SSMS) provide options to connect to the SQL server instance and execute the `DbSetup.sql` script to help configure the DB table.
 
-- Prepare DB connection string.
-
-    ```bash
-    # On the host running the SQL server container. Run the command below.
-    ip address show
-    # You looking for inet 192.168...
-    ```
-
-    The command above exposes the `IP address of the container running the SQL server`. Copy and update the connection string below as it's required for the backend API to connect to the database.
-
-    ```bash
-    # exmple dbConString="Server=192.168.0.1;Database=FinanceManagerDb;Trusted_Connection=false;TrustServerCertificate=True;User Id=<db username>;Password=<db password>;"
-   dbConString="Server=<host ip adress>;Database=FinanceManagerDb;Trusted_Connection=false;TrustServerCertificate=True;User Id=<db username>;Password=<db password>;"
-    ```
-
-## Update container environment variable
+## Update container environment variables
 
 Update environment variables placeholder in the `.env` file.
 
-- `dbConString`: the database connection string that was prepared in `Prepare and configure DB`
-- `secret`: Your desired frontend cookies signing secret.
-- `host_ip`: Your local machine IP address. Ex 192.168.0.1
-- `backendapi_port`: Host listening port number for the backend API service.
-- `frontendapi_port`: Host listening port number for the frontend service.
+- `dbServerName`: SQL server name / host ip
+- `dbName`: SQL server database name.
+- `dbUserName`: SQL server encryptionuser name.
+- `dbPassword`: SQL server db password.
+- `secret`: Secret key for `frontendapi` sessions.
+- `host_ip`: Host  ip address.
+- `backendapi_port`: Port to access backendapi.
+- `frontendapi_port`: Port to access frontendapi.
 
 ## Start services
 
