@@ -3,7 +3,7 @@ import datetime
 import os
 import requests
 from Helpers.userMethods import check_user_credentials
-from Helpers.recordMethods import get_records,create_record,get_record,update_record,get_summary
+from Helpers.recordMethods import get_records, create_record, get_record, update_record, get_summary
 
 # ///////////////////// Configuration block ///////////////////// #
 
@@ -32,12 +32,12 @@ def record():
             current_year = datetime.datetime.now().year
             return render_template('index.html', current_year=current_year, transactionList=transaction_list, is_logedIn=True)
         else:
-            amount=f"{request.form['amount']}"
-            type=f"{request.form['type']}"
-            tag=f"{request.form['tag']}"
-            note=f"{request.form['note']}"
-            
-            if create_record(amount,type,tag,note):
+            amount = f"{request.form['amount']}"
+            type = f"{request.form['type']}"
+            tag = f"{request.form['tag']}"
+            note = f"{request.form['note']}"
+
+            if create_record(amount, type, tag, note):
                 return redirect(url_for('record'))
             else:
                 flash(
@@ -96,11 +96,11 @@ def edit(id):
                     f"Error editing record with id {id}. Please try again!", "error")
                 return redirect(url_for("record"))
         else:
-            amount= f"{request.form['amount']}"
-            event= f"{request.form['type']}"
-            tag= f"{request.form['tag']}"
-            note= f"{request.form['note']}"
-            
+            amount = f"{request.form['amount']}"
+            event = f"{request.form['type']}"
+            tag = f"{request.form['tag']}"
+            note = f"{request.form['note']}"
+
             if update_record(id, amount, event, tag, note):
                 return redirect(url_for('record'))
             else:
@@ -114,15 +114,15 @@ def edit(id):
 def summary():
     if 'userName' in session:
         if request.method == 'GET':
-            return render_template('stats.html',record_summary=None, is_logedIn=True)
+            return render_template('stats.html', record_summary=None, is_logedIn=True)
         else:
-            startTime=f"{request.form['startDate']}"
-            endtime=f"{request.form['endDate']}"
+            startTime = f"{request.form['startDate']}"
+            endtime = f"{request.form['endDate']}"
             recordsList = get_summary(startTime, endtime)
             if recordsList is not None:
                 return render_template('stats.html',
-                record_summary=recordsList,start_date=request.form['startDate'],
-                end_date=request.form['endDate'],is_logedIn=True)
+                                       record_summary=recordsList, start_date=request.form['startDate'],
+                                       end_date=request.form['endDate'], is_logedIn=True)
             else:
                 flash("Error retiving transaction summary. Please try again!", "error")
                 return redirect(url_for('summary'))
