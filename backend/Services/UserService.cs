@@ -15,16 +15,14 @@ namespace backend.Services
             _userHelper = new UserHelper();
         }
 
-        public bool CreateUser(UserRegestration newUser)
+        public bool CreateUser(NewUserDTO newUser)
         {
+            static string getServerTime() => DateTime.Now.ToString("yyyy-MM-dd");
             try
             {
-                var hashedUserPassword = _userHelper.CreatePasswordHash(newUser.Password);
+                var hashedUserPassword = _userHelper.CreatePasswordHash(newUser.UserPassword);
 
-                string sqlCommand = $@"EXEC FinanceManagerSchema.spUser_Add 
-                @userName = '{newUser.UserName}', 
-                @userPassword = '{hashedUserPassword}',
-                @createDate = '{DateTime.Now}'";
+                string sqlCommand = $@"EXEC FinanceRecordSchema.spUser_Add @userName ='{newUser.UserName}', @userPassword ='{hashedUserPassword}',@isAdmin ={0}, @createDate ='{getServerTime()}', @updateDate = '{getServerTime()}'";
 
                 bool userAdded = _dapper.ExcecuteSqlAdd(sqlCommand);
                 if (userAdded)
@@ -40,66 +38,71 @@ namespace backend.Services
             }
         }
 
-        public UserModel? GetUser(int userId)
+        public UserModel? GetUserByUserName(string userName)
         {
-            string sqlCommand = @$"EXEC FinanceManagerSchema.spUser_Get 
-                @userId = {userId}";
+            string sqlCommand = @$"EXEC FinanceRecordSchema.spUser_Get @userName = '{userName}'";
             UserModel qureiedUser = _dapper.ExecuteSql<UserModel>(sqlCommand);
             if (qureiedUser.UserId > 0)
             {
                 return qureiedUser;
             }
-            Console.WriteLine($"Error feting user with id {userId}");
             return null;
         }
 
-        public UserModel? GetUserByUserName(string userName)
+        public UserModel? GetUserById(int userId)
         {
-            string sqlCommand = @$"EXEC FinanceManagerSchema.spUser_Get 
-                @userName = {userName}";
+            string sqlCommand = @$"EXEC FinanceRecordSchema.spUser_Get @userId = '{userId}'";
             UserModel qureiedUser = _dapper.ExecuteSql<UserModel>(sqlCommand);
             if (qureiedUser.UserId > 0)
             {
                 return qureiedUser;
             }
-            Console.WriteLine($"Error feting user with username {userName}");
             return null;
         }
 
         public IEnumerable<UserModel>? GetUsers()
         {
-            string sqlCommand = $"EXEC FinanceManagerSchema.spUser_Get";
             try
             {
+                string sqlCommand = "EXEC FinanceRecordSchema.spUser_Get";
                 IEnumerable<UserModel> userList = _dapper.LoadData<UserModel>(sqlCommand);
                 return userList;
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine($"Error fetching user list. {e.Message}");
+                Console.WriteLine($"Error fetching user list. Error message {ex.Message}");
                 return null;
             }
-
         }
 
-        public bool VerifyUser(string userName, string userPassword)
+        public bool LockUser(int userId)
         {
-            string sqlCommand = @$"EXEC FinanceManagerSchema.spUser_Get 
-                @userName = '{userName}'";
-            UserModel qureidUser = _dapper.LoadDataSingle<UserModel>(sqlCommand);
-            if (qureidUser.UserName != null)
+            throw new NotImplementedException();
+        }
+
+        public bool VerifyUser(string userName, string password)
+        {
+            try
             {
-                bool passwordMatch = _userHelper.VerifyPasswordHash(userPassword, qureidUser.UserPassword);
-                if (passwordMatch)
+                string sqlCommand = @$"EXEC FinanceRecordSchema.spUser_Get 
+                @userName = '{userName}'";
+                UserModel qureidUser = _dapper.LoadDataSingle<UserModel>(sqlCommand);
+                if (qureidUser.UserName != null)
                 {
+                    bool passwordMatch = _userHelper.VerifyPasswordHash(password, qureidUser.UserPassword);
+                    if (!passwordMatch)
+                    {
+                        Console.WriteLine($"Error verifying user {userName} credentails");
+                        return false;
+                    }
                     return true;
                 }
-                Console.WriteLine($"Error verifying user credentails");
+                Console.WriteLine($"Error. Can not find an account with user {userName}!");
                 return false;
             }
-            else
+            catch (Exception ex)
             {
-                Console.WriteLine($"Erro. User account not found!");
+                Console.WriteLine($"Error fetching user {userName}. Error message {ex.Message}");
                 return false;
             }
         }

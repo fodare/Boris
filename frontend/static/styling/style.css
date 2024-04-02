@@ -1,4 +1,4 @@
-body{
+body {
     background-color: #1C1E24;
     color: #f8f9fa;
     font-family: 'Courier New', Courier, monospace;
@@ -7,7 +7,7 @@ body{
     padding: 1rem 0;
 }
 
-.footer{
+.footer {
     bottom: 0;
     display: block;
     height: 3rem;
@@ -16,56 +16,56 @@ body{
 }
 
 /* Nav styling */
-.nav{
+.nav {
     padding-top: 2rem;
 }
 
-.nav-link{
+.nav-link {
     color: var(--text-color) !important;
 }
 
-.active.home-link{
-    border-bottom:1px solid var(--indigo) ;
+.active.home-link {
+    border-bottom: 1px solid var(--indigo);
 }
 
-.active.transaction-link{
-    border-bottom:1px solid var(--pink) ;
+.active.transaction-link {
+    border-bottom: 1px solid var(--pink);
 }
 
-.active.register-link{
-    border-bottom:1px solid var(--orange) ;
+.active.register-link {
+    border-bottom: 1px solid var(--orange);
 }
 
-.active.summary-link{
-    border-bottom: 1px solid var(--yellow)                                                                                         --;
+.active.summary-link {
+    border-bottom: 1px solid var(--yellow) --;
 }
 
-.active.logout-link{
+.active.logout-link {
     border-bottom: 1px solid var(--indigo-muted);
 }
 
-.home-link:hover{
-    border-bottom:1px solid var(--indigo) ;
+.home-link:hover {
+    border-bottom: 1px solid var(--indigo);
 }
 
-.transaction-link:hover{
-    border-bottom:1px solid var(--pink) ;
+.transaction-link:hover {
+    border-bottom: 1px solid var(--pink);
 }
 
-.register-link:hover{
-    border-bottom:1px solid var(--orange) ;
+.register-link:hover {
+    border-bottom: 1px solid var(--orange);
 }
 
-.summary-link:hover{
+.summary-link:hover {
     border-bottom: 1px solid var(--yellow);
 }
 
-.logout-link:hover{
+.logout-link:hover {
     border-bottom: 1px solid var(--indigo-muted);
 }
 
 /* Colors */
-:root{
+:root {
     --orange: #ff7e22;
     --yellow: #fca62a;
     --pink: #f57ad0;
@@ -75,73 +75,92 @@ body{
     --indigo-light: #969bf6;
     --indigo-muted: #f1f2fd;
     --text-color: #f8f9fa;
-    --backgroud-color:#1C1E24;
+    --backgroud-color: #1C1E24;
+    --light-greem: #8fec8f;
 }
 
 /* Transaction page styling */
-.transactionview{
+.transactionview {
     padding-top: 2rem;
 }
 
-.alert{
+.alert {
     padding-top: 1rem;
 }
 
-.recordtransaction{
+.recordtransaction {
     padding: 2rem 0;
 }
 
-.transactionnote{
-    padding-bottom:1rem;
+.transactionnote {
+    padding-bottom: 1rem;
 }
 
-.transactiontable{
-    padding-top: 2rem !important;
+.records-Totals {
+    border: 1px dashed var(--indigo-muted);
+    border-radius: 5px;
+    padding: 2rem;
+    line-height: 2.5rem;
+
 }
 
-td.credit{
+.savings {
+    color: var(--light-greem);
+    font-size: 1.5rem;
+}
+
+.spending {
+    color: var(--orange);
+    font-size: 1.5rem;
+}
+
+.transactiontable {
+    padding-top: 3rem !important;
+}
+
+td.credit {
     color: lightgreen;
 }
 
-td.debit{
+td.debit {
     color: var(--orange);
 }
 
-.editLink{
+.editLink {
     color: var(--text-color);
     text-decoration: none;
 }
 
-.editLink:hover{
+.editLink:hover {
     border-bottom: 3px solid var(--indigo-light);
     transition: transform .2s;
 }
 
 /* Login page styling */
-.form-control{
+.form-control {
     flex: 0 0 50% !important;
 }
 
-.loginform{
+.loginform {
     padding: 2rem 0;
 }
 
 /* 404 page */
-.notfoundPage{
+.notfoundPage {
     padding-top: 3rem;
     padding-bottom: 3rem;
     text-align: center;
 }
 
 /* Summary view */
-.summaryview{
+.summaryview {
     padding-top: 2rem;
 }
 
-.recordSummary{
+.recordSummary {
     padding-top: 2rem;
 }
 
-.timerange{
+.timerange {
     padding-bottom: 2rem;
 }

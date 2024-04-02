@@ -2,7 +2,8 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 import datetime
 import os
 import requests
-from Helpers.userMethods import check_user_credentials
+from Helpers.userMethods import check_user_credentials, create_user
+from Helpers.recordMethods import get_records, create_record, get_record, update_record, get_summary
 
 # ///////////////////// Configuration block ///////////////////// #
 
@@ -27,25 +28,20 @@ def home():
 def record():
     if 'userName' in session:
         if request.method == 'GET':
-            transaction_list = requests.get(
-                f"{BACKEND_API_BASE_URL}/api/v2/Transaction/transactionlists", verify=False).json()
+            transaction_list = get_records()
             current_year = datetime.datetime.now().year
-            return render_template('index.html', current_year=current_year,
-                                   transactionList=transaction_list, is_logedIn=True)
+            return render_template('index.html', current_year=current_year, transactionList=transaction_list, is_logedIn=True)
         else:
-            request_body = {
-                "amount": f"{request.form['amount']}",
-                "type": f"{request.form['type']}",
-                "tag": f"{request.form['tag']}",
-                "note": f"{request.form['note']}"
-            }
-            response_data = requests.post(
-                f"{BACKEND_API_BASE_URL}/api/v2/Transaction/addtransaction", json=request_body)
-            if response_data.status_code == 200:
+            amount = f"{request.form['amount']}"
+            type = f"{request.form['type']}"
+            tag = f"{request.form['tag']}"
+            note = f"{request.form['note']}"
+
+            if create_record(amount, type, tag, note):
                 return redirect(url_for('record'))
             else:
                 flash(
-                    "Error recording transaction. Please check you input and try again!", 'error')
+                    "Error creating record. Please check you input and try again!", 'error')
                 return redirect(url_for('record'))
     return render_template('login.html', is_logedIn=False)
 
@@ -75,13 +71,9 @@ def logout():
 def register():
     if request.method == 'GET':
         return render_template('register.html')
-    request_body = {
-        "userName": f"{request.form['userName']}",
-        "password": f"{request.form['password']}"
-    }
-    response_data = requests.post(
-        f"{BACKEND_API_BASE_URL}/api/v2/auth/user/register", verify=False, json=request_body)
-    if response_data.status_code == 200:
+    userName = request.form['userName']
+    password = request.form['password']
+    if create_user(userName, password):
         return redirect(url_for('record'))
     else:
         flash("Error creating account. Please check your input or try again!", "error")
@@ -92,25 +84,20 @@ def register():
 def edit(id):
     if 'userName' in session:
         if request.method == 'GET':
-            response_data = requests.get(
-                f"{BACKEND_API_BASE_URL}/api/v2/Transaction/{id}", verify=False)
-            if response_data.status_code == 200:
-                json_content = response_data.json()
-                return render_template('edit.html', record=json_content["data"], is_logedIn=True)
+            response_data = get_record(id)
+            if response_data is not None:
+                return render_template('edit.html', record=response_data, is_logedIn=True)
             else:
                 flash(
                     f"Error editing record with id {id}. Please try again!", "error")
                 return redirect(url_for("record"))
         else:
-            request_body = {
-                "amount": f"{request.form['amount']}",
-                "transactionType": f"{request.form['type']}",
-                "transactionTag": f"{request.form['tag']}",
-                "note": f"{request.form['note']}"
-            }
-            response_data = requests.put(
-                f"{BACKEND_API_BASE_URL}/api/v2/Transaction/updatetransaction/{id}", json=request_body)
-            if response_data.status_code == 200:
+            amount = f"{request.form['amount']}"
+            event = f"{request.form['type']}"
+            tag = f"{request.form['tag']}"
+            note = f"{request.form['note']}"
+
+            if update_record(id, amount, event, tag, note):
                 return redirect(url_for('record'))
             else:
                 flash(
@@ -123,23 +110,15 @@ def edit(id):
 def summary():
     if 'userName' in session:
         if request.method == 'GET':
-            return render_template('stats.html', is_logedIn=True)
+            return render_template('stats.html', record_summary=None, is_logedIn=True)
         else:
-            request_body = {
-                "startTime": f"{request.form['startDate']}",
-                "endtime": f"{request.form['endDate']}"
-            }
-            respose_data = requests.post(
-                f"{BACKEND_API_BASE_URL}/api/v2/Transaction/summary", verify=False, json=request_body)
-            if respose_data.status_code == 200:
-                json_content = respose_data.json()
-                record_summary = json_content['data']
+            startTime = f"{request.form['startDate']}"
+            endtime = f"{request.form['endDate']}"
+            recordsList = get_summary(startTime, endtime)
+            if recordsList is not None:
                 return render_template('stats.html',
-                                       record_summary=record_summary,
-                                       start_date=request.form['startDate'],
-                                       end_date=request.form['endDate'],
-                                       is_logedIn=True
-                                       )
+                                       record_summary=recordsList, start_date=request.form['startDate'],
+                                       end_date=request.form['endDate'], is_logedIn=True)
             else:
                 flash("Error retiving transaction summary. Please try again!", "error")
                 return redirect(url_for('summary'))

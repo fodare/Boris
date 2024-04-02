@@ -10,22 +10,26 @@ FinanceManager is a web-based application to help track personal savings and spe
 
 The application is intended for personal use and can be hosted on your private machine within your home / private network or a Raspberry Pi instance.
 
+Below is the web app request flow.
+
+<img src="https://raw.githubusercontent.com/fodare/media/main/FinanceManager/Requestflow.png" alt="App homepage" title="App homepage">
+
 ## Prerequisite
 
 - SQL server Express running.
 - Dotnet CLI installed.
 - Docker installed.
-- Favorite IDE, VS Code or Visual Studio.
+- Favourite IDE, VS Code or Visual Studio.
 
 ## Clone app files
 
-Navigate to your desired Dir and run the command below from your favorite CLI tool.
+Navigate to your desired DIR and run the command below from your favourite CLI tool.
 
     ```
     git clone https://github.com/fodare/FinanceManager.git
     cd FinanceManager
     ```
-The parent Dir contains a `backend` and a `frontend` sub Dir. `backend` holds the backend API while `frontend` Dir holds a Flask API to serve HTML pages or views.
+The parent DIR contains a `backend` and a `frontend` sub DIR. `backend` holds the backend API while `frontend` DIR holds a Flask API to serve HTML pages or views.
 
 ## Prepare and configure DB
 
@@ -43,39 +47,27 @@ The parent Dir contains a `backend` and a `frontend` sub Dir. `backend` holds th
     # IP address of the host running the container.
     ```
 
-- Using a DB explorer such as Azure data studio, VS Code SQL server plugin or SQL server management studio (SSMS) provide options to connect to the SQL server instance and execute the `DbSetup.sql` script to help configure the db table.
+- Using a DB explorer such as Azure data studio, VS Code SQL server plugin or SQL server management studio (SSMS) provide options to connect to the SQL server instance and execute the `DbSetup.sql` script to help configure the DB table.
 
-- Prepare DB connection string.
+## Update container environment variables
 
-    ```bash
-    # On the host running the SQL server container. Run the command below.
-    ip address show
-    # You looking for inet 192.168...
-    ```
+Update environment variables placeholder in the `.env` file.
 
-    The command above exposes the `IP address of the container running the SQL server`. Copy and update the connection string below as it's required for the backend API to connect to the database.
-
-    ```bash
-    # exmple dbConString="Server=192.168.0.1;Database=FinanceManagerDb;Trusted_Connection=false;TrustServerCertificate=True;User Id=<db username>;Password=<db password>;"
-   dbConString="Server=<host ip adress>;Database=FinanceManagerDb;Trusted_Connection=false;TrustServerCertificate=True;User Id=<db username>;Password=<db password>;"
-    ```
-
-## Update container environment variable
-
-Update environment varibales place holder in the `.env` file.
-
-- `dbConString`: the database connection string that was prepared in `Prepare and configure DB`
-- `secret`: You desired frontend cookies signing secret.
-- `host_ip`: You local machine Ip address. Eg 192.168.0.1
-- `backendapi_port`: Host listening port number for the backend API service.
-- `frontendapi_port`: Host listening port number for the frontendapi service.
+- `dbServerName`: SQL server name / host ip
+- `dbName`: SQL server database name.
+- `dbUserName`: SQL server encryptionuser name.
+- `dbPassword`: SQL server db password.
+- `secret`: Secret key for `frontendapi` sessions.
+- `host_ip`: Host  ip address.
+- `backendapi_port`: Port to access backendapi.
+- `frontendapi_port`: Port to access frontendapi.
 
 ## Start services
 
-From your CLI / terminal, ensure you are in the project root dir then execute the command below.
+From your CLI / terminal, ensure you are in the project root DIR then execute the command below.
 
 ``` bash
 docker compose up -d 
 ```
 
-Visit [localhost:frontendapi_portnumber](<http://localhost:{frontendapi_port number}/>)(e.g <http://localhost:3001>) to access the frontendapi service.
+Visit [localhost:frontendapi_portnumber](<http://localhost:{frontendapi_port number}/>)(e.g <http://localhost:3001>) to access the frontend service.

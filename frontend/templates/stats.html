@@ -1,5 +1,5 @@
-{% extends "basetemplate.html" %}{% block title %}Summary{% endblock %} {% block
-content %}
+{% extends "basetemplate.html" %} {% block title %} Summary {% endblock %}
+{%block content %}
 <div class="summaryview">
    <h1>Summary page</h1>
    {% with messages = get_flashed_messages(category_filter=["error"]) %} {% if
@@ -18,53 +18,67 @@ content %}
       ></button>
    </div>
    {% endif %} {% endwith %}
-   <div class="timeselector">
-      <form action="{{ url_for('summary')}}" method="post">
-         <div class="mb-3">
-            <div class="row">
-               <div class="col-lg-3">
-                  <label for="startDate" class="form-label">From</label>
-                  <input
-                     type="date"
-                     name="startDate"
-                     id="startDate"
-                     class="form-control"
-                  />
-               </div>
-               <div class="col-lg-3">
-                  <label for="endDate" class="form-label">Till</label>
-                  <input
-                     type="date"
-                     name="endDate"
-                     id="endDate"
-                     class="form-control"
-                  />
+   <div class="row timeselector">
+      <div class="col-lg-6">
+         <form action="{{ url_for('summary')}}" method="post">
+            <div class="mb-3">
+               <div class="row">
+                  <div class="col-lg-3">
+                     <label for="startDate" class="form-label">From</label>
+                     <input
+                        type="date"
+                        name="startDate"
+                        id="startDate"
+                        class="form-control"
+                     />
+                  </div>
+                  <div class="col-lg-3">
+                     <label for="endDate" class="form-label">Till</label>
+                     <input
+                        type="date"
+                        name="endDate"
+                        id="endDate"
+                        class="form-control"
+                     />
+                  </div>
                </div>
             </div>
-         </div>
-         <input type="submit" class="btn btn-secondary" value="Get Summary" />
-      </form>
+            <input
+               type="submit"
+               class="btn btn-secondary"
+               value="Get Summary"
+            />
+         </form>
+      </div>
+      <div class="col-lg-6 records-Totals">
+         <p>
+            <span class="savings">Savings/Income(€):</span>
+            {{record_summary.creditTotal}}
+         </p>
+         <p>
+            <span class="spending">Spending(€):</span>
+            {{record_summary.debitTotal}}
+         </p>
+      </div>
    </div>
    <div class="recordSummary">
       <h3 class="timerange">From:{{start_date}} - {{end_date}}</h3>
       <table class="table table-dark table-hover">
          <thead>
             <tr>
-               <th scope="col">Transaction Tag</th>
-               <th scope="col">Amount Sum</th>
-               <th scope="col">Event Count</th>
-               <th scope="col">Credit Sum</th>
-               <th scope="col">Debit Sum</th>
+               <th scope="col">Id</th>
+               <th scope="col">Amount</th>
+               <th scope="col">Type</th>
+               <th scope="col">Tag</th>
             </tr>
          </thead>
          <tbody>
-            {% for summary in record_summary %}
+            {% for summary in record_summary.records %}
             <tr>
-               <td>{{summary.tag}}</td>
-               <td>{{summary.amount}}</td>
-               <td>{{summary.count}}</td>
-               <td>{{summary.creditSum}}</td>
-               <td>{{summary.debitSum}}</td>
+               <td>{{ summary.recordId }}</td>
+               <td>{{ summary.amount }}</td>
+               <td>{{ summary.recordType }}</td>
+               <td>{{ summary.recordTag }}</td>
             </tr>
             {% endfor %}
          </tbody>

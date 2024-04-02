@@ -7,13 +7,15 @@ namespace backend.Services
 {
     public interface IUserService
     {
-        IEnumerable<UserModel> GetUsers();
-
-        UserModel? GetUser(int userId);
+        bool CreateUser(NewUserDTO newUser);
 
         UserModel? GetUserByUserName(string userName);
 
-        bool CreateUser(UserRegestration newUser);
+        UserModel? GetUserById(int userId);
+
+        IEnumerable<UserModel>? GetUsers();
+
+        bool LockUser(int userId);
 
         bool VerifyUser(string userName, string password);
     }

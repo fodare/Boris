@@ -1,22 +1,17 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 
-namespace backend.Models
+namespace backend.Dtos
 {
-    public class UserModel
+    public class NewUserDTO
     {
-        public int UserId { get; set; }
-
         [JsonPropertyName("userName")]
         public required string UserName { get; set; }
 
         [JsonPropertyName("password")]
         public required string UserPassword { get; set; }
-
-        public required bool IsAdmin { get; set; }
-
-        public DateTime CreatedDate { get; set; }
-
-        public DateTime UpdatedDate { get; set; }
     }
 }

@@ -16,7 +16,7 @@ content %}
       ></button>
    </div>
    {% endif %} {% endwith %}
-   <form action="{{ url_for('edit', id=record.transactionId) }}" method="post">
+   <form action="{{ url_for('edit', id=record.recordId) }}" method="post">
       <div class="mb-3">
          <div class="row">
             <div class="col-lg-3">
@@ -38,30 +38,20 @@ content %}
                   <option value="Debit">Debit</option>
                </select>
             </div>
-            <div class="col-lg-1">
-               <label for="tag" class="form-label">Tag</label>
-               <select name="tag" id="tag">
-                  <option value="Grocery">Grocery</option>
-                  <option value="EatingOut">EatingOut</option>
-                  <option value="Rent">Rent</option>
-                  <option value="Electricity">Electricity</option>
-                  <option value="Radio">Radio</option>
-                  <option value="Internet">Internet</option>
-                  <option value="Phone">Phone</option>
-                  <option value="Extra">Extra</option>
-                  <option value="Transportation">Transportation</option>
-                  <option value="Books">Books</option>
-                  <option value="onlineCourse">onlineCourse</option>
-                  <option value="Medication">Medication</option>
-                  <option value="Insurance">Insurance</option>
-                  <option value="Savings">Savings</option>
-                  <option value="Charity">Charity</option>
-                  <option value="Loan">Loan</option>
-               </select>
-            </div>
          </div>
       </div>
       <div class="row transactionnote">
+         <div class="col-lg-6">
+            <label for="tag" class="form-label">Tag</label>
+            <textarea
+               class="form-control"
+               id="tag"
+               rows="1"
+               name="tag"
+               placeholder="{{record.recordTag}}"
+               maxlength="120"
+            ></textarea>
+         </div>
          <div class="col-lg-6">
             <label for="note" class="form-label">Note</label>
             <textarea
