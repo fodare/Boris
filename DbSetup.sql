@@ -118,21 +118,33 @@ CREATE OR ALTER PROCEDURE FinanceRecordSchema.spRecord_Get
     EXEC FinanceRecordSchema.spRecord_Get @recordId=1
     EXEC FinanceRecordSchema.spRecord_Get @userId = 8
     EXEC FinanceRecordSchema.spRecord_Get @startDate = '2024-03-01',
-        @endDate = '2024-03-28'
+        @endDate = '2024-05-28'
     */
     @recordId INT = null,
     @userId INT = null,
     @startDate DATE = null,
     @endDate DATE =  NULL
-
 AS
 BEGIN
-    SELECT *
+    IF @startDate is NULL
+    BEGIN
+        SELECT TOP(10)
+            *
+        FROM FinanceRecordSchema.Records WITH(NOLOCK)
+        WHERE RecordId = ISNULL(@recordId , RecordId)
+            AND UserId = ISNULL(@userId, UserId)
+            AND RecordDate >= ISNULL(@startDate, RecordDate)
+            AND RecordUpdateDate <= ISNULL(@endDate, RecordUpdateDate)
+        ORDER By RecordDate DESC
+    END
+    ELSE
+        SELECT *
     FROM FinanceRecordSchema.Records WITH(NOLOCK)
     WHERE RecordId = ISNULL(@recordId , RecordId)
         AND UserId = ISNULL(@userId, UserId)
         AND RecordDate >= ISNULL(@startDate, RecordDate)
         AND RecordUpdateDate <= ISNULL(@endDate, RecordUpdateDate)
+    ORDER By RecordDate DESC
 END
 GO
 
@@ -157,24 +169,3 @@ BEGIN
             WHERE RecordId = @recordId
 END
 GO
-
--- Create OR ALTER PROCEDURE FinanceRecordSchema.spRecord_Summary
---     /* EXEC FinanceRecordSchema.spRecord_Summary
---     @startDate = '2024-01-01',
---     @endDate = '2024-04-01'
---   */
---     @startDate DATE = null,
---     @endDate DATE = null
--- AS
--- BEGIN
---     SELECT
---         RecordTag,
---         COUNT(RecordTag) as Event_count,
---         (SELECT SUM(Amount)
---         FROM FinanceRecordSchema.Records
---         WHERE RecordTag = RecordTag) AS Tag_SUM
---     FROM FinanceRecordSchema.Records
---     WHERE RecordDate >= ISNULL(@startDate, RecordDate) AND RecordDate <= ISNULL(@endDate, RecordDate)
---     GROUP BY RecordTag
---     ORDER BY Event_count
--- END
