@@ -1,9 +1,9 @@
 services:
    backendapi:
-      image: backendapi:latest
+      image: openops/fmbackendapi:0.0.4
       container_name: backendapi
       ports:
-         - "$backendapi_port:80"
+         - "$backendapi_port:8080"
       environment:
          dbServerName: "$dbServerName"
          dbName: "$dbName"
@@ -11,7 +11,7 @@ services:
          dbPassword: "$dbPassword"
 
    frontendapi:
-      image: "frontendapi:latest"
+      image: openops/fmfrontendapi:0.0.3
       container_name: frontendapi
       depends_on:
          backendapi:
