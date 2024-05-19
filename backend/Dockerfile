@@ -11,6 +11,6 @@ RUN dotnet publish -c Release -o out
 # Build runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /App
-EXPOSE 80
+EXPOSE 8080
 COPY --from=build-env /App/out .
 ENTRYPOINT ["dotnet", "backend.dll"]
