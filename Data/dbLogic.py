@@ -50,5 +50,5 @@ class DBLogic():
                     return False
 
 
-DBLogic().add_app_user(username="admin4", pasword="admin")
-DBLogic().get_app_users()
+# DBLogic().add_app_user(username="", pasword="")
+# DBLogic().get_app_users()
