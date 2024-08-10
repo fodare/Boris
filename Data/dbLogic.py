@@ -28,10 +28,14 @@ class DBLogic():
         with self.connect_to_db() as conn:
             with conn.cursor() as cursor:
                 cursor.execute('EXEC UserSchema.spUser_Get')
-                for user in cursor.fetchall():
-                    print(
-                        f"Id: {user['id']}, Username: {user['Username']}, Password: {user['Password']}, Created: {user['CreateDate']}")
                 return cursor.fetchall()
+
+    def get_app_user(self, username):
+        with self.connect_to_db() as conn:
+            with conn.cursor() as cursor:
+                cursor.execute(
+                    f"EXEC UserSchema.spUser_Get @userName = '{username}'")
+                return cursor.fetchone()
 
     def add_app_user(self, username, pasword):
         with self.connect_to_db() as conn:
@@ -48,7 +52,3 @@ class DBLogic():
                         return True
                 except pymssql.exceptions.OperationalError as err:
                     return False
-
-
-# DBLogic().add_app_user(username="", pasword="")
-# DBLogic().get_app_users()
