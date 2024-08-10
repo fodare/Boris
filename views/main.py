@@ -6,21 +6,24 @@ from Data import dbLogic
 class App(_tk.Tk):
     def __init__(self, title: str, app_geometry: tuple):
         super().__init__()
+
+        # ----------- App Window config -----------#
         self.title(title)
         self.geometry(f"{app_geometry[0]}x{app_geometry[1]}")
         self.resizable(width=False, height=True)
+
+        # ----------- Init DB config -----------#
         self.dbLogic = dbLogic.DBLogic()
 
+        # ----------- Sub frames -----------#
         self.login_frame = LoginView(parent=self)
-
         # self.login_frame.pack_propagate(False)
 
         self.register_frame = RegisterView(self)
-
         # self.register_frame.pack_propagate(False)
 
+        # ----------- Default view -----------#
         self.login_frame.render_login_frame(self)
-
         self.mainloop()
 
 
@@ -120,3 +123,8 @@ class RegisterView(_tk.Frame):
             self, text="Register", width=11, command=handle_register).grid(row=3, column=1, pady=20, rowspan=2)
 
         self.tkraise()
+
+
+class OptionsMenuFrame(_tk.Frame):
+    def __init__(self, parent):
+        super().__init(parent)
