@@ -26,7 +26,7 @@ GO
 
 CREATE OR ALTER PROCEDURE UserSchema.spUser_Get
     /* EXEC UserSchema.spUser_Get @userId = 1 */
-    /* EXEC UserSchema.spUser_Get @userName = 'jane' */
+    /* EXEC UserSchema.spUser_Get @userName = '' */
     @userId INT = NULL,
     @userName VARCHAR(50) = NULL
 AS
@@ -39,10 +39,10 @@ GO
 
 CREATE OR ALTER PROCEDURE UserSchema.spUser_Add
     /* EXEC UserSchema.spUser_Add 
-    @userName = 'Jane2', 
-    @password = 'janedoewwewe123', 
-    @createDate = '2023-12-30', 
-    @lastUpdates = '2023-12-30'
+    @userName = '', 
+    @password = '', 
+    @createDate = '', 
+    @lastUpdates = ''
     */
     @userName VARCHAR(50),
     @password NVARCHAR(max),
@@ -109,11 +109,12 @@ CREATE OR ALTER PROCEDURE PasswordSchema.spPasswords_Add
     /* 
         EXEC PasswordSchema.spPasswords_Add
         @account='', @username ='',
-        @password='', @note=''
+        @password='', @link='', @note=''
     */
     @account VARCHAR(50),
     @username VARCHAR(90),
     @password NVARCHAR(max),
+    @link NVARCHAR(max),
     @note NVARCHAR(max)
 AS
 BEGIN
@@ -122,11 +123,11 @@ BEGIN
     WHERE Passwords.Account = @account)
     BEGIN
         INSERT INTO PasswordSchema.Passwords
-            ([Account],[Username],[Password],[Note])
+            ([Account],[Username],[Password],[LoginLink],[Note])
         OUTPUT
         INSERTED.Account
         VALUES
-            (ISNULL(@account, ' '), @username, @password, @note)
+            (ISNULL(@account, ' '), @username, @password, @link, @note)
     END
     ELSE
         THROW 52000,
@@ -138,7 +139,7 @@ CREATE OR ALTER PROCEDURE PasswordSchema.spPasswords_Update
     /* 
         EXEC PasswordSchema.spPasswords_Update
         @id= 1, @account = '', @username = '',
-        @password = '', @note = 'This is a test'
+        @password = '', @note = ''
     */
     @id INT,
     @account VARCHAR(50),
