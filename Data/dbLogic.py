@@ -24,6 +24,8 @@ class DBLogic():
         )
         return db_connection
 
+    # APP user operations
+
     def get_app_users(self):
         with self.connect_to_db() as conn:
             with conn.cursor() as cursor:
@@ -37,7 +39,7 @@ class DBLogic():
                     f"EXEC UserSchema.spUser_Get @userName = '{username}'")
                 return cursor.fetchone()
 
-    def add_app_user(self, username, pasword):
+    def add_app_user(self, username, pasword) -> bool:
         with self.connect_to_db() as conn:
             with conn.cursor() as cursor:
                 try:
@@ -49,6 +51,24 @@ class DBLogic():
                     ouput = cursor.fetchone()
                     conn.commit()
                     if ouput["Username"] == username:
+                        return True
+                except pymssql.exceptions.OperationalError as err:
+                    return False
+
+    # Password operations
+
+    def add_password_entry(self, account, username, password, link, note) -> bool:
+        with self.connect_to_db() as conn:
+            with conn.cursor() as cursor:
+                try:
+                    cursor.execute(
+                        f"""EXEC PasswordSchema.spPasswords_Add
+                    @account='{account}', @username ='{username}',
+                    @password='{password}',@link='{link}', @note='{note}'
+                    """)
+                    output = cursor.fetchone()
+                    conn.commit()
+                    if output["Account"] == account:
                         return True
                 except pymssql.exceptions.OperationalError as err:
                     return False
