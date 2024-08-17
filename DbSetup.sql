@@ -81,6 +81,7 @@ CREATE TABLE PasswordSchema.Passwords
     Account VARCHAR(50) NOT NULL,
     Username VARCHAR(90) NOT NULL,
     Password NVARCHAR(max) NOT NULL,
+    LoginLink NVARCHAR(max),
     Note NVARCHAR(max)
 );
 GO
