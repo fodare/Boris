@@ -1,6 +1,9 @@
 import tkinter as _tk
 from tkinter import messagebox
 from Data import dbLogic
+from Utilities.passwordlogic import PasswordLogic
+import pyperclip
+import html
 
 
 class App(_tk.Tk):
@@ -33,7 +36,6 @@ class App(_tk.Tk):
 class LoginView(_tk.Frame):
     def __init__(self, parent):
         super().__init__(parent)
-        # self.grid(row=0, column=0, padx=100, sticky="nsew")
 
     def render_login_frame(self, parent):
 
@@ -76,7 +78,8 @@ class LoginView(_tk.Frame):
 
         self.login_button = _tk.Button(
             self, text="Login", width=11, command=handle_login).grid(row=3, column=0, pady=20,  rowspan=2)
-        self.register_button = _tk.Button(self, text="Register", width=11, command=handle_register_view).grid(
+        self.register_button = _tk.Button(self, text="Register", width=11,
+                                          command=handle_register_view).grid(
             row=3, column=1, pady=20, rowspan=2)
         self.tkraise()
 
@@ -220,11 +223,82 @@ class PasswordView(_tk.Frame):
     def __init__(self, parent):
         super().__init__(parent)
         self.grid(row=0, column=0, sticky="nsew")
+        self.password_logic = PasswordLogic()
 
     def render_password_contnet(self):
-        _tk.Label(self, text="This is the password View!").grid(
-            row=0, column=0)
-        # _tk.Label(self, text="This is the password password message!").grid(row=1, column=0)
+        # --------------- Functions --------------- #
+        def handle_password_generation():
+            random_password = self.password_logic.generate_password()
+            if len(password_entry.get()) > 0:
+                password_entry.delete(0, _tk.END)
+            password_entry.insert(_tk.END, string=f"{random_password}")
+            pyperclip.copy(random_password)
+
+        def handle_save_password():
+            account = account_entry.get()
+            username = username_entry.get()
+            password = password_entry.get()
+            link = link_entry.get()
+            note = html.unescape(note_entry.get("1.0", _tk.END))
+
+            password_saved = self.password_logic.record_password(
+                account, username, password, link, note)
+            if password_saved:
+                messagebox.showinfo(
+                    title="Success", message="Password saved successfully!")
+                account_entry.delete(0, _tk.END)
+                username_entry.delete(0, _tk.END)
+                password_entry.delete(0, _tk.END)
+                link_entry.delete(0, _tk.END)
+                note_entry.delete("1.0", _tk.END)
+            else:
+                messagebox.showerror(
+                    title="Error", message="Error saving password. Please try again!")
+
+        # --------------- Labels --------------- #
+        view_label = _tk.Label(
+            self, text="Password View", font=("monospace", 20))
+        view_label.grid(row=0, column=0, pady=10, columnspan=2)
+
+        account_label = _tk.Label(
+            self, text="Account name:").grid(row=1, column=0)
+
+        username_label = _tk.Label(
+            self, text="Username:").grid(row=2, column=0)
+
+        password_label = _tk.Label(
+            self, text="Password:").grid(row=3,  column=0)
+
+        link_label = _tk.Label(self, text="Login Link:").grid(row=4, column=0)
+
+        note = _tk.Label(self, text="Note:").grid(row=5, column=0)
+
+        # --------------- Entries --------------- #
+        account_entry = _tk.Entry(self)
+        account_entry.grid(row=1, column=1)
+
+        username_entry = _tk.Entry(self)
+        username_entry.grid(row=2, column=1)
+
+        password_entry = _tk.Entry(self)
+        password_entry.grid(row=3, column=1)
+
+        link_entry = _tk.Entry(self)
+        link_entry.grid(row=4, column=1)
+
+        note_entry = _tk.Text(self, height=3, width=20)
+        note_entry.grid(row=5, column=1)
+
+        # --------------- Buttons --------------- #
+        generate_password = _tk.Button(
+            self, text="Generate", command=handle_password_generation)
+        generate_password.grid(row=3, column=2)
+
+        add_password = _tk.Button(
+            self, text="Add Password", command=handle_save_password).grid(row=6, column=0)
+
+        edit_button = _tk.Button(self, text="Update")
+
         self.tkraise()
 
 
