@@ -87,7 +87,6 @@ class LoginView(_tk.Frame):
 class RegisterView(_tk.Frame):
     def __init__(self, parent):
         super().__init__(parent)
-        # self.grid(row=0, column=0, padx=100, sticky="nsew")
 
     def render_register_frame(self, parent):
 
@@ -144,7 +143,6 @@ class AppMainFrame(_tk.Frame):
         self.options_menu_frame.pack()
         self.options_menu_frame.pack_propagate(False)
         self.options_menu_frame.configure(width=600, height=38)
-        # self.options_menu_frame.configure(width=600, height=38,  bg="green")
 
         self.content_frame = ContentFrame(self)
         self.content_frame.pack(fill=_tk.BOTH, expand=True)
@@ -215,7 +213,6 @@ class HomeView(_tk.Frame):
     def render_home_contnet(self):
         _tk.Label(self, text="This is the home View!").grid(
             row=0, column=0)
-        # _tk.Label(self, text="This is the home view message!").grid(row = 1, column = 0)
         self.tkraise()
 
 
@@ -309,7 +306,6 @@ class FinanceView(_tk.Frame):
 
     def render_finance_contnet(self):
         _tk.Label(self, text="This is the finance view!").grid(row=0, column=0)
-        # _tk.Label(self, text="This is the password view message!").grid(row=1, column=0)
         self.tkraise()
 
 
@@ -320,7 +316,6 @@ class NewsView(_tk.Frame):
 
     def render_news_contnet(self):
         _tk.Label(self, text="This is the news view!").grid(row=0, column=0)
-        # _tk.Label(self, text="This is the news view message!").grid(row=1, column=0)
         self.tkraise()
 
 
@@ -331,5 +326,4 @@ class GoalsView(_tk.Frame):
 
     def render_goals_content(self):
         _tk.Label(self, text="This is the goals view!").grid(row=0, column=0)
-        # _tk.Label(self, text="This is the goals view message!").grid(row=1, column=0)
         self.tkraise()
