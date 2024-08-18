@@ -138,34 +138,36 @@ GO
 CREATE OR ALTER PROCEDURE PasswordSchema.spPasswords_Update
     /* 
         EXEC PasswordSchema.spPasswords_Update
-        @id= 1, @account = '', @username = '',
-        @password = '', @note = ''
+        @id=0, @account = '', @username = '',
+        @password = '', @link='', @note = ''
     */
     @id INT,
     @account VARCHAR(50),
     @username VARCHAR(90),
     @password NVARCHAR(max),
+    @link NVARCHAR(max),
     @note NVARCHAR(max)
 AS
 BEGIN
     UPDATE PasswordSchema.Passwords SET 
         [Account] = @account, [Username] = @username,
-        [Password] = @password, [Note] = @note
-        OUTPUT INSERTED.Account
+        [Password] = @password, [LoginLink] = @link, [Note] = @note
+        OUTPUT
+    INSERTED.Account
     WHERE [id] = @id
 END
 GO
 
 CREATE OR ALTER PROCEDURE PasswordSchema.spPasswords_Delete
     /* 
-        EXEC PasswordSchema.spPasswords_Delete
-        @id= 0, @account=''
+        EXEC PasswordSchema.spPasswords_Delete @id= 0
     */
     @id INT = NULL,
     @account VARCHAR(50) = NULL
 AS
 BEGIN
     DELETE FROM PasswordSchema.Passwords 
-    WHERE Passwords.id = ISNULL(@id, id) AND Passwords.Account = ISNULL(@account, Account)
+    OUTPUT DELETED.id
+    WHERE Passwords.id = ISNULL(@id, id)
 END
 GO
