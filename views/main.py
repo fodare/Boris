@@ -1,5 +1,6 @@
 import tkinter as _tk
 from tkinter import messagebox
+from tkinter import ttk
 from Data import dbLogic
 from Utilities.passwordlogic import PasswordLogic
 import pyperclip
@@ -223,7 +224,9 @@ class PasswordView(_tk.Frame):
         self.password_logic = PasswordLogic()
 
     def render_password_contnet(self):
+
         # --------------- Functions --------------- #
+
         def handle_password_generation():
             random_password = self.password_logic.generate_password()
             if len(password_entry.get()) > 0:
@@ -248,54 +251,151 @@ class PasswordView(_tk.Frame):
                 password_entry.delete(0, _tk.END)
                 link_entry.delete(0, _tk.END)
                 note_entry.delete("1.0", _tk.END)
+                self.render_password_contnet()
             else:
                 messagebox.showerror(
                     title="Error", message="Error saving password. Please try again!")
 
-        # --------------- Labels --------------- #
-        view_label = _tk.Label(
-            self, text="Password View", font=("monospace", 20))
+        def reset_entries():
+            account_entry.delete(0, _tk.END)
+            username_entry.delete(0, _tk.END)
+            password_entry.delete(0, _tk.END)
+            link_entry.delete(0, _tk.END)
+            note_entry.delete("1.0", _tk.END)
+
+        def update_password_entry():
+            selected_item = table.item(table.selection())
+            selected_item_info = self.password_logic.get_password(
+                selected_item['values'][0])
+            user_approve = messagebox.askokcancel(
+                title="Caution", message=f"Are you sure you want to update record with account name {selected_item_info['Account']}?")
+            if user_approve:
+                id = selected_item_info["id"]
+                account = account_entry.get()
+                username = username_entry.get()
+                password = password_entry.get()
+                link = link_entry.get()
+                note = html.unescape(note_entry.get("1.0", _tk.END))
+                account_updated = self.password_logic.update_password(
+                    id, account, username, password, link, note)
+                if account_updated:
+                    messagebox.showinfo(
+                        title="Info", message="Account updated successfully!")
+                    self.render_password_contnet()
+                else:
+                    messagebox.showerror(
+                        title="Error", message="Error updating account!")
+
+        # --------------- Password Entry view --------------- #
+        password_entry_frame = _tk.Frame(self)
+        password_entry_frame.grid(row=0, column=0)
+        # ----------- Labels ----------- #
+
+        view_label = _tk.Label(password_entry_frame,
+                               text="Password View", font=("monospace", 20))
         view_label.grid(row=0, column=0, pady=10, columnspan=2)
 
         account_label = _tk.Label(
-            self, text="Account name:").grid(row=1, column=0)
+            password_entry_frame, text="Account name:").grid(row=1, column=0)
 
         username_label = _tk.Label(
-            self, text="Username:").grid(row=2, column=0)
+            password_entry_frame, text="Username:").grid(row=2, column=0)
 
         password_label = _tk.Label(
-            self, text="Password:").grid(row=3,  column=0)
+            password_entry_frame, text="Password:").grid(row=3,  column=0)
 
-        link_label = _tk.Label(self, text="Login Link:").grid(row=4, column=0)
+        link_label = _tk.Label(password_entry_frame,
+                               text="Login Link:").grid(row=4, column=0)
 
-        note = _tk.Label(self, text="Note:").grid(row=5, column=0)
+        note = _tk.Label(password_entry_frame,
+                         text="Note:").grid(row=5, column=0)
 
-        # --------------- Entries --------------- #
-        account_entry = _tk.Entry(self)
+        # ----------- Entries ----------- #
+
+        account_entry = _tk.Entry(password_entry_frame, width=25)
         account_entry.grid(row=1, column=1)
 
-        username_entry = _tk.Entry(self)
+        username_entry = _tk.Entry(password_entry_frame, width=25)
         username_entry.grid(row=2, column=1)
 
-        password_entry = _tk.Entry(self)
+        password_entry = _tk.Entry(password_entry_frame, width=25)
         password_entry.grid(row=3, column=1)
 
-        link_entry = _tk.Entry(self)
+        link_entry = _tk.Entry(password_entry_frame, width=25)
         link_entry.grid(row=4, column=1)
 
-        note_entry = _tk.Text(self, height=3, width=20)
-        note_entry.grid(row=5, column=1)
+        note_entry = _tk.Text(password_entry_frame, height=3, width=25)
+        note_entry.grid(row=5, column=1, columnspan=1)
 
-        # --------------- Buttons --------------- #
+        # ----------- Buttons ----------- #
+
         generate_password = _tk.Button(
-            self, text="Generate", command=handle_password_generation)
+            password_entry_frame, text="Generate", command=handle_password_generation)
         generate_password.grid(row=3, column=2)
 
-        add_password = _tk.Button(
-            self, text="Add Password", command=handle_save_password).grid(row=6, column=0)
+        add_password_button = _tk.Button(
+            password_entry_frame, text="Add Password", command=handle_save_password)
+        add_password_button.grid(row=6, column=0)
 
-        edit_button = _tk.Button(self, text="Update")
+        update_button = _tk.Button(
+            password_entry_frame, text="Update", command=update_password_entry)
 
+        # --------------- Password Tree view --------------- #
+        password_tree_frame = _tk.Frame(self)
+        password_tree_frame.grid(row=1, column=0, columnspan=2)
+
+        table = ttk.Treeview(password_tree_frame, columns=(
+            'Account', 'Username', 'Link'), show='headings')
+        table.heading('Account', text='Account')
+        table.heading('Username', text='Username')
+        table.heading('Link', text='Login Link')
+        table.pack(fill='both', expand=True)
+
+        entry_list = self.password_logic.get_passwords()
+        for account in entry_list:
+            table.insert(parent='', index=_tk.END, values=(
+                account['Account'], account['Username'], account['LoginLink']))
+
+        # ----------- Tree event ----------- #
+
+        def item_select(_):
+            selected_item = table.item(table.selection())
+            selected_item_info = self.password_logic.get_password(
+                selected_item['values'][0])
+            reset_entries()
+            account_entry.insert(
+                _tk.END, string=f"{selected_item_info['Account']}")
+            username_entry.insert(
+                _tk.END, string=f"{selected_item_info['Username']}")
+            password_entry.insert(
+                _tk.END, string=f"{selected_item_info['Password']}")
+            link_entry.insert(
+                _tk.END, string=f"{selected_item_info['LoginLink']}")
+            note_entry.insert(_tk.END, f"{selected_item_info['Note']}")
+            add_password_button.grid_forget()
+            update_button.grid(row=6, column=0)
+
+        def item_delete(_):
+            selected_item = table.item(table.selection())
+            selected_item_info = self.password_logic.get_password(
+                selected_item['values'][0])
+            user_approve = messagebox.askokcancel(
+                title="Caution", message=f"Are you sure, you want to delete account with name {selected_item_info['Account']}")
+            if user_approve:
+                password_deleted = self.password_logic.delete_password(
+                    selected_item_info['id'])
+                if password_deleted:
+                    messagebox.showinfo(
+                        title="Info", message="Account deleted successfully!")
+                    self.render_password_contnet()
+                else:
+                    messagebox.showerror(
+                        title="Error", message="Error deleting account!")
+
+        table.bind('<<TreeviewSelect>>', item_select)
+        table.bind('<Delete>', item_delete)
+
+        # Render Password view
         self.tkraise()
 
 
