@@ -29,3 +29,15 @@ class PasswordLogic:
 
     def record_password(self, account, username, password,  link, note):
         return self.db_logic.add_password_entry(account, username, password, link, note)
+
+    def get_passwords(self):
+        return self.db_logic.get_passwords()
+
+    def get_password(self, account):
+        return self.db_logic.get_password(account)
+
+    def update_password(self, id, account, username, password, link, note):
+        return self.db_logic.update_password(id, account, username, password, link, note)
+
+    def delete_password(self, id):
+        return self.db_logic.delete_password(id)

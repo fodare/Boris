@@ -72,3 +72,45 @@ class DBLogic():
                         return True
                 except pymssql.exceptions.OperationalError as err:
                     return False
+
+    def get_passwords(self):
+        with self.connect_to_db() as conn:
+            with conn.cursor() as cursor:
+                cursor.execute("EXEC PasswordSchema.spPasswords_Get")
+                return cursor.fetchall()
+
+    def get_password(self, account):
+        with self.connect_to_db() as conn:
+            with conn.cursor() as cursor:
+                cursor.execute(
+                    f"EXEC PasswordSchema.spPasswords_Get @account='{account}'")
+                return cursor.fetchone()
+
+    def update_password(self, id, account, username, password, link, note) -> bool:
+        with self.connect_to_db() as conn:
+            with conn.cursor() as cursor:
+                try:
+                    cursor.execute(f"""
+                        EXEC PasswordSchema.spPasswords_Update
+                        @id= {id}, @account = '{account}', @username = '{username}',
+                        @password = '{password}', @link='{link}', @note = '{note}'
+                    """)
+                    output = cursor.fetchone()
+                    conn.commit()
+                    if output["Account"] == account:
+                        return True
+                except pymssql.exceptions.OperationalError as err:
+                    return False
+
+    def delete_password(self, id):
+        with self.connect_to_db() as conn:
+            with conn.cursor() as cursor:
+                try:
+                    cursor.execute(
+                        f"EXEC PasswordSchema.spPasswords_Delete @id={id}")
+                    output = cursor.fetchone()
+                    conn.commit()
+                    if output['id'] == id:
+                        return True
+                except pymssql.exceptions.OperationalError as err:
+                    return False
