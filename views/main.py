@@ -407,23 +407,3 @@ class FinanceView(_tk.Frame):
     def render_finance_contnet(self):
         _tk.Label(self, text="This is the finance view!").grid(row=0, column=0)
         self.tkraise()
-
-
-class NewsView(_tk.Frame):
-    def __init__(self, parent):
-        super().__init__(parent)
-        self.grid(row=0, column=0, sticky="nsew")
-
-    def render_news_contnet(self):
-        _tk.Label(self, text="This is the news view!").grid(row=0, column=0)
-        self.tkraise()
-
-
-class GoalsView(_tk.Frame):
-    def __init__(self, parent):
-        super().__init__(parent)
-        self.grid(row=0, column=0, sticky="nsew")
-
-    def render_goals_content(self):
-        _tk.Label(self, text="This is the goals view!").grid(row=0, column=0)
-        self.tkraise()
