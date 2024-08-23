@@ -5,15 +5,23 @@ from Data import dbLogic
 from Utilities.passwordlogic import PasswordLogic
 import pyperclip
 import html
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 
 class App(_tk.Tk):
-    def __init__(self, title: str, app_geometry: tuple):
+    def __init__(self):
         super().__init__()
 
         # ----------- App Window config -----------#
-        self.title(title)
-        self.geometry(f"{app_geometry[0]}x{app_geometry[1]}")
+        app_title = os.getenv(key='APP_TITLE', default="Boris")
+        print(str(app_title))
+        self.title(f"{app_title}")
+        window_width = os.getenv(key='APP_WINDOW_WIDTH', default=800)
+        window_height = os.getenv(key='APP_WINDOW_HEIGHT', default=600)
+        self.geometry(f"{window_width}x{window_height}")
         self.resizable(width=False, height=True)
 
         # ----------- Init DB config -----------#
