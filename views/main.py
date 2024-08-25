@@ -16,10 +16,13 @@ class App(_tk.Tk):
         super().__init__()
 
         # ----------- App Window config -----------#
-        app_title = os.getenv(key='APP_TITLE', default="Boris")
+        app_title = os.getenv('APP_TITLE') if os.getenv(
+            'APP_TITLE') is None else "Boris"
         self.title(app_title)
-        window_width = os.getenv(key='APP_WINDOW_WIDTH', default=800)
-        window_height = os.getenv(key='APP_WINDOW_HEIGHT', default=600)
+        window_width = os.getenv('APP_WINDOW_WIDTH') if os.getenv(
+            'APP_WINDOW_WIDTH') is None else 1000
+        window_height = os.getenv('APP_WINDOW_HEIGHT') if os.getenv(
+            'APP_WINDOW_HEIGHT') is None else 700
         self.geometry(f"{window_width}x{window_height}")
         self.resizable(width=False, height=False)
 
