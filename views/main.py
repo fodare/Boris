@@ -335,21 +335,25 @@ class PasswordContnet(ttk.Frame):
         def item_select(_):
             selected_item = self.password_tree.item(
                 self.password_tree.selection())
-            selected_item_info = self.password_logic.get_password(
-                selected_item['values'][0])
-            reset_form_entries()
-            self.account_entry.insert(
-                _tk.END, string=f"{selected_item_info['Account']}")
-            self.username_entry.insert(
-                _tk.END, string=f"{selected_item_info['Username']}")
-            self.password_entry.insert(
-                _tk.END, string=f"{selected_item_info['Password']}")
-            self.link_entry.insert(
-                _tk.END, string=f"{selected_item_info['LoginLink']}")
-            self.note_entry.insert(
-                _tk.END, f"{selected_item_info['Note']}")
-            self.add_button.grid_forget()
-            self.update_button.grid(row=6, column=1)
+
+            if selected_item["values"] == "":
+                pass
+            elif selected_item["values"] is not None:
+                selected_item_info = self.password_logic.get_password(
+                    selected_item['values'][0])
+                reset_form_entries()
+                self.account_entry.insert(
+                    _tk.END, string=f"{selected_item_info['Account']}")
+                self.username_entry.insert(
+                    _tk.END, string=f"{selected_item_info['Username']}")
+                self.password_entry.insert(
+                    _tk.END, string=f"{selected_item_info['Password']}")
+                self.link_entry.insert(
+                    _tk.END, string=f"{selected_item_info['LoginLink']}")
+                self.note_entry.insert(
+                    _tk.END, f"{selected_item_info['Note']}")
+                self.add_button.grid_forget()
+                self.update_button.grid(row=6, column=1)
 
         def item_delete(_):
             selected_item = self.password_tree.item(
@@ -370,8 +374,24 @@ class PasswordContnet(ttk.Frame):
                         title="Error", message="Error deleting account!")
                 update_table_entries()
 
+        def item_deselect(_):
+            selected_item = self.password_tree.item(
+                self.password_tree.selection())
+
+            if selected_item["values"] == "":
+                pass
+            elif selected_item["values"] is not None:
+                _ = self.password_logic.get_password(
+                    selected_item['values'][0])
+                self.password_tree.selection_remove(
+                    self.password_tree.selection())
+                reset_form_entries()
+                self.update_button.grid_forget()
+                self.add_button.grid(row=6, column=1, pady=5)
+
         self.password_tree.bind('<Double-1>', item_select)
         self.password_tree.bind('<Delete>', item_delete)
+        self.password_tree.bind('<Escape>', item_deselect)
 
 
 class FinanceContent(ttk.Frame):
