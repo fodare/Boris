@@ -10,20 +10,23 @@ import os
 
 load_dotenv()
 
+APP_WINDOW_WIDTH = os.getenv('APP_WINDOW_WIDTH') if os.getenv(
+    'APP_WINDOW_WIDTH') is None else 1000
+APP_WINDOW_HEIGHT = os.getenv('APP_WINDOW_HEIGHT') if os.getenv(
+    'APP_WINDOW_HEIGHT') is None else 700
+APP_THEME_NAME = os.getenv('APP_THEME_NAME') if os.getenv(
+    'APP_THEME_NAME') is None else "Darkly"
+APP_TITLE = os.getenv('APP_TITLE') if os.getenv(
+    'APP_TITLE') is None else "Boris"
+
 
 class App(_tk.Tk):
     def __init__(self):
         super().__init__()
 
         # ----------- App Window config -----------#
-        app_title = os.getenv('APP_TITLE') if os.getenv(
-            'APP_TITLE') is None else "Boris"
-        self.title(app_title)
-        window_width = os.getenv('APP_WINDOW_WIDTH') if os.getenv(
-            'APP_WINDOW_WIDTH') is None else 1000
-        window_height = os.getenv('APP_WINDOW_HEIGHT') if os.getenv(
-            'APP_WINDOW_HEIGHT') is None else 700
-        self.geometry(f"{window_width}x{window_height}")
+        self.title(APP_TITLE)
+        self.geometry(f"{APP_WINDOW_WIDTH}x{APP_WINDOW_HEIGHT}")
         self.resizable(width=False, height=False)
 
         # ----------- Init DB config -----------#
@@ -31,13 +34,15 @@ class App(_tk.Tk):
 
         # ----------- Sub frames -----------#
         self.login_frame = LoginView(self)
-        self.login_frame.pack(ipadx=window_width, ipady=window_height)
+        self.login_frame.pack(ipadx=APP_WINDOW_WIDTH, ipady=APP_WINDOW_HEIGHT)
 
         self.register_frame = RegisterView(self)
-        self.register_frame.pack(ipadx=window_width, ipady=window_height)
+        self.register_frame.pack(
+            ipadx=APP_WINDOW_WIDTH, ipady=APP_WINDOW_HEIGHT)
 
         self.content_main_frame = ContentMainFrame(self)
-        self.content_main_frame.pack(ipadx=window_width, ipady=window_height)
+        self.content_main_frame.pack(
+            ipadx=APP_WINDOW_WIDTH, ipady=APP_WINDOW_HEIGHT)
 
         # ----------- Default view -----------#
         self.login_frame.render_login_frame(self)
@@ -54,8 +59,8 @@ class LoginView(ttk.Frame):
         # ------------ Button functions ------------ #
         def handle_register_view():
             parent.login_frame.pack_forget()
-            parent.register_frame.pack(ipadx=os.getenv(
-                'APP_WINDOW_WIDTH'), ipady=os.getenv('APP_WINDOW_HEIGHT'))
+            parent.register_frame.pack(
+                ipadx=APP_WINDOW_WIDTH, ipady=APP_WINDOW_HEIGHT)
             parent.register_frame.render_register_frame(parent)
 
         def handle_login():
@@ -73,8 +78,8 @@ class LoginView(ttk.Frame):
                     title="Success!", message="Successfully logged in!")
                 parent.login_frame.pack_forget()
                 parent.register_frame.pack_forget()
-                parent.content_main_frame.pack(ipadx=os.getenv(
-                    'APP_WINDOW_WIDTH'), ipady=os.getenv('APP_WINDOW_HEIGHT'))
+                parent.content_main_frame.pack(
+                    ipadx=APP_WINDOW_WIDTH, ipady=APP_WINDOW_HEIGHT)
                 parent.content_main_frame.render_contnet_view(parent)
 
         # ------------ Widgets ------------ #
@@ -113,8 +118,8 @@ class RegisterView(ttk.Frame):
         def handle_login_view():
             parent.register_frame.pack_forget()
             parent.content_main_frame.pack_forget()
-            parent.login_frame.pack(ipadx=os.getenv(
-                'APP_WINDOW_WIDTH'), ipady=os.getenv('APP_WINDOW_HEIGHT'))
+            parent.login_frame.pack(
+                ipadx=APP_WINDOW_WIDTH, ipady=APP_WINDOW_HEIGHT)
 
         def handle_register():
             username = self.username_entry.get()
@@ -168,17 +173,17 @@ class ContentMainFrame(ttk.Frame):
         finance_frame = FinanceContent(finances_tab)
 
         password_frame.configure(relief="groove", border=5)
-        password_frame.pack(fill="both", ipady=os.getenv('APP_WINDOW_HEIGHT'))
+        password_frame.pack(fill="both", ipady=APP_WINDOW_HEIGHT)
 
         finance_frame.configure(relief="groove", border=5)
-        finance_frame.pack(fill="both", ipady=os.getenv('APP_WINDOW_HEIGHT'))
+        finance_frame.pack(fill="both", ipady=APP_WINDOW_HEIGHT)
 
         # Render tabs
         self.notebook.add(password_tab, text="Passwords")
         self.notebook.add(finances_tab, text="Finances")
 
-        self.notebook.configure(width=os.getenv('APP_WINDOW_WIDTH'),
-                                height=os.getenv('APP_WINDOW_HEIGHT'))
+        self.notebook.configure(width=APP_WINDOW_WIDTH,
+                                height=APP_WINDOW_HEIGHT)
         self.notebook.pack(fill="both")
 
 
