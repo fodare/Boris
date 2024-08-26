@@ -286,7 +286,7 @@ class PasswordContnet(ttk.Frame):
         self.password_entry = ttk.Entry(self.form_frame)
         self.password_entry.grid(row=3, column=1, pady=10)
 
-        self.link_label = ttk.Label(self.form_frame, text="Ligin Link:")
+        self.link_label = ttk.Label(self.form_frame, text="Log-in Link:")
         self.link_label.grid(row=4, column=0, pady=10)
 
         self.link_entry = ttk.Entry(self.form_frame)
