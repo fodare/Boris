@@ -128,14 +128,19 @@ class RegisterView(ttk.Frame):
         def handle_register():
             username = self.username_entry.get()
             password = self.password_entry.get()
-            account_created = parent.dbLogic.add_app_user(username, password)
-            if account_created:
-                messagebox.showinfo(
-                    title="Info!", message="\n Account created successfully!")
-                handle_login_view()
-            else:
+            try:
+                account_created = parent.dbLogic.add_app_user(
+                    username, password)
+                if account_created:
+                    messagebox.showinfo(
+                        title="Info!", message="\n Account created successfully!")
+                    handle_login_view()
+                else:
+                    messagebox.showerror(
+                        title="Error!", message="\nError creating account. \nMaybe try with another credentials!")
+            except Exception as err:
                 messagebox.showerror(
-                    title="Error!", message="\nError creating account. \nMaybe try with another credentials!")
+                    title="Error!", message=f"Error creating account. \n{err}")
 
         # ------------ Widgets ------------ #
         self.view_label = ttk.Label(
