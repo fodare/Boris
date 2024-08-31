@@ -213,6 +213,8 @@ BEGIN
         (
         Amount,TransactionType,TransactionTag,TransactionNote,CreateDate,UpdateDate
         )
+    OUTPUT
+    INSERTED.id
     VALUES
         (@amount, @type, @tag, @note, @createDate, @updateDate)
 END
@@ -240,6 +242,6 @@ BEGIN
         SELECT *
     FROM TransactionRecordSchema.Transactions WITH(NOLOCK)
     WHERE id = ISNULL(@id , id)
-    ORDER By CreateDate DESC
+    ORDER By id DESC
 END
 GO
