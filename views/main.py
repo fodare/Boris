@@ -411,12 +411,73 @@ class PasswordContnet(ttk.Frame):
 class FinanceContent(ttk.Frame):
     def __init__(self, parent):
         super().__init__(parent)
+        self.password_logic = PasswordLogic()
 
-        self.label2 = ttk.Label(self, text="Label 2:")
-        self.label2.grid(row=0, column=0)
+        # Frames /  View layout
+        self.form_frame = ttk.Frame(self)
+        self.form_frame.configure(relief="groove")
+        self.form_frame.pack(side="top", fill="x", ipady=10)
 
-        self.entry1 = ttk.Entry(self)
-        self.entry1.grid(row=0, column=1)
+        self.table_frame = ttk.Frame(self)
+        self.table_frame.configure(relief='groove')
+        self.table_frame.pack(side="left", fill="both")
 
-        self.button2 = ttk.Button(self, text="Button 2")
-        self.button2.grid(row=1, column=1, columnspan=2)
+        # Functions
+        def reset_form_entries():
+            self.amount_entry.delete(0, _tk.END)
+            self.event_entry.delete(0, _tk.END)
+            self.tag_entry.delete(0, _tk.END)
+            self.note_enrty.delete(0, _tk.END)
+
+        def handle_add_transaction():
+            amount = self.amount_entry.get()
+            event = self.event_entry.get()
+            tag = self.tag_entry.get()
+            note = self.note_enrty.get()
+            transaction_added = self.password_logic.record_transaction(
+                amount, event, tag, note)
+            if transaction_added:
+                reset_form_entries()
+                messagebox.showinfo(
+                    title="Success!", message="Recorded transaction successfully!")
+            else:
+                messagebox.showerror(title="Error!", message="Error recording")
+
+        # Form contnet
+        self.view_label = ttk.Label(
+            self.form_frame, text="Record Transaction",
+            font=(40))
+        self.view_label.grid(row=0, column=0, pady=10, columnspan=2)
+
+        self.amount_label = ttk.Label(self.form_frame, text="Amount:")
+        self.amount_label.grid(row=1, column=0)
+
+        self.amount_entry = ttk.Spinbox(
+            self.form_frame, from_=0,
+            wrap=True, width=10)
+        self.amount_entry.grid(row=1, column=1, padx=5)
+
+        self.event_label = ttk.Label(self.form_frame, text="Event:")
+        self.event_label.grid(row=1, column=2)
+
+        self.event_entry = ttk.Combobox(
+            self.form_frame, state="readonly",
+            values=["Debit", "Credit"], width=10)
+        self.event_entry.set("Credit")
+        self.event_entry.grid(row=1, column=3, padx=5)
+
+        self.tag_label = ttk.Label(self.form_frame, text="Tag:")
+        self.tag_label.grid(row=1, column=4)
+
+        self.tag_entry = ttk.Entry(self.form_frame)
+        self.tag_entry.grid(row=1, column=5, padx=5)
+
+        self.note_label = ttk.Label(self.form_frame, text="Note:")
+        self.note_label.grid(row=1, column=7)
+
+        self.note_enrty = ttk.Entry(self.form_frame)
+        self.note_enrty.grid(row=1, column=8, padx=5)
+
+        self.add_button = ttk.Button(
+            self.form_frame, text="Record", command=handle_add_transaction)
+        self.add_button.grid(row=1, column=9, padx=5)
