@@ -129,3 +129,17 @@ class DBLogic():
                         return True
                 except Exception as err:
                     return False
+
+    def get_transactions(self):
+        with self.connect_to_db() as conn:
+            with conn.cursor() as cursor:
+                cursor.execute(
+                    'EXEC TransactionRecordSchema.spTransactions_Get')
+                return cursor.fetchall()
+
+    def get_transaction(self, id):
+        with self.connect_to_db() as conn:
+            with conn.cursor() as cursor:
+                cursor.execute(
+                    f'EXEC TransactionRecordSchema.spTransactions_Get @id={id}')
+                return cursor.fetchone()

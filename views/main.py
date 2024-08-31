@@ -3,6 +3,7 @@ from tkinter import messagebox
 from tkinter import ttk
 from Data import dbLogic
 from Utilities.passwordlogic import PasswordLogic
+from Utilities.transactionlogic import TransactionLogic
 import pyperclip
 import html
 from dotenv import load_dotenv
@@ -10,14 +11,10 @@ import os
 
 load_dotenv()
 
-APP_WINDOW_WIDTH = os.getenv('APP_WINDOW_WIDTH') if os.getenv(
-    'APP_WINDOW_WIDTH') is None else 1000
-APP_WINDOW_HEIGHT = os.getenv('APP_WINDOW_HEIGHT') if os.getenv(
-    'APP_WINDOW_HEIGHT') is None else 700
-APP_THEME_NAME = os.getenv('APP_THEME_NAME') if os.getenv(
-    'APP_THEME_NAME') is None else "Darkly"
-APP_TITLE = os.getenv('APP_TITLE') if os.getenv(
-    'APP_TITLE') is None else "Boris"
+APP_WINDOW_WIDTH = os.getenv('APP_WINDOW_WIDTH')
+APP_WINDOW_HEIGHT = os.getenv('APP_WINDOW_HEIGHT')
+APP_THEME_NAME = os.getenv('APP_THEME_NAME')
+APP_TITLE = os.getenv('APP_TITLE')
 
 
 class App(_tk.Tk):
@@ -411,16 +408,36 @@ class PasswordContnet(ttk.Frame):
 class FinanceContent(ttk.Frame):
     def __init__(self, parent):
         super().__init__(parent)
-        self.password_logic = PasswordLogic()
+        self.transaction_logic = TransactionLogic()
 
         # Frames /  View layout
-        self.form_frame = ttk.Frame(self)
+        self.action_frame = ttk.Frame(self)
+        self.action_frame.config(relief="groove")
+        self.action_frame.pack(side="left", fill="y")
+
+        self.summation_frame = ttk.Frame(self.action_frame)
+        self.summation_frame.configure(relief="groove")
+        self.summation_frame.pack(side="top", fill="both", ipady=35)
+
+        self.form_frame = ttk.Frame(self.action_frame)
         self.form_frame.configure(relief="groove")
-        self.form_frame.pack(side="top", fill="x", ipady=10)
+        self.form_frame.pack(side="top", fill="both", expand=True)
 
         self.table_frame = ttk.Frame(self)
         self.table_frame.configure(relief='groove')
-        self.table_frame.pack(side="left", fill="both")
+        self.table_frame.pack(fill="both")
+
+        # Pre - fetch table and amount summary
+        transaction_list = self.transaction_logic.get_transactions()
+        total_sum = 0
+        credit_sum = 0
+        debit_sum = 0
+        for transaction in transaction_list:
+            total_sum += transaction["Amount"]
+            if transaction["TransactionType"] == "Credit":
+                credit_sum += transaction["Amount"]
+            elif transaction["TransactionType"] == "Debit":
+                debit_sum += transaction["Amount"]
 
         # Functions
         def reset_form_entries():
@@ -434,23 +451,72 @@ class FinanceContent(ttk.Frame):
             event = self.event_entry.get()
             tag = self.tag_entry.get()
             note = self.note_enrty.get()
-            transaction_added = self.password_logic.record_transaction(
+            transaction_added = self.transaction_logic.record_transaction(
                 amount, event, tag, note)
             if transaction_added:
                 reset_form_entries()
                 messagebox.showinfo(
                     title="Success!", message="Recorded transaction successfully!")
+                self.transaction_entries = self.transaction_logic.get_transactions()
+                update_amount_summary(self.transaction_entries)
+                update_transaction_table_entries()
             else:
                 messagebox.showerror(title="Error!", message="Error recording")
+
+        def update_transaction_table_entries():
+            if self.transaction_tree.get_children() == None:
+                self.transaction_entries = self.transaction_logic.get_transactions()
+                for transaction in self.transaction_entries:
+                    self.transaction_tree.insert(parent='', index=_tk.END, values=(
+                        transaction['CreateDate'], transaction['TransactionType'],
+                        transaction['Amount'], transaction['TransactionTag']))
+            else:
+                # Remove old entries
+                for transaction in self.transaction_tree.get_children():
+                    self.transaction_tree.delete(transaction)
+                # Re-add new db entries
+                for transaction in self.transaction_entries:
+                    self.transaction_tree.insert(parent='', index=_tk.END, values=(
+                        transaction['CreateDate'], transaction['TransactionType'],
+                        transaction['Amount'], transaction['TransactionTag']))
+
+        def update_amount_summary(transaction_list):
+            total_sum = 0
+            credit_sum = 0
+            debit_sum = 0
+            for transaction in transaction_list:
+                total_sum += transaction["Amount"]
+                self.total_label.configure(text=f"Total: {total_sum}")
+                if transaction["TransactionType"] == "Credit":
+                    credit_sum += transaction["Amount"]
+                    self.credit_label.configure(text=f"Credit: {credit_sum}")
+                elif transaction["TransactionType"] == "Debit":
+                    debit_sum += transaction["Amount"]
+                    self.debit_label.configure(text=f"Debit: {debit_sum}")
+
+        # Summation contnet
+        self.total_label = ttk.Label(
+            self.summation_frame, text=f"Total: {total_sum}", font=("bold"))
+        self.total_label.grid(row=0, column=0, columnspan=2, ipady=10)
+
+        self.credit_label = ttk.Label(
+            self.summation_frame, text=f"Credit: {credit_sum}", font=(30))
+        self.credit_label.grid(row=1,  column=0, ipady=5)
+
+        self.debit_label = ttk.Label(
+            self.summation_frame, text=f"Debit: {debit_sum}", font=(30))
+        self.debit_label.grid(row=2, column=0)
 
         # Form contnet
         self.view_label = ttk.Label(
             self.form_frame, text="Record Transaction",
             font=(40))
-        self.view_label.grid(row=0, column=0, pady=10, columnspan=2)
+        self.view_label.grid(
+            row=0, column=0,
+            pady=10, columnspan=2)
 
         self.amount_label = ttk.Label(self.form_frame, text="Amount:")
-        self.amount_label.grid(row=1, column=0)
+        self.amount_label.grid(row=1, column=0, ipady=10)
 
         self.amount_entry = ttk.Spinbox(
             self.form_frame, from_=0,
@@ -458,26 +524,43 @@ class FinanceContent(ttk.Frame):
         self.amount_entry.grid(row=1, column=1, padx=5)
 
         self.event_label = ttk.Label(self.form_frame, text="Event:")
-        self.event_label.grid(row=1, column=2)
+        self.event_label.grid(row=2, column=0, ipady=10)
 
         self.event_entry = ttk.Combobox(
             self.form_frame, state="readonly",
             values=["Debit", "Credit"], width=10)
         self.event_entry.set("Credit")
-        self.event_entry.grid(row=1, column=3, padx=5)
+        self.event_entry.grid(row=2, column=1, padx=5)
 
         self.tag_label = ttk.Label(self.form_frame, text="Tag:")
-        self.tag_label.grid(row=1, column=4)
+        self.tag_label.grid(row=3, column=0, ipady=10)
 
         self.tag_entry = ttk.Entry(self.form_frame)
-        self.tag_entry.grid(row=1, column=5, padx=5)
+        self.tag_entry.grid(row=3, column=1, padx=5)
 
         self.note_label = ttk.Label(self.form_frame, text="Note:")
-        self.note_label.grid(row=1, column=7)
+        self.note_label.grid(row=4, column=0, ipady=10)
 
         self.note_enrty = ttk.Entry(self.form_frame)
-        self.note_enrty.grid(row=1, column=8, padx=5)
+        self.note_enrty.grid(row=4, column=1, padx=5)
 
         self.add_button = ttk.Button(
             self.form_frame, text="Record", command=handle_add_transaction)
-        self.add_button.grid(row=1, column=9, padx=5)
+        self.add_button.grid(row=5, column=1, pady=10)
+
+        # Transaction table
+        self.transaction_tree = ttk.Treeview(self.table_frame, columns=(
+            'Date', 'Event', 'Amount', 'Tag'), show="headings")
+        self.transaction_tree.heading('Date', text="Date")
+        self.transaction_tree.heading('Event', text="Event")
+        self.transaction_tree.heading('Amount', text="Amount")
+        self.transaction_tree.heading('Tag', text="Tag")
+        self.transaction_tree.pack(
+            expand=True, fill="both", ipady=APP_WINDOW_HEIGHT)
+        self.transaction_entries = transaction_list
+        for transaction in self.transaction_entries:
+            self.transaction_tree.insert(parent='', index=_tk.END, values=(
+                transaction['CreateDate'],
+                transaction['TransactionType'],
+                transaction['Amount'],
+                transaction['TransactionTag']))

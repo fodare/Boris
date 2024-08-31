@@ -42,8 +42,3 @@ class PasswordLogic:
 
     def delete_password(self, id):
         return self.db_logic.delete_password(id)
-
-    # Transaction operations
-
-    def record_transaction(self, amount, event, tag, note):
-        return self.db_logic.add_transaction_entry(amount, event, tag, note)
