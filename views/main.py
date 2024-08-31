@@ -176,11 +176,10 @@ class ContentMainFrame(ttk.Frame):
 
         # Sub frames and views
         password_frame = PasswordContnet(password_tab)
-        finance_frame = FinanceContent(finances_tab)
-
         password_frame.configure(relief="groove", border=5)
         password_frame.pack(fill="both", ipady=APP_WINDOW_HEIGHT)
 
+        finance_frame = FinanceContent(finances_tab)
         finance_frame.configure(relief="groove", border=5)
         finance_frame.pack(fill="both", ipady=APP_WINDOW_HEIGHT)
 
