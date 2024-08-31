@@ -114,3 +114,18 @@ class DBLogic():
                         return True
                 except pymssql.exceptions.OperationalError as err:
                     return False
+
+    # Transaction operations
+
+    def add_transaction_entry(self, amount, event, tag, note):
+        with self.connect_to_db() as conn:
+            with conn.cursor() as cursor:
+                try:
+                    cursor.execute(f""" EXEC TransactionRecordSchema.spTransactionsAdd
+                    @amount={amount},@type='{event}',@tag='{tag}',@note='{note}',@createDate='{datetime.date.today()}',@updateDate='{datetime.date.today()}' """)
+                    output = cursor.fetchone()
+                    conn.commit()
+                    if output["id"] is not None:
+                        return True
+                except Exception as err:
+                    return False

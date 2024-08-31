@@ -6,6 +6,8 @@ class PasswordLogic:
     def __init__(self):
         self.db_logic = dbLogic.DBLogic()
 
+    # Password operations
+
     def generate_password(self):
         letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y',
                    'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
@@ -40,3 +42,8 @@ class PasswordLogic:
 
     def delete_password(self, id):
         return self.db_logic.delete_password(id)
+
+    # Transaction operations
+
+    def record_transaction(self, amount, event, tag, note):
+        return self.db_logic.add_transaction_entry(amount, event, tag, note)
