@@ -2,6 +2,8 @@
 
 A local Tkinter app for managing passwords, tracking finances, making online payments and many more.
 
+![app gif](Boris.gif)
+
 ## Prerequisite
 
 - Local sql server.
