@@ -1,0 +1,7 @@
+[Desktop Entry]
+version= 1.0
+Name= Boris
+Exec= python3 parent-path/app.py
+Icon= parent-path/Boris.png
+Type= Application
+Terminal=false
