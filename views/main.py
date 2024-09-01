@@ -204,7 +204,7 @@ class PasswordContnet(ttk.Frame):
 
         self.table_frame = ttk.Frame(self)
         self.table_frame.configure(relief='groove')
-        self.table_frame.pack(side="left", fill="both")
+        self.table_frame.pack(side="left", fill="both", expand=True)
 
         # Functions
         def handle_add_password():
