@@ -1,73 +1,104 @@
-# FinanceManager
+# Intro
 
-A personal web-based application to help track spending and savings habits. (Demo version)
+A local Tkinter app for managing passwords, tracking finances, making online payments and many more.
 
-<img src="https://github.com/fodare/media/blob/main/FinanceManager/App_home_page.png?raw=true" alt="App homepage" title="App homepage">
-
-## About
-
-FinanceManager is a web-based application to help track personal savings and spending habits. Each spending or savings record is persisted in a connected SQL server.
-
-The application is intended for personal use and can be hosted on your private machine within your home / private network or a Raspberry Pi instance.
-
-Below is the web app request flow.
-
-<img src="https://raw.githubusercontent.com/fodare/media/main/FinanceManager/Requestflow.png" alt="App homepage" title="App homepage">
+![app gif](Boris.gif)
 
 ## Prerequisite
 
-- SQL server Express running.
-- Dotnet CLI installed.
-- Docker installed.
-- Favourite IDE, VS Code or Visual Studio.
+- Local sql server.
+- Python 3+
+- Pip 24+
 
-## Clone app files
+## Run Application
 
-Navigate to your desired DIR and run the command below from your favourite CLI tool.
+### Clone app files
 
-    ```
-    git clone https://github.com/fodare/FinanceManager.git
-    cd FinanceManager
-    ```
-The parent DIR contains a `backend` and a `frontend` sub DIR. `backend` holds the backend API while `frontend` DIR holds a Flask API to serve HTML pages or views.
+From your favourite IDE / CLI, clone app files and navigate to parent folder.
 
-## Prepare and configure DB
-
-- Pull / Run an SQL instance [Docker SQL server](<https://hub.docker.com/_/microsoft-mssql-server>).
-
-    ```bash
-    # Example
-    docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=<desired db password>"
-    -e "MSSQL_PID=Evaluation" --network host --name sqlserver 
-    --hostname sqlserver 
-    -d mcr.microsoft.com/mssql/server:2022-preview-ubuntu-22.04
-
-    # Note the SQL server container is exposed to all services within your LAN.
-    # You can access the SQL server from another host in the LAN  via the -
-    # IP address of the host running the container.
-    ```
-
-- Using a DB explorer such as Azure data studio, VS Code SQL server plugin or SQL server management studio (SSMS) provide options to connect to the SQL server instance and execute the `DbSetup.sql` script to help configure the DB table.
-
-## Update container environment variables
-
-Update environment variables placeholder in the `.env` file.
-
-- `dbServerName`: SQL server name / host ip
-- `dbName`: SQL server database name.
-- `dbUserName`: SQL server encryptionuser name.
-- `dbPassword`: SQL server db password.
-- `secret`: Secret key for `frontendapi` sessions.
-- `host_ip`: Host  ip address.
-- `backendapi_port`: Port to access backendapi.
-- `frontendapi_port`: Port to access frontendapi.
-
-## Start services
-
-From your CLI / terminal, ensure you are in the project root DIR then execute the command below.
-
-``` bash
-docker compose up -d 
+```bash
+git clone https://github.com/fodare/Boris.git
+cd Boris
 ```
 
-Visit [localhost:frontendapi_portnumber](<http://localhost:{frontendapi_port number}/>)(e.g <http://localhost:3001>) to access the frontend service.
+### Prepare and configure DB
+
+You can either use a local SQL server / cloud hosted SQL server. To use a local SQL server, you could use / run a containerized SQL Docker container.
+
+- Pull / Run an SQL instance [Docker SQL server](https://hub.docker.com/r/microsoft/mssql-server). Below is a sample compose file to help manage SQL server container.
+
+```bash
+# Create file. e.g SQL-Server-Compose and enter the content below.
+version: "3.8"
+volumes:
+   sqlserver_data:
+services:
+   sqlserver:
+      image: mcr.microsoft.com/mssql/server:2022-latest
+      environment:
+         - ACCEPT_EULA=Y
+         - MSSQL_SA_PASSWORD={enter desired SQL server password}
+      ports:
+         - 1433:1433
+      volumes:
+         - sqlserver_data:/var/opt/mssql
+      restart: always
+      network_mode: bridge
+      healthcheck:
+         test:
+            [
+               "CMD-SHELL",
+               "/opt/mssql-tools/bin/sqlcmd 
+               -S localhost 
+               -U sa 
+               -P {Value of MSSQL_SA_PASSWORD} 
+               -Q 'SELECT 1' || exit 1",
+            ]
+         interval: 10s
+         retries: 10
+         start_period: 10s
+         timeout: 3s
+```
+
+Once the file and its contnet are updated. You can run / start a container with the command below.
+
+```bash
+sudo docker compose up -d
+```
+
+- Connect to local db and run sql command in file name `DbSetup.sql`, which creates tables, schemas and stored procedure.
+
+### Update app config values
+
+File name `.env` contains some config values to run the application. See comments on fileds below.
+
+```bash
+DBSERVERNAME=localhost
+DBUSERNAME={enter SQL server username. Default, sa}
+DBPASSWORD={enter SQL server password. Value of MSSQL_SA_PASSWORD}
+DATBASENAME=Boris
+APP_WINDOW_WIDTH=1000
+APP_WINDOW_HEIGHT=700
+APP_THEME_NAME=
+APP_TITLE=Boris
+```
+
+### Install dependencies
+
+From the application parent folder, run the command below.
+
+```bash
+cd Boris
+pip install -r requirements.txt
+```
+
+### Ubuntu / Linux: Start application
+
+Copy file `boris.Desktop`, update the path to the application folder in filed `Exec`. On the desktop version, right click on he lancher file and update the file `permision.properties`. Example below.
+
+- Right click on copied `boris.desktop` file and click `Allow lauching` menu.
+- Check the `Allow executing file as program` check box.
+
+To start the application simply double click on the launcher copied to the Desktop and application should start.
+
+If you want to regeister the application in Unbuntu lauch pad, move the updated `boris.desktop` file into `/usr/share/applications`.

@@ -1,85 +1,70 @@
 USE master;
 GO
 
-CREATE DATABASE FinanceRecordDb;
+CREATE DATABASE Boris;
 GO
 
-USE FinanceRecordDb;
+USE Boris;
 GO
 
-CREATE SCHEMA FinanceRecordSchema;
+-------------------- User Account Schema --------------------
+CREATE SCHEMA UserSchema;
 GO
 
-CREATE TABLE FinanceRecordSchema.Records
+CREATE TABLE UserSchema.Users
 (
-    RecordId INT IDENTITY(1,1),
-    UserId INT NOT NULL,
-    Amount DECIMAL(18, 4),
-    RecordType VARCHAR(50),
-    RecordTag VARCHAR(50),
-    RecordNote VARCHAR(255),
-    RecordDate DATE,
-    RecordUpdateDate DATE
+    id INT IDENTITY(1,1),
+    Username VARCHAR(50) NOT NULL,
+    Password VARCHAR(50) NOT NULL,
+    CreateDate DATE,
+    LastUpdates DATE
 );
 GO
 
-CREATE CLUSTERED INDEX cix_Records_RecordId
-    ON FinanceRecordSchema.Records (RecordId);
+CREATE CLUSTERED INDEX cix_Users_id
+    ON UserSchema.Users (id);
 GO
 
-CREATE TABLE FinanceRecordSchema.UserRecord
-(
-    UserId INT IDENTITY(1,1),
-    UserName VARCHAR(50),
-    UserPassword NVARCHAR(max),
-    IsAdmin BIT,
-    CreatedDate DATE,
-    UpdatedDate DATE
-);
-GO
-
-CREATE CLUSTERED INDEX cix_UserRecord_UserId
-    ON FinanceRecordSchema.UserRecord(UserId);
-GO
-
-CREATE OR ALTER PROCEDURE FinanceRecordSchema.spUser_Get
-    /* EXEC FinanceRecordSchema.spUser_Get @userId = 6 */
-    /* EXEC FinanceRecordSchema.spUser_Get @userName = 'jane' */
+CREATE OR ALTER PROCEDURE UserSchema.spUser_Get
+    /* EXEC UserSchema.spUser_Get @userId = 1 */
+    /* EXEC UserSchema.spUser_Get @userName = '' */
     @userId INT = NULL,
     @userName VARCHAR(50) = NULL
 AS
 BEGIN
     SELECT *
-    FROM FinanceRecordSchema.UserRecord AS Users
-    WHERE Users.[UserId] = ISNULL(@userId, UserId) AND Users.UserName = ISNULL(@userName, UserName)
+    FROM UserSchema.Users AS Users WITH (NOLOCK)
+    WHERE Users.[id] = ISNULL(@userId, id) AND Users.Username = ISNULL(@userName, Username)
 END
 GO
 
-CREATE OR ALTER PROCEDURE FinanceRecordSchema.spUser_Add
-    /* EXEC FinanceRecordSchema.spUser_Add 
-        @userName = 'Jane', @userPassword = 'janedoewwewe123',
-        @isAdmin = 1, @createDate = '2023-12-30', @updateDate = '2023-12-30'
+CREATE OR ALTER PROCEDURE UserSchema.spUser_Add
+    /* EXEC UserSchema.spUser_Add 
+    @userName = '', 
+    @password = '', 
+    @createDate = '', 
+    @lastUpdates = ''
     */
     @userName VARCHAR(50),
-    @userPassword NVARCHAR(max),
-    @isAdmin BIT = 0,
+    @password NVARCHAR(max),
     @createDate DATE,
-    @updateDate DATE
+    @lastUpdates DATE
 AS
 BEGIN
     IF NOT EXISTS (SELECT *
-    FROM FinanceRecordSchema.UserRecord AS Users
-    WHERE Users.UserName = @userName)
+    FROM UserSchema.Users AS Users
+    WHERE Users.Username = @userName)
     BEGIN
-        INSERT INTO FinanceRecordSchema.UserRecord
+        INSERT INTO UserSchema.Users
             (
-            [UserName],
-            [UserPassword],
-            [IsAdmin],
-            [CreatedDate],
-            [UpdatedDate]
+            [Username],
+            [Password],
+            [CreateDate],
+            [LastUpdates]
             )
-        VALUES(@userName, @userPassword, @isAdmin, @createDate, @updateDate)
+        OUTPUT
+        INSERTED.Username
+        VALUES(@userName, @password, @createDate, @lastUpdates)
     END
     ELSE
         THROW 52000,
@@ -87,85 +72,176 @@ BEGIN
 END
 GO
 
+CREATE SCHEMA PasswordSchema;
+GO
 
-CREATE OR ALTER PROCEDURE FinanceRecordSchema.spRecord_Add
-    /* EXEC FinanceRecordSchema.spRecord_Add
-        @amount = 20.00, @recordType = 'Credit',
-        @recordTag = 'Savings', @recordNote = 'test',
-        @recordDate = '2023-12-31', @recordUpdateDate='2023-12-31'
+
+CREATE TABLE PasswordSchema.Passwords
+(
+    id INT IDENTITY(1,1),
+    Account VARCHAR(50) NOT NULL,
+    Username VARCHAR(90) NOT NULL,
+    Password NVARCHAR(max) NOT NULL,
+    LoginLink NVARCHAR(max),
+    Note NVARCHAR(max)
+);
+GO
+
+CREATE CLUSTERED INDEX cix_Passwords_id
+    ON PasswordSchema.Passwords(id);
+GO
+
+CREATE OR ALTER PROCEDURE PasswordSchema.spPasswords_Get
+    /* 
+        EXEC PasswordSchema.spPasswords_Get @id=1
+        EXEC PasswordSchema.spPasswords_Get @account=''
     */
-    @userId INT = 0,
-    @amount DECIMAL(18, 4),
-    @recordType VARCHAR(50),
-    @recordTag VARCHAR(50),
-    @recordNote VARCHAR(255),
-    @recordDate DATE,
-    @recordUpdateDate DATE
+    @id int = null,
+    @account VARCHAR(50) = null
 AS
 BEGIN
-    INSERT INTO FinanceRecordSchema.Records
-        (
-        [UserId],[Amount],[RecordType],[RecordTag],
-        [RecordNote],[RecordDate],[RecordUpdateDate]
-        )
-    VALUES
-        (ISNULL(@userId, 0), @amount, @recordType, @recordTag, @recordNote, @recordDate, @recordUpdateDate)
+    SELECT *
+    FROM PasswordSchema.Passwords AS Passwords WITH (NOLOCK)
+    WHERE Passwords.[id] = ISNULL(@id, id) AND Passwords.Account = ISNULL(@account, Account)
 END
 GO
 
-CREATE OR ALTER PROCEDURE FinanceRecordSchema.spRecord_Get
+CREATE OR ALTER PROCEDURE PasswordSchema.spPasswords_Add
     /* 
-    EXEC FinanceRecordSchema.spRecord_Get @recordId=1
-    EXEC FinanceRecordSchema.spRecord_Get @userId = 8
-    EXEC FinanceRecordSchema.spRecord_Get @startDate = '2024-03-01',
-        @endDate = '2024-05-28'
+        EXEC PasswordSchema.spPasswords_Add
+        @account='', @username ='',
+        @password='', @link='', @note=''
     */
-    @recordId INT = null,
-    @userId INT = null,
+    @account VARCHAR(50),
+    @username VARCHAR(90),
+    @password NVARCHAR(max),
+    @link NVARCHAR(max),
+    @note NVARCHAR(max)
+AS
+BEGIN
+    IF NOT EXISTS (SELECT *
+    FROM PasswordSchema.Passwords AS Passwords WITH (NOLOCK)
+    WHERE Passwords.Account = @account)
+    BEGIN
+        INSERT INTO PasswordSchema.Passwords
+            ([Account],[Username],[Password],[LoginLink],[Note])
+        OUTPUT
+        INSERTED.Account
+        VALUES
+            (ISNULL(@account, ' '), @username, @password, @link, @note)
+    END
+    ELSE
+        THROW 52000,
+        'Account already exists. Please try with another account',1;
+END
+GO
+
+CREATE OR ALTER PROCEDURE PasswordSchema.spPasswords_Update
+    /* 
+        EXEC PasswordSchema.spPasswords_Update
+        @id=0, @account = '', @username = '',
+        @password = '', @link='', @note = ''
+    */
+    @id INT,
+    @account VARCHAR(50),
+    @username VARCHAR(90),
+    @password NVARCHAR(max),
+    @link NVARCHAR(max),
+    @note NVARCHAR(max)
+AS
+BEGIN
+    UPDATE PasswordSchema.Passwords SET 
+        [Account] = @account, [Username] = @username,
+        [Password] = @password, [LoginLink] = @link, [Note] = @note
+        OUTPUT
+    INSERTED.Account
+    WHERE [id] = @id
+END
+GO
+
+CREATE OR ALTER PROCEDURE PasswordSchema.spPasswords_Delete
+    /* 
+        EXEC PasswordSchema.spPasswords_Delete @id= 0
+    */
+    @id INT = NULL,
+    @account VARCHAR(50) = NULL
+AS
+BEGIN
+    DELETE FROM PasswordSchema.Passwords 
+    OUTPUT DELETED.id
+    WHERE Passwords.id = ISNULL(@id, id)
+END
+GO
+
+--------------------  Transaction Schema --------------------
+
+CREATE SCHEMA TransactionRecordSchema;
+GO
+
+CREATE TABLE TransactionRecordSchema.Transactions
+(
+    id INT IDENTITY(1,1),
+    Amount DECIMAL(18,4),
+    TransactionType VARCHAR(10),
+    TransactionTag VARCHAR(50),
+    TransactionNote VARCHAR(255),
+    CreateDate DATE,
+    UpdateDate DATE
+);
+GO
+
+CREATE CLUSTERED INDEX cix_Transactions_TransactionId
+    ON TransactionRecordSchema.Transactions (id);
+GO
+
+CREATE OR ALTER PROCEDURE TransactionRecordSchema.spTransactionsAdd
+    /* 
+    EXEC TransactionRecordSchema.spTransactionsAdd
+        @amount =, @type = 'Credict',
+        @tag = 'Savings', @note = 'test',
+        @createDate = '2024-08-30', @updateDate='2024-08-30'
+    */
+    @amount DECIMAL(18, 4),
+    @type VARCHAR(10),
+    @tag VARCHAR(50),
+    @note VARCHAR(255),
+    @createDate DATE,
+    @updateDate DATE
+AS
+BEGIN
+    INSERT INTO TransactionRecordSchema.Transactions
+        (
+        Amount,TransactionType,TransactionTag,TransactionNote,CreateDate,UpdateDate
+        )
+    OUTPUT
+    INSERTED.id
+    VALUES
+        (@amount, @type, @tag, @note, @createDate, @updateDate)
+END
+GO
+
+CREATE OR ALTER PROCEDURE TransactionRecordSchema.spTransactions_Get
+    /* 
+    EXEC TransactionRecordSchema.spTransactions_Get @id=4
+    EXEC TransactionRecordSchema.spTransactions_Get @startDate = '2024-08-01', @endDate = '2024-08-02'
+    */
+    @id INT = null,
     @startDate DATE = null,
     @endDate DATE =  NULL
 AS
 BEGIN
-    IF @startDate is NULL
+    IF @startDate is NOT NULL
     BEGIN
-        SELECT TOP(10)
-            *
-        FROM FinanceRecordSchema.Records WITH(NOLOCK)
-        WHERE RecordId = ISNULL(@recordId , RecordId)
-            AND UserId = ISNULL(@userId, UserId)
-            AND RecordDate >= ISNULL(@startDate, RecordDate)
-            AND RecordUpdateDate <= ISNULL(@endDate, RecordUpdateDate)
-        ORDER By RecordDate DESC
+        SELECT *
+        FROM TransactionRecordSchema.Transactions WITH(NOLOCK)
+        WHERE CreateDate >= ISNULL(@startDate, CreateDate)
+            AND CreateDate <= ISNULL(@endDate,CreateDate)
+        ORDER By CreateDate DESC
     END
     ELSE
         SELECT *
-    FROM FinanceRecordSchema.Records WITH(NOLOCK)
-    WHERE RecordId = ISNULL(@recordId , RecordId)
-        AND UserId = ISNULL(@userId, UserId)
-        AND RecordDate >= ISNULL(@startDate, RecordDate)
-        AND RecordUpdateDate <= ISNULL(@endDate, RecordUpdateDate)
-    ORDER By RecordDate DESC
-END
-GO
-
-CREATE OR ALTER PROCEDURE FinanceRecordSchema.spRecord_Update
-    /* EXEC FinanceRecordSchema.spRecord_Update
-        @amount = 130, @recordType = 'Credit',
-        @recordTag = 'Eatingout', @recordNote = 'This is a test',
-        @RecordUpdateDate = '2024-01-01', @recordId = 5
-    */
-    @amount DECIMAL(18, 4),
-    @recordType VARCHAR(50),
-    @recordTag VARCHAR(50),
-    @recordNote VARCHAR(50),
-    @RecordUpdateDate DATETIME,
-    @recordId INT
-AS
-BEGIN
-    UPDATE FinanceRecordSchema.Records 
-        SET Amount = @amount, RecordType = @recordType,
-        RecordTag = @recordTag, RecordNote = @recordNote,
-        RecordUpdateDate = @RecordUpdateDate
-            WHERE RecordId = @recordId
+    FROM TransactionRecordSchema.Transactions WITH(NOLOCK)
+    WHERE id = ISNULL(@id , id)
+    ORDER By id DESC
 END
 GO
