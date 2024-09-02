@@ -78,11 +78,11 @@ class LoginView(ttk.Frame):
                     else:
                         messagebox.showinfo(
                             title="Success!", message="Successfully logged in!")
-                    parent.login_frame.pack_forget()
-                    parent.register_frame.pack_forget()
-                    parent.content_main_frame.pack(
-                        ipadx=APP_WINDOW_WIDTH, ipady=APP_WINDOW_HEIGHT)
-                    parent.content_main_frame.render_contnet_view(parent)
+                        parent.login_frame.pack_forget()
+                        parent.register_frame.pack_forget()
+                        parent.content_main_frame.pack(
+                            ipadx=APP_WINDOW_WIDTH, ipady=APP_WINDOW_HEIGHT)
+                        parent.content_main_frame.render_contnet_view(parent)
                 except Exception as err:
                     messagebox.showerror(
                         title="Error", message=f"Error signing in!. Exception \n{err}")
@@ -463,17 +463,23 @@ class FinanceContent(ttk.Frame):
             event = self.event_entry.get()
             tag = self.tag_entry.get()
             note = self.note_enrty.get()
-            transaction_added = self.transaction_logic.record_transaction(
-                amount, event, tag, note)
-            if transaction_added:
-                reset_form_entries()
-                messagebox.showinfo(
-                    title="Success!", message="Recorded transaction successfully!")
-                self.transaction_entries = self.transaction_logic.get_transactions()
-                update_amount_summary(self.transaction_entries)
-                update_transaction_table_entries()
+
+            if tag == "":
+                messagebox.showerror(
+                    title="Error", message="Error recording transactions. Amount / tag can not be empty")
             else:
-                messagebox.showerror(title="Error!", message="Error recording")
+                transaction_added = self.transaction_logic.record_transaction(
+                    amount, event, tag, note)
+                if transaction_added:
+                    reset_form_entries()
+                    messagebox.showinfo(
+                        title="Success!", message="Recorded transaction successfully!")
+                    self.transaction_entries = self.transaction_logic.get_transactions()
+                    update_amount_summary(self.transaction_entries)
+                    update_transaction_table_entries()
+                else:
+                    messagebox.showerror(
+                        title="Error!", message="Error recording")
 
         def update_transaction_table_entries():
             if self.transaction_tree.get_children() == None:
