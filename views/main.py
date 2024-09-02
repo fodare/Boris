@@ -63,27 +63,31 @@ class LoginView(ttk.Frame):
         def handle_login():
             username = self.username_entry.get()
             password = self.password_entry.get()
-            try:
-                queried_account = parent.dbLogic.get_app_user(username)
-                if queried_account is None:
-                    messagebox.showerror(
-                        title="Error!", message="\nError loging in.\n \nInvalid credentials!")
-                elif queried_account["Password"] != password:
-                    messagebox.showerror(
-                        title="Error!", message="\nError loging in.\n \nInvalid credentials!")
-                else:
-                    messagebox.showinfo(
-                        title="Success!", message="Successfully logged in!")
-                parent.login_frame.pack_forget()
-                parent.register_frame.pack_forget()
-                parent.content_main_frame.pack(
-                    ipadx=APP_WINDOW_WIDTH, ipady=APP_WINDOW_HEIGHT)
-                parent.content_main_frame.render_contnet_view(parent)
-            except Exception as err:
+            if username == "" or password == "":
                 messagebox.showerror(
-                    title="Error", message=f"Error signing in!. Exception \n{err}")
+                    title="Error", message="Username / Password can not be empty!")
+            else:
+                try:
+                    queried_account = parent.dbLogic.get_app_user(username)
+                    if queried_account is None:
+                        messagebox.showerror(
+                            title="Error!", message="\nError loging in.\n \nInvalid credentials!")
+                    elif queried_account["Password"] != password:
+                        messagebox.showerror(
+                            title="Error!", message="\nError loging in.\n \nInvalid credentials!")
+                    else:
+                        messagebox.showinfo(
+                            title="Success!", message="Successfully logged in!")
+                        parent.login_frame.pack_forget()
+                        parent.register_frame.pack_forget()
+                        parent.content_main_frame.pack(
+                            ipadx=APP_WINDOW_WIDTH, ipady=APP_WINDOW_HEIGHT)
+                        parent.content_main_frame.render_contnet_view(parent)
+                except Exception as err:
+                    messagebox.showerror(
+                        title="Error", message=f"Error signing in!. Exception \n{err}")
 
-                # ------------ Widgets ------------ #
+        # ------------ Widgets ------------ #
         self.view_label = ttk.Label(self.contnet_frame, text="Login", font=(
             "monospace", 35)).grid(row=0, column=0, pady=70, columnspan=2)
 
@@ -125,19 +129,23 @@ class RegisterView(ttk.Frame):
         def handle_register():
             username = self.username_entry.get()
             password = self.password_entry.get()
-            try:
-                account_created = parent.dbLogic.add_app_user(
-                    username, password)
-                if account_created:
-                    messagebox.showinfo(
-                        title="Info!", message="\n Account created successfully!")
-                    handle_login_view()
-                else:
-                    messagebox.showerror(
-                        title="Error!", message="\nError creating account. \nMaybe try with another credentials!")
-            except Exception as err:
+            if username == "" or password == "":
                 messagebox.showerror(
-                    title="Error!", message=f"Error creating account. \n{err}")
+                    title="Error", message="Username / Password can not be null!")
+            else:
+                try:
+                    account_created = parent.dbLogic.add_app_user(
+                        username, password)
+                    if account_created:
+                        messagebox.showinfo(
+                            title="Info!", message="\n Account created successfully!")
+                        handle_login_view()
+                    else:
+                        messagebox.showerror(
+                            title="Error!", message="\nError creating account. \nMaybe try with another credentials!")
+                except Exception as err:
+                    messagebox.showerror(
+                        title="Error!", message=f"Error creating account. \n{err}")
 
         # ------------ Widgets ------------ #
         self.view_label = ttk.Label(
@@ -214,17 +222,21 @@ class PasswordContnet(ttk.Frame):
             link = self.link_entry.get()
             note = html.unescape(self.note_entry.get("1.0", _tk.END))
 
-            password_saved = self.password_logic.record_password(
-                account, username, password, link, note)
-            if password_saved:
-                messagebox.showinfo(
-                    title="Success", message="Password saved successfully!")
-                reset_form_entries()
-                self.tree_entries = self.password_logic.get_passwords()
-                update_table_entries()
-            else:
+            if account == "":
                 messagebox.showerror(
-                    title="Error", message="Error saving password. Please try again!")
+                    title="Error", message="Error saving password. Account name can not be empty!")
+            else:
+                password_saved = self.password_logic.record_password(
+                    account, username, password, link, note)
+                if password_saved:
+                    messagebox.showinfo(
+                        title="Success", message="Password saved successfully!")
+                    reset_form_entries()
+                    self.tree_entries = self.password_logic.get_passwords()
+                    update_table_entries()
+                else:
+                    messagebox.showerror(
+                        title="Error", message="Error saving password. Please try again!")
 
         def reset_form_entries():
             self.account_entry.delete(0, _tk.END)
@@ -378,6 +390,7 @@ class PasswordContnet(ttk.Frame):
                 if password_deleted:
                     messagebox.showinfo(
                         title="Info", message="Account deleted successfully!")
+                    reset_form_entries()
                     self.tree_entries = self.password_logic.get_passwords()
                 else:
                     messagebox.showerror(
@@ -450,17 +463,23 @@ class FinanceContent(ttk.Frame):
             event = self.event_entry.get()
             tag = self.tag_entry.get()
             note = self.note_enrty.get()
-            transaction_added = self.transaction_logic.record_transaction(
-                amount, event, tag, note)
-            if transaction_added:
-                reset_form_entries()
-                messagebox.showinfo(
-                    title="Success!", message="Recorded transaction successfully!")
-                self.transaction_entries = self.transaction_logic.get_transactions()
-                update_amount_summary(self.transaction_entries)
-                update_transaction_table_entries()
+
+            if tag == "":
+                messagebox.showerror(
+                    title="Error", message="Error recording transactions. Amount / tag can not be empty")
             else:
-                messagebox.showerror(title="Error!", message="Error recording")
+                transaction_added = self.transaction_logic.record_transaction(
+                    amount, event, tag, note)
+                if transaction_added:
+                    reset_form_entries()
+                    messagebox.showinfo(
+                        title="Success!", message="Recorded transaction successfully!")
+                    self.transaction_entries = self.transaction_logic.get_transactions()
+                    update_amount_summary(self.transaction_entries)
+                    update_transaction_table_entries()
+                else:
+                    messagebox.showerror(
+                        title="Error!", message="Error recording")
 
         def update_transaction_table_entries():
             if self.transaction_tree.get_children() == None:
