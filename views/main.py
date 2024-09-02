@@ -222,17 +222,21 @@ class PasswordContnet(ttk.Frame):
             link = self.link_entry.get()
             note = html.unescape(self.note_entry.get("1.0", _tk.END))
 
-            password_saved = self.password_logic.record_password(
-                account, username, password, link, note)
-            if password_saved:
-                messagebox.showinfo(
-                    title="Success", message="Password saved successfully!")
-                reset_form_entries()
-                self.tree_entries = self.password_logic.get_passwords()
-                update_table_entries()
-            else:
+            if account == "":
                 messagebox.showerror(
-                    title="Error", message="Error saving password. Please try again!")
+                    title="Error", message="Error saving password. Account name can not be empty!")
+            else:
+                password_saved = self.password_logic.record_password(
+                    account, username, password, link, note)
+                if password_saved:
+                    messagebox.showinfo(
+                        title="Success", message="Password saved successfully!")
+                    reset_form_entries()
+                    self.tree_entries = self.password_logic.get_passwords()
+                    update_table_entries()
+                else:
+                    messagebox.showerror(
+                        title="Error", message="Error saving password. Please try again!")
 
         def reset_form_entries():
             self.account_entry.delete(0, _tk.END)
@@ -386,6 +390,7 @@ class PasswordContnet(ttk.Frame):
                 if password_deleted:
                     messagebox.showinfo(
                         title="Info", message="Account deleted successfully!")
+                    reset_form_entries()
                     self.tree_entries = self.password_logic.get_passwords()
                 else:
                     messagebox.showerror(
