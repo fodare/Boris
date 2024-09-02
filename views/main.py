@@ -63,27 +63,31 @@ class LoginView(ttk.Frame):
         def handle_login():
             username = self.username_entry.get()
             password = self.password_entry.get()
-            try:
-                queried_account = parent.dbLogic.get_app_user(username)
-                if queried_account is None:
-                    messagebox.showerror(
-                        title="Error!", message="\nError loging in.\n \nInvalid credentials!")
-                elif queried_account["Password"] != password:
-                    messagebox.showerror(
-                        title="Error!", message="\nError loging in.\n \nInvalid credentials!")
-                else:
-                    messagebox.showinfo(
-                        title="Success!", message="Successfully logged in!")
-                parent.login_frame.pack_forget()
-                parent.register_frame.pack_forget()
-                parent.content_main_frame.pack(
-                    ipadx=APP_WINDOW_WIDTH, ipady=APP_WINDOW_HEIGHT)
-                parent.content_main_frame.render_contnet_view(parent)
-            except Exception as err:
+            if username == "" or password == "":
                 messagebox.showerror(
-                    title="Error", message=f"Error signing in!. Exception \n{err}")
+                    title="Error", message="Username / Password can not be empty!")
+            else:
+                try:
+                    queried_account = parent.dbLogic.get_app_user(username)
+                    if queried_account is None:
+                        messagebox.showerror(
+                            title="Error!", message="\nError loging in.\n \nInvalid credentials!")
+                    elif queried_account["Password"] != password:
+                        messagebox.showerror(
+                            title="Error!", message="\nError loging in.\n \nInvalid credentials!")
+                    else:
+                        messagebox.showinfo(
+                            title="Success!", message="Successfully logged in!")
+                    parent.login_frame.pack_forget()
+                    parent.register_frame.pack_forget()
+                    parent.content_main_frame.pack(
+                        ipadx=APP_WINDOW_WIDTH, ipady=APP_WINDOW_HEIGHT)
+                    parent.content_main_frame.render_contnet_view(parent)
+                except Exception as err:
+                    messagebox.showerror(
+                        title="Error", message=f"Error signing in!. Exception \n{err}")
 
-                # ------------ Widgets ------------ #
+        # ------------ Widgets ------------ #
         self.view_label = ttk.Label(self.contnet_frame, text="Login", font=(
             "monospace", 35)).grid(row=0, column=0, pady=70, columnspan=2)
 
@@ -125,19 +129,23 @@ class RegisterView(ttk.Frame):
         def handle_register():
             username = self.username_entry.get()
             password = self.password_entry.get()
-            try:
-                account_created = parent.dbLogic.add_app_user(
-                    username, password)
-                if account_created:
-                    messagebox.showinfo(
-                        title="Info!", message="\n Account created successfully!")
-                    handle_login_view()
-                else:
-                    messagebox.showerror(
-                        title="Error!", message="\nError creating account. \nMaybe try with another credentials!")
-            except Exception as err:
+            if username == "" or password == "":
                 messagebox.showerror(
-                    title="Error!", message=f"Error creating account. \n{err}")
+                    title="Error", message="Username / Password can not be null!")
+            else:
+                try:
+                    account_created = parent.dbLogic.add_app_user(
+                        username, password)
+                    if account_created:
+                        messagebox.showinfo(
+                            title="Info!", message="\n Account created successfully!")
+                        handle_login_view()
+                    else:
+                        messagebox.showerror(
+                            title="Error!", message="\nError creating account. \nMaybe try with another credentials!")
+                except Exception as err:
+                    messagebox.showerror(
+                        title="Error!", message=f"Error creating account. \n{err}")
 
         # ------------ Widgets ------------ #
         self.view_label = ttk.Label(
