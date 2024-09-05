@@ -332,7 +332,7 @@ class PasswordContnet(ttk.Frame):
         self.password_tree.heading('Account', text="Account")
         self.password_tree.heading('Username', text="Username")
         self.password_tree.heading('Link', text="Link")
-        self.password_tree.pack(expand=True, fill="both", ipadx=100)
+        self.password_tree.pack(side="left", expand=True, fill="both")
         self.tree_entries = self.password_logic.get_passwords()
         for account in self.tree_entries:
             self.password_tree.insert(parent='', index=_tk.END, values=(
@@ -415,6 +415,15 @@ class PasswordContnet(ttk.Frame):
         self.password_tree.bind('<Double-1>', item_select)
         self.password_tree.bind('<Delete>', item_delete)
         self.password_tree.bind('<Escape>', item_deselect)
+
+        # Vertical table scrolling
+        self.vertical_scroll = ttk.Scrollbar(
+            self.table_frame, orient="vertical",
+            command=self.password_tree.yview
+        )
+        self.password_tree.configure(
+            yscrollcommand=self.vertical_scroll.set)
+        self.vertical_scroll.pack(side="left", fill="y")
 
 
 class FinanceContent(ttk.Frame):
