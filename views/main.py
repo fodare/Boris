@@ -328,22 +328,29 @@ class PasswordContnet(ttk.Frame):
 
         # Table contnet
         self.password_tree = ttk.Treeview(self.table_frame, columns=(
-            'Account', 'Username', 'Link'), show="headings")
+            'Account', 'Username', 'Link', 'Note'), show="headings")
+
+        self.password_tree.column('Account', width=100, stretch=False)
+        self.password_tree.column('Username', width=100, stretch=False)
+        self.password_tree.column('Link', width=200, stretch=False)
+        self.password_tree.column('Note', stretch=True)
+
         self.password_tree.heading('Account', text="Account")
         self.password_tree.heading('Username', text="Username")
         self.password_tree.heading('Link', text="Link")
-        self.password_tree.pack(expand=True, fill="both", ipadx=100)
+        self.password_tree.heading('Note', text="Note")
+        self.password_tree.pack(side="left", expand=True, fill="both")
         self.tree_entries = self.password_logic.get_passwords()
         for account in self.tree_entries:
             self.password_tree.insert(parent='', index=_tk.END, values=(
-                account['Account'], account['Username'], account['LoginLink']))
+                account['Account'], account['Username'], account['LoginLink'], account['Note']))
 
         def update_table_entries():
             if self.password_tree.get_children() == None:
                 self.tree_entries = self.password_logic.get_passwords()
                 for account in self.tree_entries:
                     self.password_tree.insert(parent='', index=_tk.END, values=(
-                        account['Account'], account['Username'], account['LoginLink']))
+                        account['Account'], account['Username'], account['LoginLink'], account['Note']))
             else:
                 # Remove old enteries
                 for account in self.password_tree.get_children():
@@ -351,7 +358,7 @@ class PasswordContnet(ttk.Frame):
                 # Re- add new db entries
                 for account in self.tree_entries:
                     self.password_tree.insert(parent='', index=_tk.END, values=(
-                        account['Account'], account['Username'], account['LoginLink']))
+                        account['Account'], account['Username'], account['LoginLink'], account['Note']))
 
         # Table / Table events binding
         def item_select(_):
@@ -416,6 +423,18 @@ class PasswordContnet(ttk.Frame):
         self.password_tree.bind('<Delete>', item_delete)
         self.password_tree.bind('<Escape>', item_deselect)
 
+        # Vertical table scrolling
+        self.vertical_scroll = ttk.Scrollbar(
+            self.table_frame, orient="vertical",
+            command=self.password_tree.yview
+        )
+        self.password_tree.configure(
+            yscrollcommand=self.vertical_scroll.set)
+        self.vertical_scroll.pack(side="left", fill="y")
+
+        self.password_tree.bind('<MouseWheel>', lambda event: self.password_tree.configure(
+            yscrollcommand=self.vertical_scroll.set))
+
 
 class FinanceContent(ttk.Frame):
     def __init__(self, parent):
@@ -437,7 +456,7 @@ class FinanceContent(ttk.Frame):
 
         self.table_frame = ttk.Frame(self)
         self.table_frame.configure(relief='groove')
-        self.table_frame.pack(fill="both")
+        self.table_frame.pack(side="left", fill="both", expand=True)
 
         # Pre - fetch table and amount summary
         transaction_list = self.transaction_logic.get_transactions()
@@ -487,7 +506,7 @@ class FinanceContent(ttk.Frame):
                 for transaction in self.transaction_entries:
                     self.transaction_tree.insert(parent='', index=_tk.END, values=(
                         transaction['CreateDate'], transaction['TransactionType'],
-                        transaction['Amount'], transaction['TransactionTag']))
+                        transaction['Amount'], transaction['TransactionTag'], transaction['TransactionNote']))
             else:
                 # Remove old entries
                 for transaction in self.transaction_tree.get_children():
@@ -496,7 +515,7 @@ class FinanceContent(ttk.Frame):
                 for transaction in self.transaction_entries:
                     self.transaction_tree.insert(parent='', index=_tk.END, values=(
                         transaction['CreateDate'], transaction['TransactionType'],
-                        transaction['Amount'], transaction['TransactionTag']))
+                        transaction['Amount'], transaction['TransactionTag'], transaction['TransactionNote']))
 
         def update_amount_summary(transaction_list):
             total_sum = 0
@@ -568,17 +587,35 @@ class FinanceContent(ttk.Frame):
 
         # Transaction table
         self.transaction_tree = ttk.Treeview(self.table_frame, columns=(
-            'Date', 'Event', 'Amount', 'Tag'), show="headings")
+            'Date', 'Event', 'Amount', 'Tag', 'Note'), show="headings")
+
+        self.transaction_tree.column('Date', width=100, stretch=False)
+        self.transaction_tree.column('Event', width=100, stretch=False)
+        self.transaction_tree.column('Amount', width=110, stretch=False)
+        self.transaction_tree.column('Tag', width=110, stretch=False)
+        self.transaction_tree.column('Note', stretch=True)
+
         self.transaction_tree.heading('Date', text="Date")
         self.transaction_tree.heading('Event', text="Event")
         self.transaction_tree.heading('Amount', text="Amount")
         self.transaction_tree.heading('Tag', text="Tag")
-        self.transaction_tree.pack(
-            expand=True, fill="both", ipady=APP_WINDOW_HEIGHT)
+        self.transaction_tree.heading('Note', text='Note')
+        self.transaction_tree.pack(side="left", expand=True, fill="both")
         self.transaction_entries = transaction_list
         for transaction in self.transaction_entries:
             self.transaction_tree.insert(parent='', index=_tk.END, values=(
                 transaction['CreateDate'],
                 transaction['TransactionType'],
                 transaction['Amount'],
-                transaction['TransactionTag']))
+                transaction['TransactionTag'],
+                transaction['TransactionNote']))
+
+        # Vertical table scrolling
+        self.vertical_scroll = ttk.Scrollbar(
+            self.table_frame, orient="vertical", command=self.transaction_tree.yview)
+        self.transaction_tree.configure(
+            yscrollcommand=self.vertical_scroll.set)
+        self.vertical_scroll.pack(side="left", fill="y")
+
+        self.transaction_tree.bind('<MouseWheel>', lambda event: self.transaction_tree.configure(
+            yscrollcommand=self.vertical_scroll.set))
