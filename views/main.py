@@ -8,6 +8,8 @@ import pyperclip
 import html
 from dotenv import load_dotenv
 import os
+from ttkthemes import ThemedTk
+
 
 load_dotenv()
 
@@ -15,11 +17,13 @@ APP_WINDOW_WIDTH = os.getenv('APP_WINDOW_WIDTH')
 APP_WINDOW_HEIGHT = os.getenv('APP_WINDOW_HEIGHT')
 APP_THEME_NAME = os.getenv('APP_THEME_NAME')
 APP_TITLE = os.getenv('APP_TITLE')
+APP_THEME_NAME = os.getenv('APP_THEME_NAME')
 
 
-class App(_tk.Tk):
+class App(ThemedTk):
     def __init__(self):
         super().__init__()
+        self.set_theme(APP_THEME_NAME)
 
         # ----------- App Window config -----------#
         self.title(APP_TITLE)
