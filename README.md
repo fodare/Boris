@@ -79,9 +79,11 @@ DBPASSWORD={enter SQL server password. Value of MSSQL_SA_PASSWORD}
 DATBASENAME=Boris
 APP_WINDOW_WIDTH=1000
 APP_WINDOW_HEIGHT=700
-APP_THEME_NAME=
+APP_THEME_NAME=breeze
 APP_TITLE=Boris
 ```
+
+For more themes, checkout [ttkThemes](https://ttkthemes.readthedocs.io/en/latest/themes.html).
 
 ### Install dependencies
 
