@@ -14,8 +14,8 @@ GO
 CREATE TABLE UserSchema.Users
 (
     id INT IDENTITY(1,1),
-    Username VARCHAR(50) NOT NULL,
-    Password VARCHAR(50) NOT NULL,
+    Username VARCHAR(255) NOT NULL,
+    Password VARCHAR(max) NOT NULL,
     CreateDate DATE,
     LastUpdates DATE
 );
