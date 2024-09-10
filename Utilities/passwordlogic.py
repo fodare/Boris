@@ -1,5 +1,13 @@
 from random import randint, shuffle, choice
 from Data import dbLogic
+from cryptography.fernet import Fernet
+import os
+from dotenv import load_dotenv
+import codecs
+
+load_dotenv()
+
+APP_ENCRYPTION_KEY = os.getenv('APP_ENCRYPTION_KEY')
 
 
 class PasswordLogic:
@@ -42,3 +50,16 @@ class PasswordLogic:
 
     def delete_password(self, id):
         return self.db_logic.delete_password(id)
+
+    def generate_key(self):
+        return Fernet.generate_key()
+
+    def encrypt_message(self, message):
+        f = Fernet(APP_ENCRYPTION_KEY)
+        encrypted_message = f.encrypt(message.encode('UTF-8'))
+        return codecs.decode(encrypted_message)
+
+    def decrypt_message(self, encrypted_message):
+        f = Fernet(APP_ENCRYPTION_KEY)
+        byte_message = codecs.encode(encrypted_message)
+        return f.decrypt(byte_message).decode()
