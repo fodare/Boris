@@ -55,6 +55,7 @@ class LoginView(ttk.Frame):
         super().__init__(parent)
         self.contnet_frame = ttk.Frame(self)
         self.contnet_frame.pack()
+        self.password_logic = PasswordLogic()
 
     def render_login_frame(self, parent):
         # ------------ Button functions ------------ #
@@ -76,7 +77,7 @@ class LoginView(ttk.Frame):
                     if queried_account is None:
                         messagebox.showerror(
                             title="Error!", message="\nError loging in.\n \nInvalid credentials!")
-                    elif queried_account["Password"] != password:
+                    elif self.password_logic.decrypt_message(queried_account["Password"]) != password:
                         messagebox.showerror(
                             title="Error!", message="\nError loging in.\n \nInvalid credentials!")
                     else:
@@ -121,6 +122,7 @@ class RegisterView(ttk.Frame):
         super().__init__(parent)
         self.content_frame = ttk.Frame(self)
         self.content_frame.pack()
+        self.password_logic = PasswordLogic()
 
     def render_register_frame(self, parent):
         # ------------ Button functions ------------ #
@@ -138,8 +140,10 @@ class RegisterView(ttk.Frame):
                     title="Error", message="Username / Password can not be null!")
             else:
                 try:
+                    parsed_password = str(
+                        self.password_logic.encrypt_message(password))
                     account_created = parent.dbLogic.add_app_user(
-                        username, password)
+                        username, parsed_password)
                     if account_created:
                         messagebox.showinfo(
                             title="Info!", message="\n Account created successfully!")
