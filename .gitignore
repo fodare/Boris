@@ -487,3 +487,4 @@ $RECYCLE.BIN/
 
 # Python Virtual environment files
 *.venv
+local.env
