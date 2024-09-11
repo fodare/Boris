@@ -140,8 +140,9 @@ class RegisterView(ttk.Frame):
                     title="Error", message="Username / Password can not be null!")
             else:
                 try:
-                    parsed_password = str(
-                        self.password_logic.encrypt_message(password))
+                    parsed_password = self.password_logic.encrypt_message(
+                        password)
+                    print(parsed_password)
                     account_created = parent.dbLogic.add_app_user(
                         username, parsed_password)
                     if account_created:
