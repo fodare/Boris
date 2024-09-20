@@ -90,7 +90,7 @@ class LoginView(ttk.Frame):
                         parent.content_main_frame.render_contnet_view(parent)
                 except Exception as err:
                     messagebox.showerror(
-                        title="Error", message=f"Error signing in!. Exception \n{err}")
+                        title="Error", message=f"Error verifying credentials. Please try again!")
 
         # ------------ Widgets ------------ #
         self.view_label = ttk.Label(self.contnet_frame, text="Login", font=(
@@ -142,7 +142,6 @@ class RegisterView(ttk.Frame):
                 try:
                     parsed_password = self.password_logic.encrypt_message(
                         password)
-                    print(parsed_password)
                     account_created = parent.dbLogic.add_app_user(
                         username, parsed_password)
                     if account_created:
@@ -154,7 +153,7 @@ class RegisterView(ttk.Frame):
                             title="Error!", message="\nError creating account. \nMaybe try with another credentials!")
                 except Exception as err:
                     messagebox.showerror(
-                        title="Error!", message=f"Error creating account. \n{err}")
+                        title="Error!", message=f"Unhandled exception while creating account!")
 
         # ------------ Widgets ------------ #
         self.view_label = ttk.Label(
@@ -507,7 +506,7 @@ class FinanceContent(ttk.Frame):
                     update_transaction_table_entries()
                 else:
                     messagebox.showerror(
-                        title="Error!", message="Error recording")
+                        title="Error!", message="Error recording transaction. Please try again!")
 
         def update_transaction_table_entries():
             if self.transaction_tree.get_children() == None:
