@@ -103,4 +103,4 @@ Copy file `boris.Desktop`, update the path to the application folder in filed `E
 
 To start the application simply double click on the launcher copied to the Desktop and application should start.
 
-If you want to regeister the application in Unbuntu lauch pad, move the updated `boris.desktop` file into `/usr/share/applications`.
+If you want to register the application in Unbuntu lauch pad, move the updated `boris.desktop` file into `/usr/share/applications`.
