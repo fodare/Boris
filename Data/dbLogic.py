@@ -43,11 +43,11 @@ class DBLogic():
         with self.connect_to_db() as conn:
             with conn.cursor() as cursor:
                 try:
-                    cursor.execute(f"""
-                        EXEC UserSchema.spUser_Add 
-                        @userName = '{username}', @password = '{pasword}', 
-                        @createDate = '{datetime.date.today()}', @lastUpdates = '{datetime.date.today()}'
-                    """)
+                    cursor.execute(f'''
+                        EXEC UserSchema.spUser_Add
+                        @userName = "{username}", @password = "{pasword}",
+                        @createDate = "{datetime.date.today()}", @lastUpdates = "{datetime.date.today()}"
+                    ''')
                     ouput = cursor.fetchone()
                     conn.commit()
                     if ouput["Username"] == username:
