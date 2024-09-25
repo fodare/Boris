@@ -10,7 +10,6 @@ from dotenv import load_dotenv
 import os
 from ttkthemes import ThemedTk
 
-
 load_dotenv()
 
 APP_WINDOW_WIDTH = os.getenv('APP_WINDOW_WIDTH')
@@ -234,8 +233,10 @@ class PasswordContnet(ttk.Frame):
                 messagebox.showerror(
                     title="Error", message="Error saving password. Account name can not be empty!")
             else:
+                parsed_password = self.password_logic.encrypt_message(
+                    password)
                 password_saved = self.password_logic.record_password(
-                    account, username, password, link, note)
+                    account, username, parsed_password, link, note)
                 if password_saved:
                     messagebox.showinfo(
                         title="Success", message="Password saved successfully!")
@@ -271,7 +272,8 @@ class PasswordContnet(ttk.Frame):
                 id = selected_item_info["id"]
                 account = self.account_entry.get()
                 username = self.username_entry.get()
-                password = self.password_entry.get()
+                password = self.password_logic.encrypt_message(
+                    self.password_entry.get())
                 link = self.link_entry.get()
                 note = html.unescape(self.note_entry.get("1.0", _tk.END))
                 account_updated = self.password_logic.update_password(
@@ -384,7 +386,7 @@ class PasswordContnet(ttk.Frame):
                 self.username_entry.insert(
                     _tk.END, string=f"{selected_item_info['Username']}")
                 self.password_entry.insert(
-                    _tk.END, string=f"{selected_item_info['Password']}")
+                    _tk.END, string=f"{self.password_logic.decrypt_message(selected_item_info['Password'])}")
                 self.link_entry.insert(
                     _tk.END, string=f"{selected_item_info['LoginLink']}")
                 self.note_entry.insert(

@@ -81,6 +81,9 @@ APP_WINDOW_WIDTH=1000
 APP_WINDOW_HEIGHT=700
 APP_THEME_NAME=breeze
 APP_TITLE=Boris
+# A 32 url-safe base64 encoded bytes vlaue. Checkout https://fernetkeygen.com/.
+# Store and keep code secure.
+APP_ENCRYPTION_KEY=''
 ```
 
 For more themes, checkout [ttkThemes](https://ttkthemes.readthedocs.io/en/latest/themes.html).
