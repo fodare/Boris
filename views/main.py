@@ -429,9 +429,33 @@ class PasswordContnet(ttk.Frame):
                 self.update_button.grid_forget()
                 self.add_button.grid(row=6, column=1, pady=5)
 
+        def username_copy(_):
+            selected_item = self.password_tree.item(
+                self.password_tree.selection())
+            if selected_item["values"] == "":
+                pass
+            elif selected_item["values"] is not None:
+                selected_item_info = self.password_logic.get_password(
+                    selected_item['values'][0])
+                pyperclip.copy(selected_item_info["Username"])
+
+        def password_copy(_):
+            selected_item = self.password_tree.item(
+                self.password_tree.selection())
+            if selected_item["values"] == "":
+                pass
+            elif selected_item["values"] is not None:
+                selected_item_info = self.password_logic.get_password(
+                    selected_item['values'][0])
+                decrypted_password = self.password_logic.decrypt_message(
+                    selected_item_info["Password"])
+                pyperclip.copy(decrypted_password)
+
         self.password_tree.bind('<Double-1>', item_select)
         self.password_tree.bind('<Delete>', item_delete)
         self.password_tree.bind('<Escape>', item_deselect)
+        self.password_tree.bind('<Control-b>', username_copy)
+        self.password_tree.bind('<Control-c>', password_copy)
 
         # Vertical table scrolling
         self.vertical_scroll = ttk.Scrollbar(
