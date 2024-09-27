@@ -494,15 +494,14 @@ class FinanceContent(ttk.Frame):
 
         # Pre - fetch table and amount summary
         transaction_list = self.transaction_logic.get_transactions()
-        total_sum = 0
         credit_sum = 0
         debit_sum = 0
         for transaction in transaction_list:
-            total_sum += transaction["Amount"]
             if transaction["TransactionType"] == "Credit":
                 credit_sum += transaction["Amount"]
             elif transaction["TransactionType"] == "Debit":
                 debit_sum += transaction["Amount"]
+        total_savings = credit_sum-debit_sum
 
         # Functions
         def reset_form_entries():
@@ -552,22 +551,21 @@ class FinanceContent(ttk.Frame):
                         transaction['Amount'], transaction['TransactionTag'], transaction['TransactionNote']))
 
         def update_amount_summary(transaction_list):
-            total_sum = 0
             credit_sum = 0
             debit_sum = 0
             for transaction in transaction_list:
-                total_sum += transaction["Amount"]
-                self.total_label.configure(text=f"Total: {total_sum}")
                 if transaction["TransactionType"] == "Credit":
                     credit_sum += transaction["Amount"]
                     self.credit_label.configure(text=f"Credit: {credit_sum}")
                 elif transaction["TransactionType"] == "Debit":
                     debit_sum += transaction["Amount"]
                     self.debit_label.configure(text=f"Debit: {debit_sum}")
+            total_savings = (credit_sum - debit_sum)
+            self.total_label.configure(text=f"Savings €: {total_savings}")
 
         # Summation contnet
         self.total_label = ttk.Label(
-            self.summation_frame, text=f"Total: {total_sum}", font=("bold"))
+            self.summation_frame, text=f"Savings €: {total_savings}", font=("bold"))
         self.total_label.grid(row=0, column=0, columnspan=2, ipady=10)
 
         self.credit_label = ttk.Label(
