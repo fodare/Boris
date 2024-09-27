@@ -181,7 +181,7 @@ GO
 CREATE TABLE TransactionRecordSchema.Transactions
 (
     id INT IDENTITY(1,1),
-    Amount DECIMAL(18,4),
+    Amount DECIMAL(18,2),
     TransactionType VARCHAR(10),
     TransactionTag VARCHAR(50),
     TransactionNote VARCHAR(255),
