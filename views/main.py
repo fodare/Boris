@@ -290,6 +290,31 @@ class PasswordContnet(ttk.Frame):
                         title="Error", message="Error updating account!")
                 update_table_entries()
 
+        def handle_account_search():
+            account_name = self.account_entry.get()
+            if account_name is None or account_name == "":
+                messagebox.showerror(
+                    title="Error!", message="Account name can not be null!")
+                reset_form_entries()
+            else:
+                account_info = self.password_logic.get_password(account_name)
+                if account_info is None:
+                    messagebox.showerror(
+                        title="Error", message=f'Can not find account with name {account_name}!')
+                    reset_form_entries()
+                else:
+                    reset_form_entries()
+                    self.account_entry.insert(
+                        _tk.END, string=f"{account_info['Account']}")
+                    self.username_entry.insert(
+                        _tk.END, string=f"{account_info['Username']}")
+                    self.password_entry.insert(
+                        _tk.END, string=f"{self.password_logic.decrypt_message(account_info['Password'])}")
+                    self.link_entry.insert(
+                        _tk.END, string=f"{account_info['LoginLink']}")
+                    self.note_entry.insert(
+                        _tk.END, f"{account_info['Note']}")
+
         # Form contnet
         self.view_label = ttk.Label(
             self.form_frame, text="Add Password", font=(40))
@@ -300,6 +325,10 @@ class PasswordContnet(ttk.Frame):
 
         self.account_entry = ttk.Entry(self.form_frame)
         self.account_entry.grid(row=1, column=1, pady=10)
+
+        self.account_search_button = ttk.Button(
+            self.form_frame, text="Search", command=handle_account_search)
+        self.account_search_button.grid(row=1, column=2)
 
         self.username_label = ttk.Label(self.form_frame, text="Username:")
         self.username_label.grid(row=2, column=0, pady=10)
