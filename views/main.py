@@ -253,6 +253,9 @@ class PasswordContnet(ttk.Frame):
             self.password_entry.delete(0, _tk.END)
             self.link_entry.delete(0, _tk.END)
             self.note_entry.delete("1.0", _tk.END)
+            self.cancel_button.grid_forget()
+            self.update_button.grid_forget()
+            self.add_button.grid(row=6, column=1, pady=5)
 
         def handle_password_generation():
             random_password = self.password_logic.generate_password()
@@ -314,6 +317,8 @@ class PasswordContnet(ttk.Frame):
                         _tk.END, string=f"{account_info['LoginLink']}")
                     self.note_entry.insert(
                         _tk.END, f"{account_info['Note']}")
+                    self.add_button.grid_forget()
+                    self.cancel_button.grid(row=6, column=1)
 
         # Form contnet
         self.view_label = ttk.Label(
@@ -364,6 +369,9 @@ class PasswordContnet(ttk.Frame):
 
         self.update_button = ttk.Button(
             self.form_frame, text="Update", command=handle_password_update)
+
+        self.cancel_button = ttk.Button(
+            self.form_frame, text="Cancel", command=reset_form_entries)
 
         # Table contnet
         self.password_tree = ttk.Treeview(self.table_frame, columns=(
