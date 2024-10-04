@@ -356,8 +356,8 @@ class PasswordContnet(ttk.Frame):
         self.note_label = ttk.Label(self.form_frame, text="Notes:")
         self.note_label.grid(row=5, column=0, pady=10)
 
-        self.note_entry = _tk.Text(self.form_frame, height=10, width=20)
-        self.note_entry.grid(row=5, column=1, pady=10)
+        self.note_entry = _tk.Text(self.form_frame, height=20, width=31)
+        self.note_entry.grid(row=5, column=1, columnspan=2, pady=5)
 
         self.generate_password = ttk.Button(
             self.form_frame, text="Generate", command=handle_password_generation)
@@ -375,29 +375,27 @@ class PasswordContnet(ttk.Frame):
 
         # Table contnet
         self.password_tree = ttk.Treeview(self.table_frame, columns=(
-            'Account', 'Username', 'Link', 'Note'), show="headings")
+            'Account', 'Username', 'Link'), show="headings")
 
         self.password_tree.column('Account', width=100, stretch=False)
         self.password_tree.column('Username', width=100, stretch=False)
-        self.password_tree.column('Link', width=200, stretch=False)
-        self.password_tree.column('Note', stretch=True)
+        self.password_tree.column('Link', width=200, stretch=True)
 
         self.password_tree.heading('Account', text="Account")
         self.password_tree.heading('Username', text="Username")
         self.password_tree.heading('Link', text="Link")
-        self.password_tree.heading('Note', text="Note")
         self.password_tree.pack(side="left", expand=True, fill="both")
         self.tree_entries = self.password_logic.get_passwords()
         for account in self.tree_entries:
             self.password_tree.insert(parent='', index=_tk.END, values=(
-                account['Account'], account['Username'], account['LoginLink'], account['Note']))
+                account['Account'], account['Username'], account['LoginLink']))
 
         def update_table_entries():
             if self.password_tree.get_children() == None:
                 self.tree_entries = self.password_logic.get_passwords()
                 for account in self.tree_entries:
                     self.password_tree.insert(parent='', index=_tk.END, values=(
-                        account['Account'], account['Username'], account['LoginLink'], account['Note']))
+                        account['Account'], account['Username'], account['LoginLink']))
             else:
                 # Remove old enteries
                 for account in self.password_tree.get_children():
@@ -405,7 +403,7 @@ class PasswordContnet(ttk.Frame):
                 # Re- add new db entries
                 for account in self.tree_entries:
                     self.password_tree.insert(parent='', index=_tk.END, values=(
-                        account['Account'], account['Username'], account['LoginLink'], account['Note']))
+                        account['Account'], account['Username'], account['LoginLink']))
 
         # Table / Table events binding
         def item_select(_):
