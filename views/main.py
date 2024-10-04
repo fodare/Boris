@@ -356,8 +356,8 @@ class PasswordContnet(ttk.Frame):
         self.note_label = ttk.Label(self.form_frame, text="Notes:")
         self.note_label.grid(row=5, column=0, pady=10)
 
-        self.note_entry = _tk.Text(self.form_frame, height=10, width=20)
-        self.note_entry.grid(row=5, column=1, pady=10)
+        self.note_entry = _tk.Text(self.form_frame, height=20, width=31)
+        self.note_entry.grid(row=5, column=1, columnspan=2, pady=5)
 
         self.generate_password = ttk.Button(
             self.form_frame, text="Generate", command=handle_password_generation)
