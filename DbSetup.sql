@@ -103,6 +103,7 @@ BEGIN
     SELECT *
     FROM PasswordSchema.Passwords AS Passwords WITH (NOLOCK)
     WHERE Passwords.[id] = ISNULL(@id, id) AND Passwords.Account = ISNULL(@account, Account)
+    ORDER BY Account asc
 END
 GO
 
