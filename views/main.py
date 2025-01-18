@@ -114,12 +114,6 @@ class LoginView(ttk.Frame):
                                           command=handle_register_view).grid(
             row=3, column=1, pady=20, rowspan=2)
 
-        # ------------ Key bindings ------------ #
-        def handle_login_event(_):
-            handle_login()
-
-        self.bind_all('<Return>', handle_login_event)
-
         self.tkraise()
 
 
